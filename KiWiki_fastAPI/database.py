@@ -1,10 +1,5 @@
-
-
-#Copiado de chatGPT
-#///////////////////////////////////////
 import motor.motor_asyncio
 import os
-from dotenv import load_dotenv
 
 from bson import ObjectId
 from dotenv import load_dotenv
@@ -15,22 +10,36 @@ MONGO_DETAILS = os.getenv("MONGO_URI")
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 database = client.IWebOS   # Nombre de tu base de datos en MongoDB
-entryCollection = database['Entry']   # Nombre de la colección
-#////////////////////////////////////////
+collection = database.my_collection   # Nombre de la colección
 
-async def delete_entry_id(id: str):
+async def crear_ejemplo(collection,data: dict) -> dict:
+    item = await collection.insert_one(data)
+
+async def get_collection(collection):
+    items = []
+    async for item in collection.find():
+        items.append(item.dict())
+    return items
+
+async def get_id(collection,id: str) -> dict:
+    item = await collection.find_one({"_id": ObjectId(id)})
+    if item:
+        return item.dict()
+
+async def delete_id(collection,id: str):
     deleted = False
-    entry = await entryCollection.find_one({"_id":ObjectId(id)})
-    if entry:
-        await entry.delete_one({"_id": ObjectId(id)})
+    item = await collection.find_one({"_id": ObjectId(id)})
+    if item:
+        await collection.delete_one({"_id": ObjectId(id)})
         deleted = True
-    return deleted 
+    return deleted
 
-async def update_entry(id: str, data: dict):
+async def update_id(collection,id: str, data: dict):
     if not data:
         return False
-    entry = await entryCollection.find_one({"_id":ObjectId(id)})
-    if entry:
-        updatedEntry = await entryCollection.update_one({
-            {"_id": ObjectId(id)},{"$set":data}})
-        return bool(update_entry)
+    item = await collection.find_one({"_id": ObjectId(id)})
+    if item:
+        updatedItem = await collection.update_one(
+            {"_id": ObjectId(id)}, {"$set": data}
+        )
+        return bool(updatedItem)
