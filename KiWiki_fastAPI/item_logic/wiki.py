@@ -8,3 +8,7 @@ from datetime import date,datetime
 router = APIRouter()
 crud = MONGOCRUD('Wiki') 
 
+
+async def get_entries():
+    wikis = await crud.get_collection()
+    return wikis
