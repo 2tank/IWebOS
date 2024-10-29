@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from item_logic import entry
+
 app = FastAPI()
 
 
@@ -12,15 +14,4 @@ async def root():
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
-"""
-from fastapi import FastAPI
-from app.routes import router as item_router
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the FastAPI MongoDB app!"}
-
-app.include_router(item_router, tags=["Items"], prefix="/item")
-"""
+app.include_router(entry.router, prefix="/entry")
