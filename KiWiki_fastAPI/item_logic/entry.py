@@ -7,8 +7,12 @@ async def add_entry(entry,content,description):
     entry_data = jsonable_encoder(entry)
     await crud.create_item(entry_data,content,description)
 
-async def get_entries():
-    entries = await crud.get_collection()
+async def get_entries(filter):
+    entries = []
+    if filter:
+        entries = await crud.get_by_filter(filter)
+    else:
+        entries = await crud.get_collection()
     return entries
 
 async def get_entry(id):

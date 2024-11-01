@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
 from datetime import datetime
 from models.version_schema import versionSchema
 
