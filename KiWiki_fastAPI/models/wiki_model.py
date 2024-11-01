@@ -8,8 +8,3 @@ class WikiModel(BaseModel):
     creator: str = Field(..., max_length=20, description="Nombre del creador de la wiki")
     description: str = Field(..., max_length=50, description="Decripción de la wiki")
     date: datetime = Field(..., description="Fecha de creación de la wiki")
-
-    
-
-
-
