@@ -9,3 +9,18 @@ GET http://127.0.0.1:8000/hello/User
 Accept: application/json
 
 ###
+
+GET http://127.0.0.1:8000/notification/
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/notification/
+Content-Type: application/json
+
+{
+"title": "Notificación de borrado de la Wiki Guerra",
+"user": "Pepito",
+"notifDate": "2024-11-01 14:23:45",
+"notifType": "Wiki removal authorization"
+}

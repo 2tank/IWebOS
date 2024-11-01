@@ -49,3 +49,11 @@ class MONGOCRUD:
                 {"_id": ObjectId(id)}, {"$set": data}
             )
             return bool(updatedItem)
+
+    # Añadido para función de notification.py
+    async def get_by_user(self, user_id: str):
+        items = []
+        async for item in self.collection.find({"user": user_id}):
+            item["_id"] = str(item["_id"])  # Asegúrate de que el ID sea una cadena
+            items.append(item)
+        return items
