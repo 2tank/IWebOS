@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Body
 import item_logic.entry as entry_logic
+import item_logic.version as version_logic
 from models.entry_schema import entrySchema
 from models.version_schema import versionSchema
 
@@ -47,3 +48,8 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
 async def create_version_entry(id: str,version: versionSchema):
     updated_entry = await entry_logic.create_version(id,version)
     return updated_entry
+
+@router.get("/{id}/versions/")
+async def get_versions_by_entry_id(id: str):
+    versions = await version_logic.get_versions_by_entryid(id)
+    return versions
