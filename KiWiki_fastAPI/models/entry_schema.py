@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
+from models.version_schema import versionSchema
 
 class entrySchema(BaseModel):
-    author: str = Field(...) #Cambiar a usuario creador cuando sea necesario
+    title: str = Field(...)
+    creator : str = Field(...)
     creationDate: datetime = Field(...)
-    updateDate: datetime = Field(...)
-    name: str = Field(...)
-    editor: str = Field(...) #Cambiar a usuario editor cuando sea necesario
+    versions: List[str] = None

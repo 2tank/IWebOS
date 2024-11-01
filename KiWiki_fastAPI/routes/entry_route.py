@@ -1,16 +1,18 @@
 from fastapi import APIRouter, HTTPException, Body
-from bson import ObjectId
 import item_logic.entry as entry_logic
 from models.entry_schema import entrySchema
+from models.version_schema import versionSchema
 
 router = APIRouter()
 
+#TODO Mejorar códigos de error
+
 @router.post("/")
-async def add_entry(entry: entrySchema = Body(...)):
+async def add_entry(content: str,entry: entrySchema = Body(...)):
     try:
-        await entry_logic.add_entry(entry)
+        await entry_logic.add_entry(entry, content)
     except:
-        raise HTTPException(status_code=500, detail="Error posting") 
+        raise HTTPException(status_code=500, detail="Upload failed") 
     
 @router.get("/")
 async def get_entries():
@@ -43,3 +45,8 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
         return updated_entry
     except:
         raise HTTPException(status_code=500, detail="No entry")
+    
+@router.post("/{id}/versions/")
+async def create_version_entry(id: str,version: versionSchema):
+    updated_entry = await entry_logic.create_version(id,version)
+    return updated_entry
