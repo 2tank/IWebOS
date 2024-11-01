@@ -8,11 +8,8 @@ router = APIRouter()
 #TODO Mejorar códigos de error
 
 @router.post("/")
-async def add_entry(content: str,entry: entrySchema = Body(...)):
-    try:
-        await entry_logic.add_entry(entry, content)
-    except:
-        raise HTTPException(status_code=500, detail="Upload failed") 
+async def add_entry(content: str,description: str,entry: entrySchema = Body(...)):
+    await entry_logic.add_entry(entry, content, description)
     
 @router.get("/")
 async def get_entries():

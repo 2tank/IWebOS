@@ -17,7 +17,7 @@ class ENTRYCRUD(MONGOCRUD):
         super().__init__('Entry')
         self.version_collection = database['Version']
 
-    async def create_item(self, data: dict, content: str) -> dict:
+    async def create_item(self, data: dict, content: str, description: str) -> dict:
         """
         Crea una entrada y automáticamente añade una versión inicial con el contenido proporcionado
         """
@@ -27,6 +27,7 @@ class ENTRYCRUD(MONGOCRUD):
             editor = data["creator"],
             editDate = data["creationDate"],
             content = content,
+            description = description,
         )
 
         #Creamos la entrada inicial
@@ -34,7 +35,6 @@ class ENTRYCRUD(MONGOCRUD):
             title = data["title"],
             creator = data["creator"],
             creationDate = data["creationDate"],
-            versions = []
         )
 
         # Insertamos la entrada en la colección y obtenemos su id.
@@ -49,7 +49,9 @@ class ENTRYCRUD(MONGOCRUD):
         # Actualizamos la referencia de entrada para poner el id de la versión
         await self.collection.update_one(
             {"_id": entry_id},
-            {"$set": {"versions.0": str(version_id)}}
+            {
+                "$set": {"actual_version": str(version_id)}
+            }
         )
 
         # Obtenemos y devolvemos la entrada creada.
@@ -69,7 +71,9 @@ class ENTRYCRUD(MONGOCRUD):
         # Insertamos el id de la nueva versión en la lista de versiones de la entrada
         await self.collection.update_one(
             {"_id": ObjectId(entry_id)},
-            {"$push": {"versions": str(version_id)}}
+            {
+            "$set": {"actual_version": str(version_id)}
+            }
         )
 
         # Obtenemos y devolvemos la entrada actualizada.

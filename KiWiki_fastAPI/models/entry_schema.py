@@ -7,4 +7,4 @@ class entrySchema(BaseModel):
     title: str = Field(...)
     creator : str = Field(...)
     creationDate: datetime = Field(...)
-    versions: List[str] = None
+    actual_version: str = None

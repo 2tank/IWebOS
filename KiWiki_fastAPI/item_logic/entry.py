@@ -3,9 +3,9 @@ from item_logic.crud_inheritance.entry_crud import ENTRYCRUD
 
 crud = ENTRYCRUD()
 
-async def add_entry(entry,content):
+async def add_entry(entry,content,description):
     entry_data = jsonable_encoder(entry)
-    await crud.create_item(entry_data,content)
+    await crud.create_item(entry_data,content,description)
 
 async def get_entries():
     entries = await crud.get_collection()
