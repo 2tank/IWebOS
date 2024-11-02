@@ -8,21 +8,19 @@ from datetime import datetime
 
 router = APIRouter()
 
-#TODO Mejorar códigos de error
-
 @router.post("/")
 async def add_entry(content: str,entry: entrySchema = Body(...)):
     try:
         result = await entry_logic.add_entry(entry, content)
         return result
-    except:
-        raise HTTPException(status_code=500, detail="Upload failed") 
+    except Exception  as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}") 
     
 @router.get("/")
 async def get_entries(
-    year: Optional[int] = Query(None),
-    month: Optional[int] = Query(None),
-    day: Optional[int] = Query(None),
+    year: Optional[int] = Query(None, ge=1900, le=datetime.now().year),
+    month: Optional[int] = Query(None, ge=1, le=12),
+    day: Optional[int] = Query(None, ge=1, le=12),
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
     ):
@@ -55,39 +53,45 @@ async def get_entries(
 
         entries = await entry_logic.get_entries(filter)
         return entries
-    except:
-        raise HTTPException(status_code=500, detail="No entries") 
+    except Exception as e:
+        raise HTTPException(status_code=500,  detail=f"Failed to retrieve entries: {str(e)}") 
     
 @router.get("/{id}")
 async def get_entry(id: str):
     try:
         entry = await entry_logic.get_entry(id)
         return entry
-    except:
-        raise HTTPException(status_code=500, detail="No entry")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve entry: {str(e)}")
 
 @router.delete("/{id}")
 async def delete_entry(id: str):
     try:
         deleted_entry = await entry_logic.delete_entry(id)
         return deleted_entry
-    except:
-        raise HTTPException(status_code=500, detail="No entry")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete entry: {str(e)}")
     
 @router.put("/{id}")
 async def update_entry(id: str, req: entrySchema = Body(...)):
     try:
         updated_entry = await entry_logic.update_entry(id,req)
         return updated_entry
-    except:
-        raise HTTPException(status_code=500, detail="No entry")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update entry: {str(e)}")
         
 @router.post("/{id}/versions/")
-async def create_version_entry(id: str,version: versionSchema):
-    updated_entry = await entry_logic.create_version(id,version)
-    return updated_entry
+async def create_entry_version(id: str,version: versionSchema):
+    try:
+        updated_entry = await entry_logic.create_version(id,version)
+        return updated_entry
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create version: {str(e)}")
 
 @router.get("/{id}/versions/")
 async def get_versions_by_entry_id(id: str):
-    versions = await version_logic.get_versions_by_entryid(id)
-    return versions
+    try:
+        versions = await version_logic.get_versions_by_entryid(id)
+        return versions
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"No versions found: {str(e)}")

@@ -1,6 +1,4 @@
-# item_logic/crud_inheritance/version_crud.py
 from database import MONGOCRUD
-from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 
 
@@ -10,7 +8,8 @@ class VersionCRUD(MONGOCRUD):
         super().__init__('Version')
 
     async def get_versions_by_entryid(self, entry_id: str):
-        cursor = self.collection.find({"entry_id": entry_id})
+        # Se obtienen las versiones en orden de novedad
+        cursor = self.collection.find({"entry_id": entry_id}).sort({"editDate" : -1})
         versions = []
 
         async for document in cursor:
