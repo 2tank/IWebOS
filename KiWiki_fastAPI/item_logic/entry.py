@@ -1,7 +1,9 @@
 from fastapi.encoders import jsonable_encoder
 from item_logic.crud_inheritance.entry_crud import ENTRYCRUD
+from item_logic.crud_inheritance.version_crud import VersionCRUD
 
 crud = ENTRYCRUD()
+version_crud = VersionCRUD()
 
 async def add_entry(entry,content):
     entry_data = jsonable_encoder(entry)
@@ -32,3 +34,9 @@ async def update_entry(id,req):
 async def create_version(id,versionSchema):
     entry_newVersion = await crud.add_version_to_entry(id,versionSchema)
     return entry_newVersion
+
+async def get_actualVersion_by_entryid(id):
+    entry = await crud.get_id(id)
+    versionID = entry["actual_version"]
+    version = await version_crud.get_id(versionID)
+    return version
