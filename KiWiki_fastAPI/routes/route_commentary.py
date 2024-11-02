@@ -50,3 +50,23 @@ async def update_commentary(id: str, req: commentary = Body(...)):
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     result = await commentary_logic.updateCommentary(id,req)
     return result
+
+@router.get("/getAllCommentariesInEntry/{id_entrada}")
+async def get_commentaries_in_entry(id_entrada: str):
+    result = await commentary_logic.getAllCommentariesFromEntry(id_entrada)
+    return result
+
+@router.get("/getMainCommentariesInEntry/{id_entrada}")
+async def get_main_commentaries_in_entry(id_entrada: str):
+    result = await commentary_logic.getMainCommentariesFromEntry(id_entrada)
+    return result
+
+@router.get("/getAllCommentariesInEntrySpecificVersion/{id_entrada}/{id_version}")
+async def get_commentaries_in_entry_specific_version(id_entrada: str, id_version: str):
+    result = await commentary_logic.getAllCommentariesFromEntrySpecificVersion(id_entrada, id_version)
+    return result
+
+@router.get("/getMainCommentariesInEntrySpecificVersion/{id_entrada}/{id_version}")
+async def get_main_commentaries_in_entry_specific_version(id_entrada: str, id_version: str):
+    result = await commentary_logic.getMainCommentariesFromEntrySpecificVersion(id_entrada, id_version)
+    return result

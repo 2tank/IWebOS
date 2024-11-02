@@ -1,7 +1,5 @@
 from fastapi import FastAPI
-
-from item_logic import entry
-
+from routes import route_commentary
 app = FastAPI()
 
 
@@ -14,4 +12,5 @@ async def root():
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
-app.include_router(entry.router, prefix="/entry")
+#app.include_router(entry.router, prefix="/entry")
+app.include_router(route_commentary.router, prefix="/commentary")

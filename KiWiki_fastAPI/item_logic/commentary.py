@@ -12,6 +12,7 @@ def commentaryHelper(commentary) -> dict:
         "_id": str(commentary["_id"]),
         "user": commentary["user"],
         "entry": commentary["entry"],
+        "entry_version": commentary["entry_version"],
         "content": commentary["content"],
         "date": commentary["date"],
         "entryRating": commentary["entryRating"],
@@ -81,6 +82,12 @@ async def getResponses(id: str) -> list[dict]:
     return listaRespuestas
 
 async def updateCommentary(id: str, commentary):
+    """
+
+    :param id:
+    :param commentary:
+    :return:
+    """
     resultado = await commentaryCollection.update_id(id, commentary)
     return resultado
 
@@ -97,3 +104,59 @@ async def deleteCommentary(id: str):
         await updateCommentary(str(comentarioEnRespuesta['_id']), comentarioEnRespuesta)
     deletedComentary = await commentaryCollection.delete_id(id)
     return deletedComentary
+
+async def getAllCommentariesFromEntry(entry_id: str) -> list[str]:
+    """
+
+    :param entry_id:
+    :return:
+    """
+    list = []
+    listComentaries = await commentaryCollection.collection.find({"entry": entry_id}).to_list(length=None)
+    for commentary in listComentaries:
+        list.append(str(commentary['_id']))
+    return list
+
+async def getMainCommentariesFromEntry(entry_id: str) -> list[str]:
+    """
+
+    :param entry_id:
+    :return:
+    """
+    list = []
+    listaComentarios = await commentaryCollection.collection.find(
+        {"entry": entry_id, "$or": [{"commentaryInReply": None}, {"commentaryInReply": ""}]}
+    ).to_list(length=None)
+    for comentario in listaComentarios:
+        list.append(str(comentario['_id']))
+    return list
+
+async def getAllCommentariesFromEntrySpecificVersion(entry_id: str, entry_version_id: str) -> list[str]:
+    """
+
+    :param entry_id:
+    :param entry_version_id:
+    :return:
+    """
+    list = []
+    listComentaries = await commentaryCollection.collection.find(
+        {"entry": entry_id, "entry_version": entry_version_id}
+    ).to_list(length=None)
+    for commentary in listComentaries:
+        list.append(str(commentary['_id']))
+    return list
+
+async def getMainCommentariesFromEntrySpecificVersion(entry_id: str, entry_version_id: str) -> list[str]:
+    """
+
+    :param entry_id:
+    :param entry_version_id:
+    :return:
+    """
+    list = []
+    listaComentarios = await commentaryCollection.collection.find(
+        {"entry": entry_id, "entry_version": entry_version_id,"$or": [{"commentaryInReply": None}, {"commentaryInReply": ""}]}
+    ).to_list(length=None)
+    for comentario in listaComentarios:
+        list.append(str(comentario['_id']))
+    return list
