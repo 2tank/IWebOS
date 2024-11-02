@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Body
 import item_logic.version as version_logic
 
+
 router = APIRouter()
 
 
@@ -11,5 +12,19 @@ async def get_versions():
         return versions
     except Exception as e:
         raise HTTPException(status_code=500,  detail=f"Failed to retrieve versions: {str(e)}") 
-    
+
+@router.get("/{id}")
+async def get_version_by_id(id : str):
+    try:
+        version = await version_logic.get_version_by_id(id)
+        return version
+    except Exception as e:
+        raise HTTPException(status_code=500,  detail=f"Failed to retrieve versions: {str(e)}") 
+
+@router.delete("/{id}")
+async def delete_version_by_id(id : str):
+        deleted_version = await version_logic.delete_version_by_id(id)
+        return deleted_version
+
+
 #TODO DELETE and UPDATE, hay que tener cuidado de que en el update no se permita editar el campo entry_id
