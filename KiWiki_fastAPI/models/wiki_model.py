@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import Optional
 from datetime import datetime #Ponemos el as DateType ya que si no entra en conflicto la línea 10 con el date y el Field
 
 class WikiModel(BaseModel):

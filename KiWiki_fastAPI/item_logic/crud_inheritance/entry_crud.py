@@ -27,7 +27,7 @@ class ENTRYCRUD(MONGOCRUD):
         
         return results
 
-    async def create_item(self, data: dict, content: str, description: str) -> dict:
+    async def create_item(self, data: dict, content: str) -> dict:
         """
         Crea una entrada y automáticamente añade una versión inicial con el contenido proporcionado
         """
@@ -37,7 +37,6 @@ class ENTRYCRUD(MONGOCRUD):
             editor = data["creator"],
             editDate = data["creationDate"],
             content = content,
-            description = description,
         )
 
         #Creamos la entrada inicial
@@ -45,6 +44,8 @@ class ENTRYCRUD(MONGOCRUD):
             title = data["title"],
             creator = data["creator"],
             creationDate = data["creationDate"],
+            description = data["description"],
+            tags = data["tags"],
         )
 
         # Insertamos la entrada en la colección y obtenemos su id.

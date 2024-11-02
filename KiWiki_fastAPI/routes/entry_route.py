@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, Query
 import item_logic.entry as entry_logic
 import item_logic.version as version_logic
-from models.entry_schema import entrySchema
+from models.entry_schema import entrySchema, entryType
 from models.version_schema import versionSchema
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 router = APIRouter()
@@ -11,18 +11,25 @@ router = APIRouter()
 #TODO Mejorar códigos de error
 
 @router.post("/")
-async def add_entry(content: str,description: str,entry: entrySchema = Body(...)):
-    await entry_logic.add_entry(entry, content, description)
+async def add_entry(content: str,entry: entrySchema = Body(...)):
+    try:
+        result = await entry_logic.add_entry(entry, content)
+        return result
+    except:
+        raise HTTPException(status_code=500, detail="Upload failed") 
     
 @router.get("/")
 async def get_entries(
-    year: Optional[int] = None,
-    month: Optional[int] = None,
-    day: Optional[int] = None):
+    year: Optional[int] = Query(None),
+    month: Optional[int] = Query(None),
+    day: Optional[int] = Query(None),
+    description: Optional[str] = Query(None),
+    tags: Optional[List[entryType]] = Query(None),
+    ):
     try:
-        filter = None
+        filter = {}
+        #Filtro por Año|Mes|Día
         if year:
-            filter = {}
             if month and day:
                 start_date = datetime(year,month,day)
                 end_date = datetime(year,month,day,23,59,59)
@@ -36,7 +43,15 @@ async def get_entries(
                 start_date = datetime(year,1,1)
                 end_date = datetime(year+1,1,1)
                 
-            filter["creationDate"] = {"$gte": start_date, "$lte": end_date}  
+            filter["creationDate"] = {"$gte": start_date, "$lte": end_date} 
+
+        #Filtramos con expresión regular y la opción case-insensitive
+        if description:
+            filter["description"] = {"$regex": ".*{}.*".format(description), "$options": "i"}
+
+        #Filtro por tags
+        if tags:
+            filter["tags"] = {"$in": tags}
 
         entries = await entry_logic.get_entries(filter)
         return entries
