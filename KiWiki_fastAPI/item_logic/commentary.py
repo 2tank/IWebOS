@@ -22,32 +22,34 @@ def commentaryHelper(commentary) -> dict:
 
 async def add_commentary(commentary):
     """
-
-    :param commentary:
-    :return:
+    Añade el comentario a la base de datos
+    :param commentary: Model de comentario
+    :return: Devuelve el resultado del metodo de MONGOCRUD
     """
     commentary_data = jsonable_encoder(commentary)
-    await commentaryCollection.create_item(commentary_data)
+    result = await commentaryCollection.create_item(commentary_data)
+    return result
 
 async def add_commentary_reply(original_commentary_id, reply):
     """
-
-    :param original_commentary_id:
-    :param reply:
-    :return:
+    Añade el comentario cuando es en respuesta a otro comentario
+    :param original_commentary_id: Es el id del comentario al que esta respondiendo
+    :param reply: Es la respuesta que ha introducido el usuario comentando
+    :return: Devuelve el resultado del metodo de collection
     """
     reply_data = jsonable_encoder(reply)
     reply_data = await commentaryCollection.create_item(reply_data)
-    await commentaryCollection.collection.update_one(
+    result = await commentaryCollection.collection.update_one(
         {"_id": ObjectId(original_commentary_id)},
         {"$push": {"replies": reply_data['_id']}},
     )
+    return result
 
 async def hasResponses(id: str) -> bool:
     """
-
-    :param id:
-    :return:
+    Comprueba si el comentario evaluando tiene respuestas
+    :param id: El id del comentario que queremos comprobar
+    :return: Un valor booleano (True signigica que tiene respuestas)
     """
     comentarioEvaluando = await commentaryCollection.collection.find_one({"_id": ObjectId(id)})
     if comentarioEvaluando:
@@ -57,9 +59,9 @@ async def hasResponses(id: str) -> bool:
 
 async def numberOfResponses(id: str) -> int:
     """
-
-    :param id:
-    :return:
+    Devuelve el numero de respuestes al comentario
+    :param id: El id del comentario que queremos comprobar
+    :return: Un valor numerico entero (numero de respuestas)
     """
     comentarioEvaluando = await commentaryCollection.collection.find_one({"_id": ObjectId(id)})
     if comentarioEvaluando:
@@ -83,19 +85,20 @@ async def getResponses(id: str) -> list[dict]:
 
 async def updateCommentary(id: str, commentary):
     """
-
-    :param id:
-    :param commentary:
-    :return:
+    Actualiza un cometario de forma simple
+    :param id: El id del comentario que queremos actualizar
+    :param commentary: Es el cuerpo del comentario actualizado
+    :return: Devuelve el resultado del metodo heredado de MONGOCRUD
     """
     resultado = await commentaryCollection.update_id(id, commentary)
     return resultado
 
 async def deleteCommentary(id: str):
     """
-
-    :param id:
-    :return:
+    Eliminar un comentario y ademas si es una respuesta elimina la referencia en
+    el comentario al que respondia
+    :param id: El id del comentario que queremos eliminar
+    :return: Devuelve el resultado del metodo que hereda de MONGOCRUD
     """
     comentarioParaEliminar = await commentaryCollection.collection.find_one({"_id": ObjectId(id)})
     if comentarioParaEliminar['commentaryInReply']:
@@ -107,9 +110,9 @@ async def deleteCommentary(id: str):
 
 async def getAllCommentariesFromEntry(entry_id: str) -> list[str]:
     """
-
-    :param entry_id:
-    :return:
+    Obtiene todos los comentarios de una entrada, todos y de todas las versiones
+    :param entry_id: El id de la entrada en la que buscamos
+    :return: Devuelve una lista con los Id de los comentarios
     """
     list = []
     listComentaries = await commentaryCollection.collection.find({"entry": entry_id}).to_list(length=None)
@@ -119,9 +122,10 @@ async def getAllCommentariesFromEntry(entry_id: str) -> list[str]:
 
 async def getMainCommentariesFromEntry(entry_id: str) -> list[str]:
     """
-
-    :param entry_id:
-    :return:
+    Obtiene todos los comentarios principales (que no son respuesta a otro)
+    de una entrada, todos y de todas las versiones
+    :param entry_id: El id de la entrada en la que buscamos
+    :return: Devuelve una lista con los Id de los comentarios
     """
     list = []
     listaComentarios = await commentaryCollection.collection.find(
@@ -133,10 +137,10 @@ async def getMainCommentariesFromEntry(entry_id: str) -> list[str]:
 
 async def getAllCommentariesFromEntrySpecificVersion(entry_id: str, entry_version_id: str) -> list[str]:
     """
-
-    :param entry_id:
-    :param entry_version_id:
-    :return:
+    Obtiene todos los comentarios de una entrada, todos los de una version especifica
+    :param entry_id: El id de la entrada en la que buscamos
+    :param entry_version_id: El id de la version de la entrada en la que buscamos
+    :return: Devuelve una lista con los Id de los comentarios
     """
     list = []
     listComentaries = await commentaryCollection.collection.find(
@@ -148,10 +152,11 @@ async def getAllCommentariesFromEntrySpecificVersion(entry_id: str, entry_versio
 
 async def getMainCommentariesFromEntrySpecificVersion(entry_id: str, entry_version_id: str) -> list[str]:
     """
-
-    :param entry_id:
-    :param entry_version_id:
-    :return:
+    Obtiene todos los comentarios principales (que no son respuesta a otro)
+    de una entrada en una version especifica
+    :param entry_id: El id de la entrada en la que buscamos
+    :param entry_version_id: El id de la version de la entrada en la que buscamos
+    :return: Devuelve una lista con los Id de los comentarios
     """
     list = []
     listaComentarios = await commentaryCollection.collection.find(
