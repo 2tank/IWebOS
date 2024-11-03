@@ -20,7 +20,7 @@ async def add_entry(content: str,entry: entrySchema = Body(...)):
 async def get_entries(
     year: Optional[int] = Query(None, ge=1900, le=datetime.now().year),
     month: Optional[int] = Query(None, ge=1, le=12),
-    day: Optional[int] = Query(None, ge=1, le=12),
+    day: Optional[int] = Query(None, ge=1, le=31),
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
     ):
