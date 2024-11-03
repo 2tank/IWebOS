@@ -29,7 +29,7 @@ async def rollback_version_by_id(id):
     deleted_version = None
 
     if ( actualVersionID == id ) :
-        versions = await crud.get_versions_by_entryid(entry_id)
+        versions = await crud.get_versions_by_entryid(entry_id,reverted=True)
         numVersions = len(versions)
 
         if (numVersions > 1):
@@ -59,10 +59,11 @@ async def delete_version_by_id(id):
 
 # rollback manual (elige que version pasa a ser la actual)
 async def update_actual_version_by_id(entry_id,version_id):
-    versions = await crud.get_versions_by_entryid(entry_id)
+    versions = await crud.get_versions_by_entryid(entry_id,reverted=False)
 
     if any(str(v["_id"]) == version_id for v in versions):
         await entry_crud.update_id(entry_id, {"actual_version": version_id})
+        await crud.update_id(version_id, {"reverted": False})
     else:
         return False
     
