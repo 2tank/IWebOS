@@ -18,7 +18,7 @@ async def get_versions_by_entryid(entry_id):
     versions = await crud.get_versions_by_entryid(entry_id)
     return versions
 
-async def delete_version_by_id(id):
+async def rollback_version_by_id(id):
     version = await crud.get_id(id)
     entry_id = version['entry_id']
 
@@ -40,5 +40,21 @@ async def delete_version_by_id(id):
 
             #actualizar referencia a nueva version actual   
             await entry_crud.update_id(entry_id, {"actual_version": newId})            
+
+    return deleted_version
+
+
+async def delete_version_by_id(id):
+    version = await crud.get_id(id)
+    entry_id = version['entry_id']
+
+    #Entrada referenciada
+    entry = await entry_crud.get_id(entry_id)
+
+    actualVersionID = entry["actual_version"]
+    deleted_version = None
+
+    if ( actualVersionID != id ) : # borra si no es actual
+        deleted_version = await crud.delete_id(id)
 
     return deleted_version
