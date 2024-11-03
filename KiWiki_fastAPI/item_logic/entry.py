@@ -40,3 +40,4 @@ async def get_actualVersion_by_entryid(id):
     versionID = entry["actual_version"]
     version = await version_crud.get_id(versionID)
     return version
+

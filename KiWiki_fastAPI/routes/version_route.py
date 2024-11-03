@@ -31,4 +31,10 @@ async def delete_version_by_id(id : str):
         deleted_version = await version_logic.delete_version_by_id(id)
         return deleted_version
 
+@router.put("/{id}")
+async def rollback_version_by_id(id : str):
+        version = await version_logic.rollback_version_by_id(id)
+        return version
+
+
 #TODO DELETE and UPDATE, hay que tener cuidado de que en el update no se permita editar el campo entry_id

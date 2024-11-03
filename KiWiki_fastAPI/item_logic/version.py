@@ -28,10 +28,7 @@ async def rollback_version_by_id(id):
     actualVersionID = entry["actual_version"]
     deleted_version = None
 
-    if ( actualVersionID != id ) : # borra si no es actual
-        # deleted_version = await crud.delete_id(id) # descomentar si quieres: borrar de la bdd una version antigua
-        deleted_version = None
-    else: # si es actual hace rollback pero no la borra
+    if ( actualVersionID == id ) :
         versions = await crud.get_versions_by_entryid(entry_id)
         numVersions = len(versions)
 
@@ -40,7 +37,7 @@ async def rollback_version_by_id(id):
 
             #actualizar referencia a nueva version actual   
             await entry_crud.update_id(entry_id, {"actual_version": newId})            
-
+            await crud.update_id(version["_id"],{"reverted": True})
     return deleted_version
 
 
@@ -58,3 +55,15 @@ async def delete_version_by_id(id):
         deleted_version = await crud.delete_id(id)
 
     return deleted_version
+
+
+# rollback manual (elige que version pasa a ser la actual)
+async def update_actual_version_by_id(entry_id,version_id):
+    versions = await crud.get_versions_by_entryid(entry_id)
+
+    if any(str(v["_id"]) == version_id for v in versions):
+        await entry_crud.update_id(entry_id, {"actual_version": version_id})
+    else:
+        return False
+    
+    return True

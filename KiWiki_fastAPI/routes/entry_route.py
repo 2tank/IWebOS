@@ -103,3 +103,8 @@ async def get_actual_version_by_entry_id(id: str):
         return version
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"No versions found: {str(e)}")
+    
+@router.put("/{entry_id}/versions/{version_id}")
+async def update_version_by_id(entry_id : str,version_id : str):
+        version = await version_logic.update_actual_version_by_id(entry_id,version_id)
+        return version

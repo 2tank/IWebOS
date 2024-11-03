@@ -5,7 +5,9 @@ class versionSchema(BaseModel):
     editor : str = Field(...)
     editDate: datetime = Field(...)
     content: str = Field(...)
+    reverted: bool = Field(default=False)
     entry_id: str = None
+
  
     model_config = {
         "json_schema_extra" : {
@@ -14,6 +16,7 @@ class versionSchema(BaseModel):
                     "editor": "Editor Prueba",
                     "editDate": "2024-11-02T15:27:29.120Z",
                     "content": "Contenido Prueba",
+                    "reverted": "False",
                     "entry_id": ""
                 }
             ]

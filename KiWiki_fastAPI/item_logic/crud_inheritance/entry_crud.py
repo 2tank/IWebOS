@@ -5,7 +5,6 @@ from models.entry_schema import entrySchema
 import motor.motor_asyncio
 import os
 from dotenv import load_dotenv
-from fastapi.encoders import jsonable_encoder
 
 load_dotenv(dotenv_path='.env')
 
@@ -17,15 +16,6 @@ class ENTRYCRUD(MONGOCRUD):
     def __init__(self):
         super().__init__('Entry')
         self.version_collection = database['Version']
-
-    async def get_by_filter(self,filter: dict):
-        cursor = self.collection.find(filter)
-        results = []
-        async for document in cursor:
-            document['_id'] = str(document['_id'])  # Convertir ObjectId a string
-            results.append(jsonable_encoder(document))
-        
-        return results
 
     async def create_item(self, data: dict, content: str) -> dict:
         """
