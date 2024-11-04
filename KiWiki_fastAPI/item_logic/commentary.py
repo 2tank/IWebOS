@@ -165,3 +165,11 @@ async def getMainCommentariesFromEntrySpecificVersion(entry_id: str, entry_versi
     for comentario in listaComentarios:
         list.append(str(comentario['_id']))
     return list
+
+async def get_entries(filter):
+    entries = []
+    if len(filter) > 0:
+        entries = await commentaryCollection.get_by_filter(filter)
+    else:
+        entries = await commentaryCollection.get_collection()
+    return entries
