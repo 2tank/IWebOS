@@ -9,9 +9,9 @@ from datetime import datetime
 router = APIRouter()
 
 @router.post("/")
-async def add_entry(content: str,entry: entrySchema = Body(...)):
+async def add_entry(entry: entrySchema = Body(...)):
     try:
-        result = await entry_logic.add_entry(entry, content)
+        result = await entry_logic.add_entry(entry)
         return result
     except Exception  as e:
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}") 

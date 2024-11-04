@@ -5,9 +5,9 @@ from item_logic.crud_inheritance.version_crud import VersionCRUD
 crud = ENTRYCRUD()
 version_crud = VersionCRUD()
 
-async def add_entry(entry,content):
+async def add_entry(entry):
     entry_data = jsonable_encoder(entry)
-    result = await crud.create_item(entry_data,content)
+    result = await crud.create_item(entry_data)
     return result
 
 async def get_entries(filter):

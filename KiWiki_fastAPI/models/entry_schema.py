@@ -17,18 +17,17 @@ class entrySchema(BaseModel):
 
     model_config = {
         "json_schema_extra" : {
-            "examples" : [
-                {
-                    "_id": "67264426ae903056cd2d7ac7",
-                    "title": "Entrada Prueba",
-                    "creator": "Creador Prueba",
-                    "creationDate": "2024-11-02T15:23:52.461000",
-                    "description": "Descripcion Prueba",
-                    "tags": [
-                        "POLITICS"
-                    ],
-                    "actual_version": ""
-                }
-            ]
+            "example" : 
+            {
+                "_id": "67264426ae903056cd2d7ac7",
+                "title": "Entrada Prueba",
+                "creator": "Creador Prueba",
+                "creationDate": "2024-11-02T15:23:52.461000",
+                "description": "Descripcion Prueba",
+                "tags": [
+                    "POLITICS"
+                ],
+                "actual_version": ""
+            }
         }
     }

@@ -1,4 +1,5 @@
 from database import MONGOCRUD
+from fastapi.encoders import jsonable_encoder
 from bson import ObjectId
 from models.version_schema import versionSchema
 from models.entry_schema import entrySchema
@@ -17,16 +18,15 @@ class ENTRYCRUD(MONGOCRUD):
         super().__init__('Entry')
         self.version_collection = database['Version']
 
-    async def create_item(self, data: dict, content: str) -> dict:
+    async def create_item(self, data: dict) -> dict:
         """
         Crea una entrada y automáticamente añade una versión inicial con el contenido proporcionado
         """
 
-        #Creamos la versión inicial
+        #Creamos la versión inicial con contenidos vacios
         version = versionSchema(
             editor = data["creator"],
             editDate = data["creationDate"],
-            content = content,
         )
 
         #Creamos la entrada inicial
@@ -78,4 +78,6 @@ class ENTRYCRUD(MONGOCRUD):
         )
 
         # Obtenemos y devolvemos la entrada actualizada.
-        return await super().get_id(entry_id)
+        result = await self.version_collection.find_one({"_id" : ObjectId(version_id)})
+        result["_id"] = str(result["_id"]) 
+        return jsonable_encoder(result)
