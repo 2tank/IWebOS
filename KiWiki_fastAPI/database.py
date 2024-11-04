@@ -3,6 +3,7 @@ import os
 
 from bson import ObjectId
 from dotenv import load_dotenv
+from fastapi.encoders import jsonable_encoder
 
 load_dotenv(dotenv_path='.env')
 
@@ -49,3 +50,12 @@ class MONGOCRUD:
                 {"_id": ObjectId(id)}, {"$set": data}
             )
             return bool(updatedItem)
+
+    async def get_by_filter(self, filter: dict):
+        cursor = self.collection.find(filter)
+        results = []
+        async for document in cursor:
+            document['_id'] = str(document['_id'])  # Convertir ObjectId a string
+            results.append( jsonable_encoder(document))
+
+        return results
