@@ -1,16 +1,23 @@
-Test your FastAPI endpoints
-GET http://127.0.0.1:8000/wiki/
-Accept: application/json
 
-GET http://127.0.0.1:8000/hello/User
-Accept: application/json
+
+# GET http://127.0.0.1:8000/wikis/
+
+
+# GET http://127.0.0.1:8000/wiki/
+# Accept: application/json
+
+# GET http://127.0.0.1:8000/hello/User
+# Accept: application/json
 
 POST http://127.0.0.1:8000/wikis/
 Content-Type: application/json
 
 {
-    "name": "Sulkazzz",
+    "name": "Sulkazzz4",
     "creator": "gay",
-    "description": "Con los dedos de la mano y los dedos de los pies...",
+    "description": "Con los dedos d",
     "date": "2024-01-01T00:00:00"
 }
+
+
+# PATCH http://127.0.0.1:8000/wikis/672796032f8ef805799b3a08/add_entry/5f9f1a8e0a3d0b0012345678
