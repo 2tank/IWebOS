@@ -1,26 +1,9 @@
 from fastapi import FastAPI
+from routes import wiki_route,entry_route,version_route, commentary_route
 
 app = FastAPI()
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
-
-"""
-from fastapi import FastAPI
-from app.routes import router as item_router
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the FastAPI MongoDB app!"}
-
-app.include_router(item_router, tags=["Items"], prefix="/item")
-"""
+app.include_router(entry_route.router, prefix="/entries")
+app.include_router(wiki_route.router, prefix="/wikis")
+app.include_router(version_route.router,prefix="/versions")
+app.include_router(commentary_route.router,prefix="/commentaries")
