@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 from datetime import datetime
+import re
 from typing import List, Optional,  Literal
 
 linkType = Literal['External','Internal']
@@ -11,10 +12,26 @@ class Attachment(BaseModel):
     alt_text: Optional[str] = Field(None,description="Texto alternativo para imágenes")
     file_name: Optional[str] = Field(None, description="Nombre del archivo, solo para archivos que no son imágenes")
 
+    @field_validator('url')
+    def validate_attachment_url(cls, value):
+        try:
+            HttpUrl(value)
+        except ValueError:
+            raise ValueError(f"URL no válida para el adjunto: {value}")
+        return value
+
 class Link(BaseModel):
     type: linkType = Field(...,description="Tipo de enlace external o Internal") 
     url: str = Field(...,description="URL del enlace")
     text: str = Field(...,description="Texto del enlace")
+
+    @field_validator('url')
+    def validate_attachment_url(cls, value):
+        try:
+            HttpUrl(value)
+        except ValueError:
+            raise ValueError(f"URL no válida para el adjunto: {value}")
+        return value
 
 class Location(BaseModel):
     latitude: float = Field(...,description="atitud de la ubicación")
@@ -44,25 +61,25 @@ class versionSchema(BaseModel):
                 "attachments": [
                     {
                         "type": "image",
-                        "url": "https://ruta-a-la-imagen.com/imagen1.jpg",
+                        "url": "https://imagen.com",
                         "caption": "Descripción de la imagen",
                         "alt_text": "Texto alternativo"
                     },
                     {
                         "type": "file",
-                        "url": "https://ruta-al-archivo.com/documento.pdf",
+                        "url": "https://archivo.com",
                         "file_name": "documento.pdf"
                     }
                 ],
                 "links": [
                     {
-                        "type": "internal",
-                        "url": "/otra-entrada-de-la-wiki",
+                        "type": "Internal",
+                        "url": "https://enlaceinterno.com",
                         "text": "Enlace interno"
                     },
                     {
-                        "type": "external",
-                        "url": "https://enlace-externo.com",
+                        "type": "External",
+                        "url": "https://enlaceexterno.com",
                         "text": "Enlace externo"
                     }
                 ],
@@ -74,7 +91,7 @@ class versionSchema(BaseModel):
                         },
                         "description": "Ubicación en Nueva York"
                     }
-                ]
+                ],
             }
         }
     }

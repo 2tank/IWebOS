@@ -10,11 +10,11 @@ router = APIRouter()
 
 @router.post("/")
 async def add_entry(entry: entrySchema = Body(...)):
-    try:
+    #try:
         result = await entry_logic.add_entry(entry)
         return result
-    except Exception  as e:
-        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}") 
+    #except Exception  as e:
+       # raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}") 
     
 @router.get("/")
 async def get_entries(
