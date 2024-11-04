@@ -18,6 +18,16 @@ async def get_versions_by_entryid(entry_id):
     versions = await crud.get_versions_by_entryid(entry_id)
     return versions
 
+async def get_entry_by_version_id(id):
+    version = await crud.get_id(id)
+    entry_id = version['entry_id']
+
+    #Entrada referenciada
+    entry = await entry_crud.get_id(entry_id)
+
+    return entry
+
+
 async def rollback_version_by_id(id):
     version = await crud.get_id(id)
     entry_id = version['entry_id']

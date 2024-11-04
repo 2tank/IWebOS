@@ -30,3 +30,9 @@ async def rollback_version_by_id(id : str):
 async def delete_version_by_id(id : str):
         deleted_version = await version_logic.delete_version_by_id(id)
         return deleted_version
+
+
+@router.get("/{id}")
+async def get_entry_by_version_id(id : str):
+        entry = await version_logic.delete_version_by_id(id)
+        return entry
