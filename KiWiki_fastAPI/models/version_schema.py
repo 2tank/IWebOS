@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 from datetime import datetime
-import re
 from typing import List, Optional,  Literal
 
 linkType = Literal['External','Internal']
