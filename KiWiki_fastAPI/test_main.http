@@ -13,13 +13,22 @@
 # Content-Type: application/json
 
 # {
-#     "name": "Sulkazzz4",
+#     "name": "Sulkazzz7",
 #     "creator": "gay",
 #     "description": "Con los dedos d",
-#     "date": "2024-01-01T00:00:00"
+#     "date": "2024-01-01"
 # }
 
 
 # PATCH http://127.0.0.1:8000/wikis/672796032f8ef805799b3a08/add_entry/5f9f1a8e0a3d0b0012345678
 
-DELETE http://127.0.0.1:8000/wikis/672796032f8ef805799b3a08
+# DELETE http://127.0.0.1:8000/wikis/67294f699a29300d110e2f23
+
+POST http://127.0.0.1:8000/wikis/get_by_date/
+Content-Type: application/json
+
+{
+    "content": "2024-01-01",
+    "condition": "lower"
+    
+}

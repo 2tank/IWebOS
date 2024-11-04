@@ -1,8 +1,10 @@
 """Modules for wiki."""
 from typing import List
+from datetime import datetime
 
 from fastapi.encoders import jsonable_encoder
 from item_logic.crud_inheritance.wiki_crud import WIKICRUD
+
 
 wiki_crud = WIKICRUD()
 
@@ -27,12 +29,12 @@ async def post_wiki(entry) -> dict:
     Returns:
         dict: Devuelve en formato dict el id de la wiki creada.
     """
-    entry_data = jsonable_encoder(entry)
+    entry_data = entry.dict()
     result = await wiki_crud.create_item(entry_data)
     return result
 
 
-async def get_entries_name(content: str) -> List:
+async def get_wiki_name(content: str) -> List:
     """
     Obtiene una lista de entradas de wiki por su nombre.
 
@@ -45,15 +47,15 @@ async def get_entries_name(content: str) -> List:
     Raises:
         ValueError: Si no se encuentran entradas en el wiki.
     """
-    result = await wiki_crud.get_entries_wiki_name(content)
+    result = await wiki_crud.get_name(content, "name")
 
     if not result:
         raise ValueError("No entries found in the wiki")  # Lanza una excepción genérica
 
-    return result["entries"]
+    return result
 
 
-async def get_entries_id(content: str) -> List:
+async def get_wiki_id(content: str) -> List:
     """
     Obtiene una lista de entradas de wiki por su ID.
 
@@ -66,12 +68,12 @@ async def get_entries_id(content: str) -> List:
     Raises:
         ValueError: Si no se encuentran entradas en el wiki.
     """
-    result = await wiki_crud.get_entries_wiki_id(content)
+    result = await wiki_crud.get_id(content)
 
     if not result:
         raise ValueError("No entries found in the wiki")  # Lanza una excepción genérica
 
-    return result["entries"]
+    return result
 
 
 async def add_entries(id_wiki: str, id_entry: str) -> dict:
@@ -101,4 +103,8 @@ async def delete_wiki(id_wiki: str) -> dict:
     """
 
     result = await wiki_crud.delete_id(id_wiki)
+    return result
+
+async def get_wikis_date(content: datetime, condition: str) -> List:
+    result = await wiki_crud.get_wiki_date(content, condition)
     return result
