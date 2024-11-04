@@ -32,6 +32,12 @@ class MONGOCRUD:
         if item:
             item["_id"] = str(item["_id"])
             return item
+        
+    async def get_name(self,name: str, search_field: str) -> dict:
+        item = await self.collection.find_one({search_field: str})
+        if item:
+            item[search_field] = name
+            return item
 
     async def delete_id(self,id: str):
         deleted = False
