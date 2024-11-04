@@ -11,7 +11,7 @@ async def get_wikis():
         return wikis
     except Exception as e:
         print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
-        raise HTTPException(status_code=500, detail="No wikis") 
+        raise HTTPException(status_code=500, detail="No wikis") from e
 
 
 @router.post("/")
@@ -21,8 +21,8 @@ async def post_wiki(entrt:WikiSchema = Body(...)):
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
-        raise HTTPException(status_code=500, detail="No wikis")
-    
+        raise HTTPException(status_code=500, detail="No wikis") from e
+
 
 @router.get("/entries_name")
 async def get_entries(content: str):
@@ -31,7 +31,7 @@ async def get_entries(content: str):
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
-        raise HTTPException(status_code=400, detail="No entries for this wiki")
+        raise HTTPException(status_code=400, detail="No entries for this wiki") from e
 
 
 @router.get("/entries_id")
@@ -41,15 +41,24 @@ async def get_entries_id(content: str):
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
-        raise HTTPException(status_code=400, detail="No entries for this wiki")
-    
+        raise HTTPException(status_code=400, detail="No entries for this wiki") from e
 
-@router.patch("/{id_wiki}/add_entry/{id_entry}")
-async def add_entries(id_wiki: str, id_entry: str):
+
+@router.patch("/{id}/add_entry/{id_entry}")
+async def add_entries(id: str, id_entry: str):
     try:
-        print(id_wiki, id_entry)
-        response = await wiki_logic.add_entries(id_wiki, id_entry)
+        response = await wiki_logic.add_entries(id, id_entry)
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
-        raise HTTPException(status_code=400, detail="Cannot create an entry")
+        raise HTTPException(status_code=400, detail="Cannot create an entry") from e
+
+
+@router.delete("/{id}/")
+async def delete_wiki(id: str) -> bool:
+    try:
+        response = await wiki_logic.delete_wiki(id)
+        return response
+    except Exception as e:
+        print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
+        raise HTTPException(status_code=400, detail="Cannot delete this wiki") from e

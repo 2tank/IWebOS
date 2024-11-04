@@ -11,7 +11,8 @@ class WikiSchema(BaseModel):
     entries: List[str] = Field(default_factory=list, description="Lista de entradas asociadas")
 
     @field_validator('entries', mode='before')
-    def validate_entries(cls, v):
+    @classmethod
+    def validate_entries(cls, v):  # Cambia self por cls
         if v is not None and len(v) > 0:
             raise ValueError('Entries should not be provided on creation and must be empty.')
         return v

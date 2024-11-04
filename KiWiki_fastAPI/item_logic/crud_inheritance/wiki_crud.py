@@ -11,23 +11,23 @@ load_dotenv(dotenv_path='.env')
 
 MONGO_DETAILS = os.getenv("MONGO_URI")
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
-database = client.IWebOS 
+database = client.IWebOS
 
 
 class WIKICRUD(MONGOCRUD):
     def __init__(self):
         super().__init__('Wiki')
 
-    
-    async def get_entries_wiki_id(self, content: str, search_type: str):
-        wiki_entries_id = await super().get_collection(content)
+
+    async def get_entries_wiki_id(self, content: str):
+        wiki_entries_id = await super().get_id(content)
         return wiki_entries_id
-            
-    async def get_entries_wiki_name(content: str):
+
+    async def get_entries_wiki_name(self, content: str):
         wiki_entries_name = await super().get_name(content, "name")
         return wiki_entries_name
-            
-            
+
+
     async def add_entry_wiki(self, id_wiki: str, id_entry: str):
         result = await self.collection.update_one(
         {"_id": ObjectId(id_wiki)},  # Filtro por _id
@@ -37,4 +37,3 @@ class WIKICRUD(MONGOCRUD):
             raise ValueError("No Wiki document found with the provided ID")
 
         return {"message": "Entry ID added to Wiki entries successfully"}
-    
