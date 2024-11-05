@@ -1,5 +1,4 @@
 from database import MONGOCRUD
-from fastapi.encoders import jsonable_encoder
 from bson import ObjectId
 from models.version_schema import versionSchema
 from models.entry_schema import entrySchema
@@ -73,4 +72,4 @@ class ENTRYCRUD(MONGOCRUD):
         # Obtenemos y devolvemos la entrada actualizada.
         result = await self.version_collection.find_one({"_id" : ObjectId(version_id)})
         result["_id"] = str(result["_id"]) 
-        return jsonable_encoder(result)
+        return result
