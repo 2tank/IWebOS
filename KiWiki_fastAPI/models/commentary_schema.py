@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
@@ -7,7 +7,7 @@ class commentary(BaseModel):
     entry: str = Field(...) #El ObjectId de la entrada en la que está comentando
     entry_version: str = Field(...) #El ObjectId de la version de la entrada en la que esta comentando
     content: str = Field(...)
-    date: datetime = Field(...)
+    date: datetime = Field(default_factory=lambda: datetime.now(timezone(timedelta(hours=2)))) #Para que cuando se actualice el campo tome la hora actual, el timedelta sirve para declarar que la zona horaria es CEST (+2)
     entryRating: Optional[int] = Field(None,ge=0,le=10) #La puntuacion que le da el usuario a la entrada del 0 al 10
     commentaryInReply: Optional[str] = None
     replies: Optional[List[str]] = []

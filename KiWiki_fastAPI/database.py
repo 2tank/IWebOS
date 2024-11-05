@@ -57,11 +57,11 @@ class MONGOCRUD:
             )
             return bool(updatedItem)
         
-    async def get_by_filter(self,filter: dict):
-        cursor = self.collection.find(filter)
+    async def get_by_filter(self,filter: dict) -> list[dict]:
+        cursor = await self.collection.find(filter)
         results = []
         async for document in cursor:
             document['_id'] = str(document['_id'])  # Convertir ObjectId a string
-            results.append(jsonable_encoder(document))
+            results.append(document.dict())
         
         return results
