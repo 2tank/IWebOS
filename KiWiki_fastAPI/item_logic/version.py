@@ -6,8 +6,13 @@ from item_logic.crud_inheritance.entry_crud import ENTRYCRUD
 entry_crud = ENTRYCRUD()
 crud = VersionCRUD()
 
-async def get_versions():
-    versions = await crud.get_collection()
+async def get_versions(filter):
+
+    if(len(filter) > 0):
+        versions = await crud.get_by_filter(filter)
+    else:
+        versions = await crud.get_collection()
+
     return versions
 
 async def get_version_by_id(id):
