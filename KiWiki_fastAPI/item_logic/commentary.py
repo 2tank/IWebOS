@@ -1,8 +1,6 @@
 from bson import ObjectId
-from fastapi.encoders import jsonable_encoder
 
 from database import MONGOCRUD
-from models.commentary_schema import commentary
 
 commentaryCollection = MONGOCRUD('Commentary')
 
@@ -26,7 +24,7 @@ async def add_commentary(commentary):
     :param commentary: Model de comentario
     :return: Devuelve el resultado del metodo de MONGOCRUD
     """
-    commentary_data = jsonable_encoder(commentary)
+    commentary_data = commentary.dict()
     result = await commentaryCollection.create_item(commentary_data)
     return result
 
@@ -37,7 +35,7 @@ async def add_commentary_reply(original_commentary_id, reply):
     :param reply: Es la respuesta que ha introducido el usuario comentando
     :return: Devuelve el resultado del metodo de collection
     """
-    reply_data = jsonable_encoder(reply)
+    reply_data = reply.dict()
     reply_data = await commentaryCollection.create_item(reply_data)
     result = await commentaryCollection.collection.update_one(
         {"_id": ObjectId(original_commentary_id)},
@@ -166,7 +164,7 @@ async def getMainCommentariesFromEntrySpecificVersion(entry_id: str, entry_versi
         list.append(str(comentario['_id']))
     return list
 
-async def get_entries(filter):
+async def get_commentaries(filter):
     entries = []
     if len(filter) > 0:
         entries = await commentaryCollection.get_by_filter(filter)

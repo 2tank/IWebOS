@@ -3,10 +3,8 @@ from http.client import HTTPException
 from typing import Optional
 
 from fastapi import APIRouter, Body, Query
-from fastapi.encoders import jsonable_encoder
 
 import item_logic.commentary as commentary_logic
-from item_logic.commentary import updateCommentary
 from models.commentary_schema import commentary
 
 router = APIRouter()
@@ -123,14 +121,14 @@ async def get_commentaries(
                 filter["entry_version"] = entry_version_id
         if only_main_commentaries:
             filter["commentaryInReply"] = None
-        commentaries = await commentary_logic.get_entries(filter)
+        commentaries = await commentary_logic.get_commentaries(filter)
         if sort_by_newest:
             commentaries.sort(key=extract_date, reverse=True)
         elif sort_by_oldest:
             commentaries.sort(key=extract_date)
         return commentaries
     except:
-        raise HTTPException(status_code=500, detail="No entries")
+        raise HTTPException(status_code=500, detail="No commentaries")
 
 @router.get("/{id}/replies")
 async def get_replies(id: str):
