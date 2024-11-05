@@ -6,8 +6,7 @@ crud = ENTRYCRUD()
 version_crud = VersionCRUD()
 
 async def add_entry(entry):
-    entry_data = jsonable_encoder(entry)
-    result = await crud.create_item(entry_data)
+    result = await crud.create_item(entry)
     return result
 
 async def get_entries(filter):

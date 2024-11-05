@@ -18,28 +18,21 @@ class ENTRYCRUD(MONGOCRUD):
         super().__init__('Entry')
         self.version_collection = database['Version']
 
-    async def create_item(self, data: dict) -> dict:
+    async def create_item(self, data: entrySchema) -> dict:
         """
         Crea una entrada y automáticamente añade una versión inicial con el contenido proporcionado
         """
 
+        data_dict = data.model_dump()
+        
         #Creamos la versión inicial con contenidos vacios
         version = versionSchema(
-            editor = data["creator"],
-            editDate = data["creationDate"],
-        )
-
-        #Creamos la entrada inicial
-        entry = entrySchema(
-            title = data["title"],
-            creator = data["creator"],
-            creationDate = data["creationDate"],
-            description = data["description"],
-            tags = data["tags"],
+            editor = data_dict["creator"],
+            editDate = data_dict["creationDate"],
         )
 
         # Insertamos la entrada en la colección y obtenemos su id.
-        result = await self.collection.insert_one(entry.model_dump())
+        result = await self.collection.insert_one(data_dict)
         entry_id = result.inserted_id
 
         # Actualizamos el campo entry_id de versión e insertamos version en la colección y obtenemos el id nuevamente
