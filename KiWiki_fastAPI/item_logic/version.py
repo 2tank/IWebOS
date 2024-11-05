@@ -45,8 +45,8 @@ async def rollback_version_by_id(id):
         if (numVersions > 1):
             newId = versions[1]["_id"]
 
-            #actualizar referencia a nueva version actual   
-            await entry_crud.update_id(entry_id, {"actual_version": newId})            
+            #actualizar referencia a nueva version actual
+            await entry_crud.update_id(entry_id, {"actual_version": newId})
             await crud.update_id(version["_id"],{"reverted": True})
     return deleted_version
 
@@ -76,5 +76,5 @@ async def update_actual_version_by_id(entry_id,version_id):
         await crud.update_id(version_id, {"reverted": False})
     else:
         return False
-    
+
     return True
