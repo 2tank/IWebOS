@@ -33,7 +33,7 @@ class Link(BaseModel):
         return value
 
 class Location(BaseModel):
-    latitude: float = Field(...,description="atitud de la ubicación")
+    latitude: float = Field(...,description="Latitud de la ubicación")
     longitude: float = Field(...,description="Longitud de la ubicación")
 
 class Map(BaseModel):
