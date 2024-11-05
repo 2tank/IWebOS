@@ -1,6 +1,4 @@
 from database import MONGOCRUD
-from fastapi.encoders import jsonable_encoder
-
 
 class VersionCRUD(MONGOCRUD):
 
