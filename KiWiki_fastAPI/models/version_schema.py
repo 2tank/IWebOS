@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, HttpUrl, field_validator
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import List, Optional,  Literal
 
 linkType = Literal['External','Internal']
@@ -42,7 +42,7 @@ class Map(BaseModel):
 
 class versionSchema(BaseModel):
     editor : str = Field(..., description="Editor de esta versión")
-    editDate: datetime = Field(..., description="Fecha de la edición")
+    editDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))), description="Fecha de la edición")
     content: Optional[str] = Field(None, description="Contenido HTML de la entrada")
     attachments: List[Attachment] = Field(default_factory=list, description="Lista de archivos adjuntos")
     links: List[Link] = Field(default_factory=list,description="Lista de enlaces")

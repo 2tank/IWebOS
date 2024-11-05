@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import List, Literal
 
 #No tengo claro si dejar los tags como literales internos o pasarlo a una tabla de la bbdd
@@ -10,7 +10,7 @@ entryType = Literal['POLITICS', 'SPORTS', 'CINEMA']  # A expandir...
 class entrySchema(BaseModel):
     title: str = Field(..., max_length=20, description="Titulo de la Entrada")
     creator : str = Field(..., max_length=20, description="Creador de la Entrada")
-    creationDate: datetime = Field(..., description="Fecha creación de la Entrada")
+    creationDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))) ,description="Fecha creación de la Entrada")
     description: str = Field(...,max_length=50, description="Descripción de la entrada")
     tags: List[entryType] = Field(default_factory=list,description="Tags asociados a la entrada")
     actual_version: str = None
