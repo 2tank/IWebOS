@@ -62,6 +62,6 @@ class MONGOCRUD:
         results = []
         async for document in cursor:
             document['_id'] = str(document['_id'])  # Convertir ObjectId a string
-            results.append(document.dict())
+            results.append(document.model_dump())
         
         return results

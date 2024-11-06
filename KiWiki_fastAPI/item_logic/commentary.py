@@ -24,7 +24,7 @@ async def add_commentary(commentary):
     :param commentary: Model de comentario
     :return: Devuelve el resultado del metodo de MONGOCRUD
     """
-    commentary_data = commentary.dict()
+    commentary_data = commentary.model_dump()
     result = await commentaryCollection.create_item(commentary_data)
     return result
 
@@ -35,7 +35,7 @@ async def add_commentary_reply(original_commentary_id, reply):
     :param reply: Es la respuesta que ha introducido el usuario comentando
     :return: Devuelve el resultado del metodo de collection
     """
-    reply_data = reply.dict()
+    reply_data = reply.model_dump()
     reply_data = await commentaryCollection.create_item(reply_data)
     result = await commentaryCollection.collection.update_one(
         {"_id": ObjectId(original_commentary_id)},
