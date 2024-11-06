@@ -58,7 +58,7 @@ class MONGOCRUD:
             return bool(updatedItem)
         
     async def get_by_filter(self,filter: dict) -> list[dict]:
-        cursor = await self.collection.find(filter)
+        cursor = self.collection.find(filter)
         results = []
         async for document in cursor:
             document['_id'] = str(document['_id'])  # Convertir ObjectId a string
