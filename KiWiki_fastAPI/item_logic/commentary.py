@@ -171,3 +171,25 @@ async def get_commentaries(filter):
     else:
         entries = await commentaryCollection.get_collection()
     return entries
+
+def extract_date(commentary):
+    try:
+        fullDate = str(commentary['date'])
+        dateSplitBase = fullDate.split('T')
+        yearMonthDay = dateSplitBase[0].split('-')
+        dateSplitRest = dateSplitBase[1].split('.')
+        hourMinuteSecond = dateSplitRest[0].split(':')
+
+        # Crear el valor único cronológicamente ordenado
+        unique_value = (
+            f"{int(yearMonthDay[0]):04}"  # Año (4 dígitos)
+            f"{int(yearMonthDay[1]):02}"  # Mes (2 dígitos)
+            f"{int(yearMonthDay[2]):02}"  # Día (2 dígitos)
+            f"{int(hourMinuteSecond[0]):02}"  # Hora (2 dígitos)
+            f"{int(hourMinuteSecond[1]):02}"  # Minuto (2 dígitos)
+            f"{int(hourMinuteSecond[2]):02}"  # Segundo (2 dígitos)
+        )
+
+        return int(unique_value)  # Convertir a entero para mantener orden cronológico
+    except KeyError:
+        return 0

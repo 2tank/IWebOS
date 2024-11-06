@@ -80,28 +80,6 @@ async def get_main_commentaries_in_entry_specific_version(id_entrada: str, id_ve
 """
 
 
-def extract_date(commentary):
-    try:
-        fullDate = commentary['date']
-        dateSplitBase = fullDate.split('T')
-        yearMonthDay = dateSplitBase[0].split('-')
-        dateSplitRest = dateSplitBase[1].split('.')
-        hourMinuteSecond = dateSplitRest[0].split(':')
-
-        # Crear el valor único cronológicamente ordenado
-        unique_value = (
-            f"{int(yearMonthDay[0]):04}"  # Año (4 dígitos)
-            f"{int(yearMonthDay[1]):02}"  # Mes (2 dígitos)
-            f"{int(yearMonthDay[2]):02}"  # Día (2 dígitos)
-            f"{int(hourMinuteSecond[0]):02}"  # Hora (2 dígitos)
-            f"{int(hourMinuteSecond[1]):02}"  # Minuto (2 dígitos)
-            f"{int(hourMinuteSecond[2]):02}"  # Segundo (2 dígitos)
-        )
-
-        return int(unique_value)  # Convertir a entero para mantener orden cronológico
-    except KeyError:
-        return 0
-
 @router.get("/")
 async def get_commentaries(
         user_id: Optional[str] = Query(None),
@@ -123,9 +101,9 @@ async def get_commentaries(
             filter["commentaryInReply"] = None
         commentaries = await commentary_logic.get_commentaries(filter)
         if sort_by_newest:
-            commentaries.sort(key=extract_date, reverse=True)
+            commentaries.sort(key=commentary_logic.extract_date, reverse=True)
         elif sort_by_oldest:
-            commentaries.sort(key=extract_date)
+            commentaries.sort(key=commentary_logic.extract_date)
         return commentaries
     except:
         raise HTTPException(status_code=500, detail="No commentaries")
