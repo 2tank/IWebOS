@@ -31,6 +31,16 @@ class WIKICRUD(MONGOCRUD):
 
         return {"message": "Entry ID added to Wiki entries successfully"}
 
+    async def delete_entry_wiki(self, id_wiki: str, id_entry: str):
+        result = await self.collection.update_one(
+            {"_id": ObjectId(id_wiki)},
+            {"$pull": {"entries": id_entry}}
+        )
+        if result.modified_count == 0:
+            raise ValueError("No Wiki document found with the provided ID")
+
+        return {"message": "Entry ID deleted to Wiki entries successfully"}
+
 
     async def get_wikis_same_date(self, wiki_date: datetime):
         items = []

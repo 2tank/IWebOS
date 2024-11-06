@@ -56,6 +56,15 @@ async def add_entries(id: str, id_entry: str):
         print(f"Se produjo un error: {e}")  # Imprime el error para el diagnóstico
         raise HTTPException(status_code=400, detail="Cannot create an entry") from e
 
+@router.delete("/{id}/delete_entry/{id_entry}")
+async def delete_entries(id: str, id_entry: str):
+    try:
+        response = await wiki_logic.delete_entries(id, id_entry)
+        return response
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="Cannot remove an entry") from e
+
 
 @router.delete("/{id}/")
 async def delete_wiki(id: str) -> bool:

@@ -90,6 +90,10 @@ async def add_entries(id_wiki: str, id_entry: str) -> dict:
     result = await wiki_crud.add_entry_wiki(id_wiki, id_entry)
     return result
 
+async def delete_entries(id_wiki: str, id_entry: str) -> dict:
+    result = await wiki_crud.delete_entry_wiki(id_wiki, id_entry)
+    return result
+
 
 async def delete_wiki(id_wiki: str) -> dict:
     """"

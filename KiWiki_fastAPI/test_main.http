@@ -24,11 +24,13 @@
 
 # DELETE http://127.0.0.1:8000/wikis/67294f699a29300d110e2f23
 
-POST http://127.0.0.1:8000/wikis/get_by_date/
-Content-Type: application/json
+# POST http://127.0.0.1:8000/wikis/get_by_date/
+# Content-Type: application/json
 
-{
-    "content": "2024-01-01",
-    "condition": "lower"
+# {
+#    "content": "2024-01-01",
+#    "condition": "lower"
     
-}
+# }
+
+DELETE http://localhost:8000/wikis/6727955189519a038e9c7827/delete_entry/5f9f1a8e0a3d0b0012345678
