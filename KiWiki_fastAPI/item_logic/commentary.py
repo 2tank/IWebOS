@@ -175,7 +175,7 @@ async def get_commentaries(filter):
 def extract_date(commentary):
     try:
         fullDate = str(commentary['date'])
-        dateSplitBase = fullDate.split('T')
+        dateSplitBase = fullDate.split(' ')
         yearMonthDay = dateSplitBase[0].split('-')
         dateSplitRest = dateSplitBase[1].split('.')
         hourMinuteSecond = dateSplitRest[0].split(':')
