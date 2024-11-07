@@ -1,13 +1,14 @@
-from fastapi import APIRouter, HTTPException, Body
-from bson import ObjectId
+from typing import Optional
+
+from fastapi import APIRouter, HTTPException, Body, Query
 import item_logic.notification as notification_logic
-from models.notification_schema import notificationSchema
+from models.notification_schema import NotificationSchema, NotificationType
 
 router = APIRouter()
 
 # --- BASIC CRUD OPERATIONS -----------------------------------------------
 @router.post("/")
-async def add_notification(notification: notificationSchema = Body(...)):
+async def add_notification(notification: NotificationSchema = Body(...)):
     try:
         await notification_logic.add_notification(notification)
     except:
@@ -15,9 +16,33 @@ async def add_notification(notification: notificationSchema = Body(...)):
 
 
 @router.get("/")
-async def get_notifications():
+async def get_notifications(
+    user : Optional[str] = Query(None),
+    notif_type: Optional[NotificationType] = Query(None),
+    approved: Optional[bool] = Query(None),
+    read: Optional[bool] = Query(None)
+):
     try:
-        notifications = await notification_logic.get_notifications()
+        notifications_filter = {}
+
+        # Filtar por usuario (nombre por ahora)
+        if user is not None:
+            notifications_filter["user"] = user
+
+        # Filtrar por tipo de notificación, si notifType fue proporcionado
+        if notif_type is not None:
+            notifications_filter["notifType"] = notif_type
+
+        # Filtrar por estado de aprobación, si approved fue proporcionado
+        if approved is not None:
+            notifications_filter["approved"] = approved
+
+        # Filtrar por estado de lectura, si read fue proporcionado
+        if read is not None:
+            notifications_filter["read"] = read
+
+
+        notifications = await notification_logic.get_notifications(notifications_filter)
         return notifications
     except:
         raise HTTPException(status_code=500, detail="No notifications")
@@ -42,37 +67,9 @@ async def delete_notification(id: str):
 
 
 @router.put("/{id}")
-async def update_notification(id: str, req: notificationSchema = Body(...)):
+async def update_notification(id: str, req: NotificationSchema = Body(...)):
     try:
         updated_notification = await notification_logic.update_notification(id, req)
         return updated_notification
     except:
         raise HTTPException(status_code=500, detail="Could not update given notification")
-
-# --- ADDITIONAL OPERATIONS FOR NOTIFICATION ------------------------------
-
-# Conseguir todas las notificaciones pertenecientes a un usuario
-@router.get("/user/{user_id}", response_model=list) # La respuesta de la ruta tiene que ser de tipo lista
-async def get_notifications_by_user(user_id: str):
-    try:
-        notifications = await notification_logic.get_notifications_by_user(user_id)
-        return notifications
-    except:
-        raise HTTPException(status_code=404, detail="No notifications for given user.")
-
-
-# Acceptar la petición de la notificación
-async def approve_notification(id: str):
-    try:
-        updated_notification = await notification_logic.approve_notification(id)
-        return updated_notification
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Notificación no encontrada.")
-
-# Marcar como leida la notificación
-async def mark_notification_as_read(id: str):
-    try:
-        updated_notification = await notification_logic.mark_notification_as_read(id)
-        return updated_notification
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Notificación no encontrada.")
