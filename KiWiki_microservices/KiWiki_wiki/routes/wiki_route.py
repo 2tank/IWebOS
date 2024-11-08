@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from fastapi import APIRouter, HTTPException, Body
 import item_logic.wiki as wiki_logic
 from models.wiki_schema import WikiSchema, WikiSchemaPartial
@@ -40,15 +40,15 @@ async def post_wiki(entry: WikiSchema = Body(...)):
         HTTPException: If an error occurs during creation, returns a 500 status.
     """
     try:
-        response = await wiki_logic.post_wiki(entry)
+        response = await wiki_logic.post_wiki(entry.model_dump())
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=500, detail="No wikis") from e
 
 
-@router.get("/wiki_name")
-async def get_wiki_name(content: str):
+@router.get("/name/{wiki_name}")
+async def get_wiki_name(wiki_name: str):
     """
     Retrieve a wiki by its name.
 
@@ -62,15 +62,15 @@ async def get_wiki_name(content: str):
         HTTPException: If no matching wiki is found, returns a 400 status.
     """
     try:
-        response = await wiki_logic.get_wiki_name(content)
+        response = await wiki_logic.get_wiki_name(wiki_name)
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="No wiki for this name") from e
 
 
-@router.get("/wiki_id")
-async def get_wiki_id(content: str):
+@router.get("/id/{wiki_id}")
+async def get_wiki_id(wiki_id: str):
     """
     Retrieve a wiki by its ID.
 
@@ -84,15 +84,15 @@ async def get_wiki_id(content: str):
         HTTPException: If no matching wiki is found, returns a 400 status.
     """
     try:
-        response = await wiki_logic.get_wiki_id(content)
+        response = await wiki_logic.get_wiki_id(wiki_id)
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="No wiki for this id") from e
 
 
-@router.patch("/{id}/add_entry/{id_entry}")
-async def add_entries(wiki_id: str, id_entry: str) -> str:
+@router.patch("/{wiki_id}/add_entry/{id_entry}")
+async def add_entries(wiki_id: str, id_entry: str) -> dict:
     """
     Add an entry to a wiki by ID.
 
@@ -114,8 +114,8 @@ async def add_entries(wiki_id: str, id_entry: str) -> str:
         raise HTTPException(status_code=400, detail="Cannot create an entry") from e
 
 
-@router.delete("/{id}/delete_entry/{id_entry}")
-async def delete_entries(wiki_id: str, id_entry: str) -> str:
+@router.delete("/{id_wiki}/delete_entry/{id_entry}")
+async def delete_entries(id_wiki: str, id_entry: str) -> dict:
     """
     Remove an entry from a wiki by ID.
 
@@ -130,14 +130,14 @@ async def delete_entries(wiki_id: str, id_entry: str) -> str:
         HTTPException: If the entry cannot be removed, returns a 400 status.
     """
     try:
-        response = await wiki_logic.delete_entries(wiki_id, id_entry)
+        response = await wiki_logic.delete_entries(id_wiki, id_entry)
         return response
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot remove an entry") from e
 
 
-@router.delete("/{id}/")
+@router.delete("/{wiki_id}/")
 async def delete_wiki(wiki_id: str) -> bool:
     """
     Delete a wiki by ID.
@@ -160,7 +160,7 @@ async def delete_wiki(wiki_id: str) -> bool:
 
 
 @router.post("/get_by_date/")
-async def get_wikis_date(content: str = Body(...), condition: str = Body(...)) -> List[dict]:
+async def get_wikis_date(data: Dict = Body(...)) -> List[dict]:
     """
     Retrieve wikis based on a specified creation date and condition.
 
@@ -175,15 +175,16 @@ async def get_wikis_date(content: str = Body(...), condition: str = Body(...)) -
         HTTPException: If no matching wikis are found, returns a 400 status.
     """
     try:
-        wiki_date = datetime.fromisoformat(content)
-        wikis = await wiki_logic.get_wikis_date(wiki_date, condition)
+
+        wiki_date = datetime.fromisoformat(data["content"])
+        wikis = await wiki_logic.get_wikis_date(wiki_date, data["condition"])
         return wikis
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot obtain by current date") from e
 
 
-@router.get("/get_by_author/{name_author}")
+@router.get("/creator/{name_author}")
 async def get_wikis_author(name_author: str):
 
     try:

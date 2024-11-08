@@ -28,8 +28,7 @@ async def post_wiki(entry) -> dict:
     Returns:
         dict: Devuelve en formato dict el id de la wiki creada.
     """
-    entry_data = entry.dict()
-    result = await wiki_crud.create_item(entry_data)
+    result = await wiki_crud.create_item(entry)
     return result
 
 
@@ -46,6 +45,7 @@ async def get_wiki_name(content: str) -> List:
     Raises:
         ValueError: Si no se encuentran entradas en el wiki.
     """
+    print("HOLA")
     result = await wiki_crud.get_name(content, "name")
 
     if not result:

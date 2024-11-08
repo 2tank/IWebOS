@@ -29,15 +29,20 @@ class MONGOCRUD:
     async def get_id(self,id: str) -> dict:
         item = await self.collection.find_one({"_id": ObjectId(id)})
         if item:
+            item["_id"] = id
+            return item
+
+        return {}
+
+    async def get_name(self, name: str, search_field: str) -> dict:
+        item = await self.collection.find_one({search_field: name})
+        if item:
             item["_id"] = str(item["_id"])
             return item
+        
+        return {}  # Devuelve un diccionario vacío si no se encuentra el item
 
-    async def get_name(self,name: str, search_field: str) -> dict:
-        item = await self.collection.find_one({search_field: str})
-        if item:
-            item[search_field] = name
-            return item
-
+        
     async def delete_id(self,id: str) -> bool:
         deleted = False
         item = await self.collection.find_one({"_id": ObjectId(id)})
