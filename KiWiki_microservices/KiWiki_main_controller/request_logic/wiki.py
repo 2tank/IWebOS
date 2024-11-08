@@ -18,7 +18,7 @@ async def get_wikis() -> List:
         List: Lista de documentos de wikis en formato JSON.
     """
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{wiki_url}/")
+        response = await client.get("f{wiki_url}/")
         data = response.json()
         return data
 
