@@ -1,6 +1,6 @@
 config = {
-    "wiki_url": "https://127.0.0.1/xxxx/wiki",
-    "entry_url": "https://api.mientrada.com",
-    "commentary_url": "https://api.miversion.com",
-    "notification_url": "https://api.minotificacion.com"
+    "wiki_url": "http://127.0.0.1:8001/wikis",
+    "entry_url": "http://api.mientrada.com",
+    "commentary_url": "http://api.miversion.com",
+    "notification_url": "http://api.minotificacion.com"
 }
