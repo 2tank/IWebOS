@@ -33,4 +33,16 @@
     
 # }
 
-DELETE http://localhost:8000/wikis/6727955189519a038e9c7827/delete_entry/5f9f1a8e0a3d0b0012345678
+# DELETE http://localhost:8000/wikis/6727955189519a038e9c7827/delete_entry/5f9f1a8e0a3d0b0012345678
+
+PATCH  http://localhost:8000/wikis/6727955189519a038e9c7827/modify_wiki
+Content-Type: application/json
+
+{
+   "name": "gorritasssss",
+   "description": "prueba4"
+}
+
+# GET http://localhost:8000/wikis/get_by_author/gay
+
+

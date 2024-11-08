@@ -2,7 +2,6 @@
 from typing import List
 from datetime import datetime
 
-from fastapi.encoders import jsonable_encoder
 from item_logic.crud_inheritance.wiki_crud import WIKICRUD
 
 
@@ -91,6 +90,16 @@ async def add_entries(id_wiki: str, id_entry: str) -> dict:
     return result
 
 async def delete_entries(id_wiki: str, id_entry: str) -> dict:
+    """
+    Elimina una entrada de una wiki existente.
+
+    Args:
+        id_wiki (str): El ID de la wiki de la cual se eliminará la entrada.
+        id_entry (str): El ID de la entrada que se eliminará.
+
+    Returns:
+        dict: Mensaje de éxito o el resultado de la operación.
+    """
     result = await wiki_crud.delete_entry_wiki(id_wiki, id_entry)
     return result
 
@@ -111,4 +120,15 @@ async def delete_wiki(id_wiki: str) -> dict:
 
 async def get_wikis_date(content: datetime, condition: str) -> List:
     result = await wiki_crud.get_wiki_date(content, condition)
+    return result
+
+
+async def get_wikis_author(name_author: str) -> List:
+    result = await wiki_crud.get_wikis_author(name_author)
+    return result
+
+
+
+async def modify_wiki(id_wiki: str, wiki_data_modify: dict) -> dict:
+    result = await wiki_crud.modify_wiki(id_wiki, wiki_data_modify)
     return result
