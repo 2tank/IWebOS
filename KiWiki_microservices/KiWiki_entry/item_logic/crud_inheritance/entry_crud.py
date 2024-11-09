@@ -2,6 +2,7 @@ from database import MONGOCRUD
 from bson import ObjectId
 from models.version_schema import versionSchema
 from models.entry_schema import entrySchema
+from typing import Optional, List, Dict
 import motor.motor_asyncio
 import os
 from dotenv import load_dotenv
@@ -50,15 +51,15 @@ class ENTRYCRUD(MONGOCRUD):
         # Obtenemos y devolvemos la entrada creada.
         return await super().get_id(entry_id)
 
-    async def add_version_to_entry(self, entry_id: str, version_data: versionSchema) -> dict:
+    async def add_version_to_entry(self, entry_id: str, version_data: Dict) -> dict:
         """
         Añade una nueva versión a una entrada existente.
         """
-        version = version_data.model_dump()
-        version["entry_id"] = str(entry_id)
+        
+        version_data["entry_id"] = str(entry_id)
 
         # Insertamos la nueva versión en la colección y obtenemos el id
-        result = await self.version_collection.insert_one(version)
+        result = await self.version_collection.insert_one(version_data)
         version_id = result.inserted_id
 
         # Insertamos el id de la nueva versión en la lista de versiones de la entrada

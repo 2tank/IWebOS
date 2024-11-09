@@ -3,7 +3,7 @@ import item_logic.entry as entry_logic
 import item_logic.version as version_logic
 from models.entry_schema import entrySchema, entryType
 from models.version_schema import versionSchema
-from typing import Optional, List
+from typing import Optional, List, Dict
 from datetime import datetime
 
 router = APIRouter()
@@ -88,7 +88,7 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
         raise HTTPException(status_code=500, detail="Failed to update entry")
 
 @router.post("/{id}/versions/")
-async def create_entry_version(id: str,version: versionSchema):
+async def create_entry_version(id: str,version: Dict): #Lo suyo es usar versionSchema
     try:
         updated_entry = await entry_logic.create_version(id,version)
         return updated_entry

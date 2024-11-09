@@ -91,6 +91,7 @@ class versionSchema(BaseModel):
                         "description": "Ubicación en Nueva York"
                     }
                 ],
+                "reverted": "False",
             }
         }
     }
