@@ -12,7 +12,7 @@ entry_url = config["entry_url"]
 router = APIRouter()
 
 @router.post("/")
-async def add_entry(entry: Dict = Body(...)):
+async def add_entry(entry: entrySchema = Body(...)):
     """
     Crea una nueva entrada.
 
@@ -28,7 +28,7 @@ async def add_entry(entry: Dict = Body(...)):
     try:
         print(entry)
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{entry_url}/", json=entry)
+            response = await client.post(f"{entry_url}/", json=entry.model_dump())
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
@@ -156,7 +156,7 @@ async def update_entry(id: str, req: Dict = Body(...)):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.put(f"{entry_url}/{id}", json=req)
+            response = await client.put(f"{entry_url}/{id}", json=req.model_dump())
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:

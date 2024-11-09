@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer, field_validator
 from datetime import datetime, timezone, timedelta
 from typing import List, Literal
 
@@ -31,3 +31,14 @@ class entrySchema(BaseModel):
             }
         }
     }
+
+    @field_serializer("creationDate", mode="plain")
+    def serialize_date(self, value: datetime) -> str:
+        return value.isoformat()
+
+    @field_serializer("tags", mode="plain")
+    def serialize_tags(self, value: List[entryType]) -> List[str]:
+        """
+        Serializa el campo tags a una lista de cadenas
+        """
+        return [tag for tag in value]  # Convierte cada tag a su valor en cadena
