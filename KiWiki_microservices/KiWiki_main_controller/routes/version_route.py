@@ -54,7 +54,7 @@ async def get_versions(
             filter_params["content"] = {"$regex": f".*{content_word}.*", "$options": "i"}
 
         async with httpx.AsyncClient() as client:
-            response = await client.get(version_url, params=filter_params)
+            response = await client.get(f"{version_url}/", params=filter_params)
             response.raise_for_status()
             return response.json()
 
