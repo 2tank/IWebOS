@@ -7,6 +7,8 @@ import httpx
 router = APIRouter()
 version_url = config["version_url"]
 
+# check
+
 @router.get("/")
 async def get_versions(
     year: Optional[int] = Query(None),
@@ -62,6 +64,7 @@ async def get_versions(
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve versions")
 
+# check
 
 @router.get("/{id}")
 async def get_version_by_id(id: str):
@@ -82,6 +85,8 @@ async def get_version_by_id(id: str):
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve version by ID")
+
+
 
 
 @router.put("/{id}")
@@ -119,12 +124,15 @@ async def delete_version_by_id(id: str):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.delete(f"{version_url}/{id}")
+
             response.raise_for_status()
             return response.json()
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete version by ID")
 
+
+# check
 
 @router.get("/{id}/entry")
 async def get_entry_by_version_id(id: str):
@@ -139,7 +147,7 @@ async def get_entry_by_version_id(id: str):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(f"{version_url}/{id}/entry")
+            response = await client.get(f"{version_url}/{id}")
             response.raise_for_status()
             return response.json()
     except Exception as e:
