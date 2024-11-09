@@ -1,7 +1,6 @@
 from typing import List, Any, Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, field_validator
-
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 
 class WikiSchema(BaseModel):
@@ -37,6 +36,11 @@ class WikiSchema(BaseModel):
         if v is not None and len(v) > 0:
             raise ValueError('Entries should not be provided on creation and must be empty.')
         return v
+
+
+    @field_serializer("date", mode="plain")
+    def serialize_date(self, value: datetime) -> str:
+        return value.isoformat()
 
 
 class WikiSchemaPartial(BaseModel):

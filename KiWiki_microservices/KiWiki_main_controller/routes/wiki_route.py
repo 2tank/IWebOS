@@ -1,8 +1,7 @@
 from typing import List, Dict
 from fastapi import APIRouter, HTTPException, Body
-# from models.wiki_schema import WikiSchema, WikiSchemaPartial
+from models.wiki_schema import WikiSchema, WikiSchemaPartial
 import httpx
-from datetime import datetime
 from urls import config
 
 wiki_url = config["wiki_url"]
@@ -28,10 +27,10 @@ async def get_wikis():
 
 
 @router.post("/")
-async def post_wiki(entry: Dict = Body(...)):
+async def post_wiki(entry: WikiSchema = Body(...)):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{wiki_url}/", json=entry)
+            response = await client.post(f"{wiki_url}/", json=entry.model_dump())
             response.raise_for_status()
             return response.json()
         
@@ -118,10 +117,10 @@ async def delete_wiki(wiki_id: str) -> bool:
 
 
 @router.post("/get_by_date/")
-async def get_wikis_date(request: Dict = Body(...)) -> List[dict]:
+async def get_wikis_date(request: WikiSchema = Body(...)) -> List[dict]:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{wiki_url}/get_by_date/", json=request)
+            response = await client.post(f"{wiki_url}/get_by_date/", json=request.model_dump())
             response.raise_for_status()
             return response.json()
         
@@ -136,10 +135,10 @@ async def get_wikis_date(request: Dict = Body(...)) -> List[dict]:
 
 
 @router.patch("/{id_wiki}/modify_wiki")
-async def modify_wiki(id_wiki: str, wiki_data: Dict = Body(...)) -> dict:
+async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) -> dict:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.patch(f"{wiki_url}/{id_wiki}/modify_wiki", json=wiki_data)
+            response = await client.patch(f"{wiki_url}/{id_wiki}/modify_wiki", json=wiki_data.model_dump())
             response.raise_for_status()
             return response.json()
         
