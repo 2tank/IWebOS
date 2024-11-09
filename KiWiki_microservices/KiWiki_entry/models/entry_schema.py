@@ -13,11 +13,12 @@ class entrySchema(BaseModel):
     creationDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))) ,description="Fecha creación de la Entrada")
     description: str = Field(...,max_length=50, description="Descripción de la entrada")
     tags: List[entryType] = Field(default_factory=list,description="Tags asociados a la entrada")
+    wiki: str = Field(..., description="Wiki asociada a la entrada")
     actual_version: str = None
 
     model_config = {
         "json_schema_extra" : {
-            "example" : 
+            "example" :
             {
                 "_id": "67264426ae903056cd2d7ac7",
                 "title": "Entrada Prueba",
@@ -27,6 +28,7 @@ class entrySchema(BaseModel):
                 "tags": [
                     "POLITICS"
                 ],
+                "wiki": "id_Wiki Prueba",
                 "actual_version": ""
             }
         }
