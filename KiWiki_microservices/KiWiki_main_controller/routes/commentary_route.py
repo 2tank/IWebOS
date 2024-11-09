@@ -3,6 +3,8 @@ from fastapi import APIRouter, HTTPException, Body, Query
 # from models.wiki_schema import WikiSchema, WikiSchemaPartial
 import httpx
 from datetime import datetime
+
+from models.commentary_schema import commentary, commentaryUpdate
 from urls import config
 
 commentary_url = config["commentary_url"]
@@ -10,10 +12,10 @@ router = APIRouter()
 
 
 @router.post("/")
-async def post_commetary(commentary: Dict = Body(...)):
+async def post_commetary(commentary: commentary = Body(...)):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{commentary_url}/", json=commentary)
+            response = await client.post(f"{commentary_url}/", json=commentary.model_dump())
             response.raise_for_status()
             return response.json()
 
@@ -94,10 +96,10 @@ async def delete_commentary(id_commentary: str) -> bool:
 
 
 @router.patch("/{id_commentary}")
-async def patch_commentary(id_commentary: str, commentaryUpdate: Dict = Body(...)):
+async def patch_commentary(id_commentary: str, commentaryUpdate: commentaryUpdate = Body(...)):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.patch(f"{commentary_url}/{id_commentary}", json=commentaryUpdate)
+            response = await client.patch(f"{commentary_url}/{id_commentary}", json=commentaryUpdate.model_dump())
             response.raise_for_status()
             return response.json()
 
