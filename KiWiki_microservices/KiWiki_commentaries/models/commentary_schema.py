@@ -19,13 +19,23 @@ class commentary(BaseModel):
                 "entry": "507f1f77bcf86cd799439022",
                 "entry_version": "507f1f77bcf86cd799439033",
                 "content": "Este es un comentario de prueba.",
-                "date": "2024-11-02T15:23:52.461000",
                 "entryRating": 8,
                 "commentaryInReply": "507f1f77bcf86cd799439044",
                 "replies": [
                     "507f1f77bcf86cd799439055",
                     "507f1f77bcf86cd799439066"
                 ]
+            }
+        }
+    }
+
+class commentaryUpdate(BaseModel):
+    content: str = Field(...)
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "content": "Este es un comentario de prueba."
             }
         }
     }

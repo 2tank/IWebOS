@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import APIRouter, Body, Query
 
 import item_logic.commentary as commentary_logic
-from models.commentary_schema import commentary
+from models.commentary_schema import commentary, commentaryUpdate
 
 router = APIRouter()
 
@@ -51,8 +51,8 @@ async def delete_commentary(id: str):
     result = await commentary_logic.deleteCommentary(id)
     return result
 
-@router.put("/{id}")
-async def update_commentary(id: str, req: commentary = Body(...)):
+@router.patch("/{id}")
+async def update_commentary(id: str, req: commentaryUpdate = Body(...)):
     req = {k: v for k, v in req.model_dump().items() if v is not None}
     result = await commentary_logic.updateCommentary(id,req)
     return result

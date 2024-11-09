@@ -1,72 +1,128 @@
-from fastapi import APIRouter, Body
-from fastapi.encoders import jsonable_encoder
+from typing import List, Dict, Optional
+from fastapi import APIRouter, HTTPException, Body, Query
+# from models.wiki_schema import WikiSchema, WikiSchemaPartial
+import httpx
+from datetime import datetime
 
-import request_logic.commentary as commentary_logic
-from request_logic.commentary import updateCommentary
-from models.commentary_schema import commentary
+from models.commentary_schema import commentary, commentaryUpdate
+from urls import config
 
+commentary_url = config["commentary_url"]
 router = APIRouter()
 
+
 @router.post("/")
-async def add_commentary(commentary: commentary = Body(...)):
-    if commentary.commentaryInReply:
-        original_comentary_id = commentary.commentaryInReply
-        await commentary_logic.add_commentary_reply(original_comentary_id, commentary)
-    else:
-        await commentary_logic.add_commentary(commentary)
+async def post_commetary(commentary: commentary = Body(...)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(f"{commentary_url}/", json=commentary.model_dump())
+            response.raise_for_status()
+            return response.json()
+
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Cannot post commentary")
+
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=500, detail="Cannot post commentary")
+
+
 
 @router.get("/")
-async def get_commentaries():
-    commentaries = await commentary_logic.commentaryCollection.get_collection()
-    return commentaries
+async def get_commentaries(
+        user_id: Optional[str] = Query(None),
+        entry_id: Optional[str] = Query(None),
+        entry_version_id: Optional[str] = Query(None),
+        only_main_commentaries: Optional[bool] = Query(None),
+        sort_by_newest: Optional[bool] = Query(None),
+        sort_by_oldest: Optional[bool] = Query(None),
+    ):
+    try:
+        filters = {
+            "user_id": user_id,
+            "entry_id": entry_id,
+            "entry_version_id": entry_version_id,
+            "only_main_commentaries": only_main_commentaries,
+            "sort_by_newest": sort_by_newest,
+            "sort_by_oldest": sort_by_oldest,
+        }
 
-@router.get("/{id}")
-async def get_commentary(id: str):
-    commentary = await commentary_logic.commentaryCollection.get_id(id)
-    return commentary
+        filters = {k: v for k, v in filters.items() if v is not None and v != []}
 
-@router.get("/hasResponses/{id}")
-async def get_commentary_has_response(id: str):
-    result = await commentary_logic.hasResponses(id)
-    return result
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{commentary_url}/", params=filters)
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="No commentaries found")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="No commentaries found")
 
-@router.get("/numberOfResponses/{id}")
-async def get_commentary_number_of_responses(id: str):
-    result = await commentary_logic.numberOfResponses(id)
-    return result
 
-@router.get("/getResponses/{id}")
-async def get_commentary_get_responses(id: str):
-    result = await commentary_logic.getResponses(id)
-    return result
+@router.get("/{id_commentary}")
+async def get_commentary_by_id(id_commentary: str):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{commentary_url}/{id_commentary}")
+            response.raise_for_status()
+            return response.json()
 
-@router.delete("/{id}")
-async def delete_commentary(id: str):
-    result = await commentary_logic.deleteCommentary(id)
-    return result
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=400, detail="No commentary for this id")
 
-@router.put("/{id}")
-async def update_commentary(id: str, req: commentary = Body(...)):
-    req = {k: v for k, v in req.model_dump().items() if v is not None}
-    result = await commentary_logic.updateCommentary(id,req)
-    return result
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="No commentary for this id")
 
-@router.get("/getAllCommentariesInEntry/{id_entrada}")
-async def get_commentaries_in_entry(id_entrada: str):
-    result = await commentary_logic.getAllCommentariesFromEntry(id_entrada)
-    return result
+@router.delete("/{id_commentary}")
+async def delete_commentary(id_commentary: str) -> bool:
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.delete(f"{commentary_url}/{id_commentary}")
+            response.raise_for_status()
+            return response.status_code == 200
 
-@router.get("/getMainCommentariesInEntry/{id_entrada}")
-async def get_main_commentaries_in_entry(id_entrada: str):
-    result = await commentary_logic.getMainCommentariesFromEntry(id_entrada)
-    return result
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=400, detail="Cannot delete this commentary")
 
-@router.get("/getAllCommentariesInEntrySpecificVersion/{id_entrada}/{id_version}")
-async def get_commentaries_in_entry_specific_version(id_entrada: str, id_version: str):
-    result = await commentary_logic.getAllCommentariesFromEntrySpecificVersion(id_entrada, id_version)
-    return result
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="Cannot delete this commentary")
 
-@router.get("/getMainCommentariesInEntrySpecificVersion/{id_entrada}/{id_version}")
-async def get_main_commentaries_in_entry_specific_version(id_entrada: str, id_version: str):
-    result = await commentary_logic.getMainCommentariesFromEntrySpecificVersion(id_entrada, id_version)
-    return result
+
+@router.patch("/{id_commentary}")
+async def patch_commentary(id_commentary: str, commentaryUpdate: commentaryUpdate = Body(...)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(f"{commentary_url}/{id_commentary}", json=commentaryUpdate.model_dump())
+            response.raise_for_status()
+            return response.json()
+
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=400, detail="Put parameters correctly")
+
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="Put parameters correctly")
+
+@router.get("/{id_commentary}/replies")
+async def get_wikis_author(id_commentary: str) -> List[dict]:
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{commentary_url}/{id_commentary}/replies")
+            response.raise_for_status()
+            return response.json()
+
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=400, detail="Failed to fetch replies from commentary")
+
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="Cannot retrieve replies from commentary")

@@ -99,10 +99,13 @@ async def deleteCommentary(id: str):
     :return: Devuelve el resultado del metodo que hereda de MONGOCRUD
     """
     comentarioParaEliminar = await commentaryCollection.collection.find_one({"_id": ObjectId(id)})
-    if comentarioParaEliminar['commentaryInReply']:
-        comentarioEnRespuesta = await commentaryCollection.collection.find_one({"_id": ObjectId(comentarioParaEliminar['commentaryInReply'])})
-        comentarioEnRespuesta['replies'].remove(str(comentarioParaEliminar['_id']))
-        await updateCommentary(str(comentarioEnRespuesta['_id']), comentarioEnRespuesta)
+    try:
+        if comentarioParaEliminar['commentaryInReply']:
+            comentarioEnRespuesta = await commentaryCollection.collection.find_one({"_id": ObjectId(comentarioParaEliminar['commentaryInReply'])})
+            comentarioEnRespuesta['replies'].remove(str(comentarioParaEliminar['_id']))
+            await updateCommentary(str(comentarioEnRespuesta['_id']), comentarioEnRespuesta)
+    except TypeError:
+        print("Skip")
     deletedComentary = await commentaryCollection.delete_id(id)
     return deletedComentary
 
