@@ -15,11 +15,11 @@ async def get_wikis():
             response = await client.get(f"{wiki_url}/")
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=500, detail="No wikis")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=500, detail="No wikis")
@@ -33,11 +33,11 @@ async def post_wiki(entry: WikiSchema = Body(...)):
             response = await client.post(f"{wiki_url}/", json=entry.model_dump())
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=500, detail="Cannot post wiki")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=500, detail="Cannot post wiki")
@@ -51,11 +51,11 @@ async def get_wiki_name(wiki_name: str):
             response = await client.get(f"{wiki_url}/name/{wiki_name}")
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="No wiki for this name")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="No wiki for this name")
@@ -69,11 +69,11 @@ async def get_wiki_id(id_wiki: str):
             response = await client.get(f"{wiki_url}/id/{id_wiki}")
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="No wiki for this id")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="No wiki for this id")
@@ -87,11 +87,11 @@ async def add_entries(id_wiki: str, id_entry: str):
             response = await client.patch(f"{wiki_url}/{id_wiki}/add_entry/{id_entry}")
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="Cannot create an entry")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot create an entry")
@@ -105,11 +105,11 @@ async def delete_wiki(wiki_id: str) -> bool:
             response = await client.delete(f"{wiki_url}/{wiki_id}/")
             response.raise_for_status()
             return response.status_code == 200
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="Cannot delete this wiki")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot delete this wiki")
@@ -123,11 +123,11 @@ async def get_wikis_date(request: WikiSchema = Body(...)) -> List[dict]:
             response = await client.post(f"{wiki_url}/get_by_date/", json=request.model_dump())
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="Cannot obtain by current date")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot obtain by current date")
@@ -141,11 +141,11 @@ async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) ->
             response = await client.patch(f"{wiki_url}/{id_wiki}/modify_wiki", json=wiki_data.model_dump())
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="Put parameters correctly")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Put parameters correctly")
@@ -159,11 +159,11 @@ async def get_wikis_author(name_author: str) -> List[dict]:
             response = await client.get(f"{wiki_url}/creator/{name_author}")
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="Failed to fetch wikis for author")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot retrieve wikis by author")
@@ -189,11 +189,11 @@ async def delete_entries(id_wiki: str, id_entry: str) -> dict:
             response = await client.delete(f"{wiki_url}/{id_wiki}/delete_entry/{id_entry}")
             response.raise_for_status()
             return response.json()
-        
+
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
         raise HTTPException(status_code=400, detail="Cannot delete an entry")
-    
+
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot delete an entry")

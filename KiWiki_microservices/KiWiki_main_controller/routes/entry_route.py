@@ -1,21 +1,41 @@
 from fastapi import APIRouter, HTTPException, Body, Query
-import request_logic.entry as entry_logic
-import request_logic.version as version_logic
+import httpx
+from urls import config
 from models.entry_schema import entrySchema, entryType
 from models.version_schema import versionSchema
-from typing import Optional, List
+from typing import Optional, List, Dict
 from datetime import datetime
 
+
+
+entry_url = config["entry_url"]
 router = APIRouter()
 
-#TODO Mejorar códigos de error
-
 @router.post("/")
-async def add_entry(content: str,entry: entrySchema = Body(...)):
+async def add_entry(entry: Dict = Body(...)):
+    """
+    Crea una nueva entrada.
+
+    Parámetros:
+        - entry (entrySchema): Datos de la entrada a crear.
+
+    Retorno:
+        - dict: Datos de la entrada creada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
     try:
-        result = await entry_logic.add_entry(entry, content)
-        return result
-    except:
+        print(entry)
+        async with httpx.AsyncClient() as client:
+            response = await client.post(f"{entry_url}/", json=entry)
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Upload failed")
+    except Exception as e:
+        print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Upload failed")
 
 @router.get("/")
@@ -25,69 +45,231 @@ async def get_entries(
     day: Optional[int] = Query(None),
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
-    ):
+):
+    """
+    Obtiene una lista de entradas aplicando filtros opcionales.
+
+    Parámetros:
+        - year (int, opcional): Año de creación.
+        - month (int, opcional): Mes de creación.
+        - day (int, opcional): Día específico de creación.
+        - description (str, opcional): Descripción parcial.
+        - tags (List[entryType], opcional): Lista de etiquetas.
+
+    Retorno:
+        - List[dict]: Lista de entradas filtradas.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
     try:
-        filter = {}
-        #Filtro por Año|Mes|Día
-        if year:
-            if month and day:
-                start_date = datetime(year,month,day)
-                end_date = datetime(year,month,day,23,59,59)
-            elif month:
-                start_date = datetime(year,month,1)
-                if month == 12:
-                    end_date = datetime(year+1,1,1)
-                else:
-                    end_date = datetime(year,month+1,1)
-            else:
-                start_date = datetime(year,1,1)
-                end_date = datetime(year+1,1,1)
+        filters = {
+            "year": year,
+            "month": month,
+            "day": day,
+            "description": description,
+            "tags": tags,
+        }
 
-            filter["creationDate"] = {"$gte": start_date, "$lte": end_date}
+        filters = {k: v for k, v in filters.items() if v is not None and v != []}
 
-        #Filtramos con expresión regular y la opción case-insensitive
-        if description:
-            filter["description"] = {"$regex": ".*{}.*".format(description), "$options": "i"}
-
-        #Filtro por tags
-        if tags:
-            filter["tags"] = {"$in": tags}
-
-        entries = await entry_logic.get_entries(filter)
-        return entries
-    except:
-        raise HTTPException(status_code=500, detail="No entries")
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{entry_url}/", params=filters)
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="No entries found")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="No entries found")
 
 @router.get("/{id}")
 async def get_entry(id: str):
+    """
+    Obtiene una entrada específica por ID.
+
+    Parámetros:
+        - id (str): ID de la entrada.
+
+    Retorno:
+        - dict: Datos de la entrada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
     try:
-        entry = await entry_logic.get_entry(id)
-        return entry
-    except:
-        raise HTTPException(status_code=500, detail="No entry")
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{entry_url}/{id}")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="No entry found")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="No entry found")
 
 @router.delete("/{id}")
 async def delete_entry(id: str):
+    """
+    Elimina una entrada específica por ID.
+
+    Parámetros:
+        - id (str): ID de la entrada a eliminar.
+
+    Retorno:
+        - dict: Datos de la entrada eliminada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
     try:
-        deleted_entry = await entry_logic.delete_entry(id)
-        return deleted_entry
-    except:
-        raise HTTPException(status_code=500, detail="No entry")
+        async with httpx.AsyncClient() as client:
+            response = await client.delete(f"{entry_url}/{id}")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to delete entry")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete entry")
+
+
+# este tengo que tocarlo
 
 @router.put("/{id}")
-async def update_entry(id: str, req: entrySchema = Body(...)):
+async def update_entry(id: str, req: Dict = Body(...)):
+    """
+    Actualiza una entrada específica por ID.
+
+    Parámetros:
+        - id (str): ID de la entrada a actualizar.
+        - req (entrySchema): Datos de la entrada actualizada.
+
+    Retorno:
+        - dict: Datos de la entrada actualizada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
     try:
-        updated_entry = await entry_logic.update_entry(id,req)
-        return updated_entry
-    except:
-        raise HTTPException(status_code=500, detail="No entry")
+        async with httpx.AsyncClient() as client:
+            response = await client.put(f"{entry_url}/{id}", json=req)
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to update entry")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update entry")
+
+
 
 @router.post("/{id}/versions/")
-async def create_version_entry(id: str,version: versionSchema):
-    updated_entry = await entry_logic.create_version(id,version)
-    return updated_entry
+async def create_entry_version(id: str, version: Dict):
+    """
+    Crea una nueva versión para una entrada específica.
+
+    Parámetros:
+        - id (str): ID de la entrada.
+        - version (versionSchema): Datos de la nueva versión.
+
+    Retorno:
+        - dict: Datos de la nueva versión creada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(f"{entry_url}/{id}/versions/", json=version)
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to create version")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create version")
 
 @router.get("/{id}/versions/")
 async def get_versions_by_entry_id(id: str):
-    versions = await version_logic.get_versions_by_entryid(id)
-    return versions
+    """
+    Obtiene todas las versiones de una entrada específica.
+
+    Parámetros:
+        - id (str): ID de la entrada.
+
+    Retorno:
+        - List[dict]: Lista de versiones de la entrada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{entry_url}/{id}/versions/")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to find versions")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to find versions")
+
+@router.get("/{id}/currentVersion/")
+async def get_actual_version_by_entry_id(id: str):
+    """
+    Obtiene la versión actual de una entrada específica.
+
+    Parámetros:
+        - id (str): ID de la entrada.
+
+    Retorno:
+        - dict: Datos de la versión actual de la entrada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{entry_url}/{id}/currentVersion/")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to find actual version")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to find actual version")
+
+@router.put("/{entry_id}/versions/{version_id}")
+async def update_version_by_id(entry_id: str, version_id: str):
+    """
+    Actualiza la versión actual de una entrada específica.
+
+    Parámetros:
+        - entry_id (str): ID de la entrada.
+        - version_id (str): ID de la versión a actualizar.
+
+    Retorno:
+        - dict: Datos de la nueva versión actualizada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.put(f"{entry_url}/{entry_id}/versions/{version_id}")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to update actual version")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update actual version")
