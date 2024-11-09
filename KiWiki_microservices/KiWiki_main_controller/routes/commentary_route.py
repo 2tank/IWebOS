@@ -59,11 +59,11 @@ async def get_commentary_by_id(id_commentary: str):
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="No commentary for this id")
 
-@router.delete("/{id_commentary}/")
+@router.delete("/{id_commentary}")
 async def delete_commentary(id_commentary: str) -> bool:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.delete(f"{commentary_url}/{id_commentary}/")
+            response = await client.delete(f"{commentary_url}/{id_commentary}")
             response.raise_for_status()
             return response.status_code == 200
 
@@ -75,6 +75,22 @@ async def delete_commentary(id_commentary: str) -> bool:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot delete this commentary")
 
+
+@router.patch("/{id_commentary}")
+async def patch_commentary(id_commentary: str, commentaryUpdate: Dict = Body(...)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(f"{commentary_url}/{id_commentary}", json=commentaryUpdate)
+            response.raise_for_status()
+            return response.json()
+
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=400, detail="Put parameters correctly")
+
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="Put parameters correctly")
 
 @router.get("/{id_commentary}/replies")
 async def get_wikis_author(id_commentary: str) -> List[dict]:

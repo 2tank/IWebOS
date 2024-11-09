@@ -1,4 +1,4 @@
-from datetime import datetime
+    from datetime import datetime
 from typing import Optional, List, Any
 from pydantic import BaseModel, Field, field_validator
 
@@ -12,6 +12,23 @@ class commentary(BaseModel):
     entryRating: Optional[int] = Field(None,ge=0,le=10) #La puntuacion que le da el usuario a la entrada del 0 al 10
     commentaryInReply: Optional[str] = None
     replies: Optional[List[str]] = []
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "user": "507f1f77bcf86cd799439011",
+                "entry": "507f1f77bcf86cd799439022",
+                "entry_version": "507f1f77bcf86cd799439033",
+                "content": "Este es un comentario de prueba.",
+                "entryRating": 8,
+                "commentaryInReply": "507f1f77bcf86cd799439044",
+                "replies": [
+                    "507f1f77bcf86cd799439055",
+                    "507f1f77bcf86cd799439066"
+                ]
+            }
+        }
+    }
 
     @field_validator('user', mode='before')
     @classmethod
@@ -60,3 +77,14 @@ class commentary(BaseModel):
         if v is not None and len(v) > 0:
             raise ValueError('Entry version should not be provided on creation and must be empty.')
         return v
+
+class commentaryUpdate(BaseModel):
+    content: str = Field(...)
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "content": "Este es un comentario de prueba."
+            }
+        }
+    }
