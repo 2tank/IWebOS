@@ -17,7 +17,7 @@ class entrySchema(BaseModel):
 
     model_config = {
         "json_schema_extra" : {
-            "example" :
+            "example" : 
             {
                 "_id": "67264426ae903056cd2d7ac7",
                 "title": "Entrada Prueba",

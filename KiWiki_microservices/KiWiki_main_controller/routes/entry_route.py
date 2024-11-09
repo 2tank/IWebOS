@@ -10,23 +10,22 @@ entry_url = config["entry_url"]
 router = APIRouter()
 
 @router.post("/")
-async def add_entry(content: str, entry: entrySchema = Body(...)):
+async def add_entry(entry: entrySchema = Body(...)):
     """
-    Agrega una nueva entrada en el sistema.
+    Crea una nueva entrada.
 
     Parámetros:
-        - content (str): Contenido de la entrada.
-        - entry (entrySchema): Esquema de la entrada.
+        - entry (entrySchema): Datos de la entrada a crear.
 
     Retorno:
-        - dict: Información de la entrada agregada si es exitosa.
+        - dict: Datos de la entrada creada.
 
     Excepciones:
         - HTTPException: Error en la solicitud al servidor externo.
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{entry_url}/", json={"content": content, "entry": entry.dict()})
+            response = await client.post(f"{entry_url}/", json=entry.dict())
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
@@ -35,7 +34,6 @@ async def add_entry(content: str, entry: entrySchema = Body(...)):
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Upload failed")
-
 
 @router.get("/")
 async def get_entries(
@@ -72,18 +70,16 @@ async def get_entries(
 
         filters = {k: v for k, v in filters.items() if v is not None and v != []}
 
-
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{entry_url}/", params=filters)
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
-        raise HTTPException(status_code=500, detail="No entries")
+        raise HTTPException(status_code=500, detail="No entries found")
     except Exception as e:
         print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail="No entries")
-
+        raise HTTPException(status_code=500, detail="No entries found")
 
 @router.get("/{id}")
 async def get_entry(id: str):
@@ -111,17 +107,16 @@ async def get_entry(id: str):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="No entry found")
 
-
 @router.delete("/{id}")
 async def delete_entry(id: str):
     """
     Elimina una entrada específica por ID.
 
     Parámetros:
-        - id (str): ID de la entrada.
+        - id (str): ID de la entrada a eliminar.
 
     Retorno:
-        - dict: Información de la entrada eliminada.
+        - dict: Datos de la entrada eliminada.
 
     Excepciones:
         - HTTPException: Error en la solicitud al servidor externo.
@@ -138,18 +133,17 @@ async def delete_entry(id: str):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete entry")
 
-
 @router.put("/{id}")
 async def update_entry(id: str, req: entrySchema = Body(...)):
     """
-    Actualiza una entrada específica.
+    Actualiza una entrada específica por ID.
 
     Parámetros:
-        - id (str): ID de la entrada.
-        - req (entrySchema): Nuevos datos para la entrada.
+        - id (str): ID de la entrada a actualizar.
+        - req (entrySchema): Datos de la entrada actualizada.
 
     Retorno:
-        - dict: Información de la entrada actualizada.
+        - dict: Datos de la entrada actualizada.
 
     Excepciones:
         - HTTPException: Error en la solicitud al servidor externo.
@@ -166,18 +160,17 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to update entry")
 
-
 @router.post("/{id}/versions/")
-async def create_version_entry(id: str, version: versionSchema = Body(...)):
+async def create_entry_version(id: str, version: versionSchema):
     """
-    Crea una nueva versión de una entrada.
+    Crea una nueva versión para una entrada específica.
 
     Parámetros:
         - id (str): ID de la entrada.
-        - version (versionSchema): Datos de la versión.
+        - version (versionSchema): Datos de la nueva versión.
 
     Retorno:
-        - dict: Información de la nueva versión.
+        - dict: Datos de la nueva versión creada.
 
     Excepciones:
         - HTTPException: Error en la solicitud al servidor externo.
@@ -189,16 +182,15 @@ async def create_version_entry(id: str, version: versionSchema = Body(...)):
             return response.json()
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
-        raise HTTPException(status_code=500, detail="Version creation failed")
+        raise HTTPException(status_code=500, detail="Failed to create version")
     except Exception as e:
         print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail="Version creation failed")
-
+        raise HTTPException(status_code=500, detail="Failed to create version")
 
 @router.get("/{id}/versions/")
 async def get_versions_by_entry_id(id: str):
     """
-    Obtiene todas las versiones de una entrada.
+    Obtiene todas las versiones de una entrada específica.
 
     Parámetros:
         - id (str): ID de la entrada.
@@ -216,7 +208,60 @@ async def get_versions_by_entry_id(id: str):
             return response.json()
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
-        raise HTTPException(status_code=500, detail="No versions found")
+        raise HTTPException(status_code=500, detail="Failed to find versions")
     except Exception as e:
         print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail="No versions found")
+        raise HTTPException(status_code=500, detail="Failed to find versions")
+
+@router.get("/{id}/currentVersion/")
+async def get_actual_version_by_entry_id(id: str):
+    """
+    Obtiene la versión actual de una entrada específica.
+
+    Parámetros:
+        - id (str): ID de la entrada.
+
+    Retorno:
+        - dict: Datos de la versión actual de la entrada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{entry_url}/{id}/currentVersion/")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to find actual version")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to find actual version")
+
+@router.put("/{entry_id}/versions/{version_id}")
+async def update_version_by_id(entry_id: str, version_id: str):
+    """
+    Actualiza la versión actual de una entrada específica.
+
+    Parámetros:
+        - entry_id (str): ID de la entrada.
+        - version_id (str): ID de la versión a actualizar.
+
+    Retorno:
+        - dict: Datos de la nueva versión actualizada.
+
+    Excepciones:
+        - HTTPException: Error en la solicitud al servidor externo.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.put(f"{entry_url}/{entry_id}/versions/{version_id}")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to update actual version")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update actual version")

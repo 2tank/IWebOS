@@ -5,7 +5,7 @@ from typing import List, Optional,  Literal
 linkType = Literal['External','Internal']
 
 class Attachment(BaseModel):
-    type: str = Field(...,description="Tipo de archivo 'image', 'file'...")
+    type: str = Field(...,description="Tipo de archivo 'image', 'file'...") 
     url: str = Field(..., description="Url adjunto al archivo")
     caption: Optional[str] = Field(None,description="Descripción del archivo")
     alt_text: Optional[str] = Field(None,description="Texto alternativo para imágenes")
@@ -20,7 +20,7 @@ class Attachment(BaseModel):
         return value
 
 class Link(BaseModel):
-    type: linkType = Field(...,description="Tipo de enlace external o Internal")
+    type: linkType = Field(...,description="Tipo de enlace external o Internal") 
     url: str = Field(...,description="URL del enlace")
     text: str = Field(...,description="Texto del enlace")
 
@@ -50,7 +50,7 @@ class versionSchema(BaseModel):
     reverted: bool = Field(default=False)
     entry_id: str = None
 
-
+ 
     model_config = {
         "json_schema_extra" : {
             "example": {
