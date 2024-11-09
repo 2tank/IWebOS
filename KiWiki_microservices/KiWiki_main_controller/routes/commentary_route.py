@@ -1,5 +1,5 @@
-from typing import List, Dict
-from fastapi import APIRouter, HTTPException, Body
+from typing import List, Dict, Optional
+from fastapi import APIRouter, HTTPException, Body, Query
 # from models.wiki_schema import WikiSchema, WikiSchemaPartial
 import httpx
 from datetime import datetime
@@ -25,22 +25,39 @@ async def post_commetary(commentary: Dict = Body(...)):
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=500, detail="Cannot post commentary")
 
+
+
 @router.get("/")
-async def get_commentaries():
+async def get_commentaries(
+        user_id: Optional[str] = Query(None),
+        entry_id: Optional[str] = Query(None),
+        entry_version_id: Optional[str] = Query(None),
+        only_main_commentaries: Optional[bool] = Query(None),
+        sort_by_newest: Optional[bool] = Query(None),
+        sort_by_oldest: Optional[bool] = Query(None),
+    ):
     try:
+        filters = {
+            "user_id": user_id,
+            "entry_id": entry_id,
+            "entry_version_id": entry_version_id,
+            "only_main_commentaries": only_main_commentaries,
+            "sort_by_newest": sort_by_newest,
+            "sort_by_oldest": sort_by_oldest,
+        }
+
+        filters = {k: v for k, v in filters.items() if v is not None and v != []}
+
         async with httpx.AsyncClient() as client:
-            print(f"{commentary_url}/")
-            response = await client.get(f"{commentary_url}/")
+            response = await client.get(f"{commentary_url}/", params=filters)
             response.raise_for_status()
             return response.json()
-
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
-        raise HTTPException(status_code=500, detail="No commentaries")
-
+        raise HTTPException(status_code=500, detail="No commentaries found")
     except Exception as e:
-        print(f"Se produjo un error: {e}")
-        raise HTTPException(status_code=500, detail="No commentaries")
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="No commentaries found")
 
 
 @router.get("/{id_commentary}")
