@@ -169,7 +169,7 @@ async def update_entry(id: str, req: Dict = Body(...)):
 
 
 @router.post("/{id}/versions/")
-async def create_entry_version(id: str, version: Dict):
+async def create_entry_version(id: str, version: versionSchema = Body(...)):
     """
     Crea una nueva versión para una entrada específica.
 
@@ -185,7 +185,7 @@ async def create_entry_version(id: str, version: Dict):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{entry_url}/{id}/versions/", json=version)
+            response = await client.post(f"{entry_url}/{id}/versions/", json=version.model_dump())
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:

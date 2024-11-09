@@ -88,9 +88,9 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
         raise HTTPException(status_code=500, detail="Failed to update entry")
 
 @router.post("/{id}/versions/")
-async def create_entry_version(id: str,version: Dict): #Lo suyo es usar versionSchema
+async def create_entry_version(id: str,version: versionSchema = Body(...)): #Lo suyo es usar versionSchema
     try:
-        updated_entry = await entry_logic.create_version(id,version)
+        updated_entry = await entry_logic.create_version(id,version.model_dump())
         return updated_entry
     except Exception as e:
         print(f"Failed to create version: {str(e)}")
