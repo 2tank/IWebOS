@@ -3,14 +3,16 @@ import httpx
 from urls import config
 from models.entry_schema import entrySchema, entryType
 from models.version_schema import versionSchema
-from typing import Optional, List
+from typing import Optional, List, Dict
 from datetime import datetime
+
+
 
 entry_url = config["entry_url"]
 router = APIRouter()
 
 @router.post("/")
-async def add_entry(entry: entrySchema = Body(...)):
+async def add_entry(entry: Dict = Body(...)):
     """
     Crea una nueva entrada.
 
@@ -24,8 +26,9 @@ async def add_entry(entry: entrySchema = Body(...)):
         - HTTPException: Error en la solicitud al servidor externo.
     """
     try:
+        print(entry)
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{entry_url}/", json=entry.dict())
+            response = await client.post(f"{entry_url}/", json=entry)
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
@@ -133,8 +136,11 @@ async def delete_entry(id: str):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete entry")
 
+
+# este tengo que tocarlo
+
 @router.put("/{id}")
-async def update_entry(id: str, req: entrySchema = Body(...)):
+async def update_entry(id: str, req: Dict = Body(...)):
     """
     Actualiza una entrada específica por ID.
 
@@ -150,7 +156,7 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.put(f"{entry_url}/{id}", json=req.dict())
+            response = await client.put(f"{entry_url}/{id}", json=req)
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
@@ -160,8 +166,10 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to update entry")
 
+
+
 @router.post("/{id}/versions/")
-async def create_entry_version(id: str, version: versionSchema):
+async def create_entry_version(id: str, version: Dict):
     """
     Crea una nueva versión para una entrada específica.
 
@@ -177,7 +185,7 @@ async def create_entry_version(id: str, version: versionSchema):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{entry_url}/{id}/versions/", json=version.dict())
+            response = await client.post(f"{entry_url}/{id}/versions/", json=version)
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
