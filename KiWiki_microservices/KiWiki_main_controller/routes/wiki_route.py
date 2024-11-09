@@ -117,10 +117,10 @@ async def delete_wiki(wiki_id: str) -> bool:
 
 
 @router.post("/get_by_date/")
-async def get_wikis_date(request: WikiSchema = Body(...)) -> List[dict]:
+async def get_wikis_date(request: Dict = Body(...)) -> List[dict]:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{wiki_url}/get_by_date/", json=request.model_dump())
+            response = await client.post(f"{wiki_url}/get_by_date/", json=request)
             response.raise_for_status()
             return response.json()
 

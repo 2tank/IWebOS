@@ -28,7 +28,7 @@ class entrySchema(BaseModel):
                 "tags": [
                     "POLITICS"
                 ],
-                wiki: "id_Wiki Prueba",
+                "wiki": "id_Wiki Prueba",
                 "actual_version": ""
             }
         }
