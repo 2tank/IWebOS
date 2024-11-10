@@ -1,5 +1,4 @@
 from enum import Enum
-
 from pydantic import BaseModel, Field, field_serializer
 from datetime import datetime, timezone, timedelta
 
@@ -13,17 +12,17 @@ class NotificationType(str, Enum):
 class NotificationSchema(BaseModel):
     title: str = Field(...)
     user: str = Field(...)
-    notifDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))))
+    notifDate: datetime = Field(default_factory=lambda: datetime.now(timezone(timedelta(hours=2))))
     notifType: NotificationType = Field(...)
-    approved: bool = Field(default = False)
-    read: bool = Field(default = False)
+    approved: bool = Field(default=False)
+    read: bool = Field(default=False)
 
-    @field_serializer("date", mode="plain")
+    @field_serializer("notifDate")
     def serialize_date(self, value: datetime) -> str:
         return value.isoformat()
 
     class Config:
-        use_enum_values = True # Configuración para serializar Enums como strings
+        use_enum_values = True
         json_schema_extra = {
             "example": {
                 "title": "Notificación de creación de entrada de la Wiki Guerra",
