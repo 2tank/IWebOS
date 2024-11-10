@@ -2,8 +2,6 @@ from typing import Optional
 
 import httpx
 from fastapi import APIRouter, HTTPException, Body, Query
-import notification as notification_logic
-from notification_schema import NotificationSchema, NotificationType
 
 from urls import config
 
