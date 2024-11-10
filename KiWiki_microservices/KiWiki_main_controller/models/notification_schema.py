@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer
 from datetime import datetime, timezone, timedelta
 
 class NotificationType(str, Enum):
@@ -17,6 +17,10 @@ class NotificationSchema(BaseModel):
     notifType: NotificationType = Field(...)
     approved: bool = Field(default = False)
     read: bool = Field(default = False)
+
+    @field_serializer("date", mode="plain")
+    def serialize_date(self, value: datetime) -> str:
+        return value.isoformat()
 
     class Config:
         use_enum_values = True # Configuración para serializar Enums como strings
