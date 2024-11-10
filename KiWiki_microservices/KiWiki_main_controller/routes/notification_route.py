@@ -3,6 +3,7 @@ from typing import Optional
 import httpx
 from fastapi import APIRouter, HTTPException, Body, Query
 
+from models.notification_schema import NotificationSchema, NotificationType
 from urls import config
 
 notification_url = config["notification_url"]
