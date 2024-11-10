@@ -24,7 +24,7 @@ class NotificationSchema(BaseModel):
             "example": {
                 "title": "Notificación de creación de entrada de la Wiki Guerra",
                 "user": "Raquel",
-                "notifDate": "07/11/2024 23:16:52",  # Ejemplo en formato `dd/mm/yyyy hh:mm:ss`
+                "notifDate": "2024-11-02T15:23:52.461000",
                 "notifType": "ENTRY_CREATION",
                 "approved": True,
                 "read": False
