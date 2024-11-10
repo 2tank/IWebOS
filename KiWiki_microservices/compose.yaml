@@ -1,0 +1,46 @@
+services:
+  wiki:
+    build:
+      context: ./KiWiki_wiki
+    ports:
+      - "8001:8000"
+    env_file:
+      - ./KiWiki_wiki/.env
+      
+  entry:
+    build:
+      context: ./KiWiki_entry
+    ports:
+      - "8002:8000"
+    env_file:
+      - ./KiWiki_entry/.env
+      
+  commentaries:
+    build:
+      context: ./KiWiki_commentaries  # Ruta a tu carpeta del microservicio 'commentaries'
+    ports:
+      - "8003:8000"
+    env_file:
+      - ./KiWiki_commentaries/.env  # Ruta al archivo .env del microservicio 'commentaries'
+      
+  notifications:
+    build:
+      context: ./KiWiki_notifications
+    ports:
+      - "8004:8000"
+    env_file:
+      - ./KiWiki_notifications/.env
+      
+  version:
+    build:
+      context: ./KiWiki_version
+    ports:
+      - "8005:8000"
+    env_file:
+      - ./KiWiki_version/.env
+
+  main_controller:
+    build:
+      context: ./KiWiki_main_controller  # Ruta a tu carpeta del microservicio 'main_controller'
+    ports:
+      - "8000:8000"
