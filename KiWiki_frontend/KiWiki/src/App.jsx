@@ -7,8 +7,6 @@ function App() {
 
   return (
 
-
-
     <div>
       <h1>Bienvenido a KiWiki, cabrón</h1>
     </div>
