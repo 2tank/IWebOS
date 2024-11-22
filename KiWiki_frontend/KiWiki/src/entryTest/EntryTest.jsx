@@ -25,12 +25,22 @@ function EntryTest() {
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
     return (
-        <div className='max-h-screen flex-row justify-center items-center max-h-screen bg-white'>
-            <h1>Data:</h1>
-            <ul>
-                <li>Titulo: {data.title}</li>
-                <li>Creador: {data.creator}</li>
-            </ul>
+        <div>
+            <div className='flex flex-wrap flex-col bg-black text-white'>
+                <h1 className='flex justify-center'>PLACEHOLDER DEL FRONT DE ENTRY (todo este cuadrado negro)</h1>
+                <h2>Data entrada test:</h2>
+                <ul>
+                    <li>ID: {data._id}</li>
+                    <li>Titulo: {data.title}</li>
+                    <li>Creador: {data.creator}</li>
+                    <li>Fecha de creacion: {data.creationDate}</li>
+                    <li>Descripcion: {data.description}</li>
+                    <li>Version ID: {data.actual_version}</li>
+                </ul>
+            </div>
+            <div className='flex flex-wrap justify-center bg-yellow-300 text-black'>
+                <h1>Componente de comentarios comienza debajo</h1>
+            </div>
         </div>
     )
 
