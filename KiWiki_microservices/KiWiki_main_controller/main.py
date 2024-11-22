@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routes import wiki_route,entry_route,version_route, commentary_route, notification_route
 
 app = FastAPI()
