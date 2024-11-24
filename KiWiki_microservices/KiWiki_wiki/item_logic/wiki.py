@@ -45,7 +45,6 @@ async def get_wiki_name(content: str) -> List:
     Raises:
         ValueError: Si no se encuentran entradas en el wiki.
     """
-    print("HOLA")
     result = await wiki_crud.get_name(content, "name")
 
     if not result:
