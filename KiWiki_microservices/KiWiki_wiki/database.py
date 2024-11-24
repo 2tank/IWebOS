@@ -1,6 +1,6 @@
 import motor.motor_asyncio
 import os
-
+from typing import List
 from bson import ObjectId
 from dotenv import load_dotenv
 
@@ -35,12 +35,14 @@ class MONGOCRUD:
         return {}
 
     async def get_name(self, name: str, search_field: str) -> List:
-        item = await self.collection.find_one({search_field: name})
-        if item:
-            item["_id"] = str(item["_id"])
-            return item
+        items = await self.get_collection()
+        obtained = []
+        for item in items:
+            if name.lower() in item["name"].lower():
+                item["_id"] = str(item["_id"])
+                obtained.append(item)
         
-        return {}  # Devuelve un diccionario vacío si no se encuentra el item
+        return obtained
 
         
     async def delete_id(self,id: str) -> bool:
