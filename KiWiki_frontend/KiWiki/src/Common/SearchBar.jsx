@@ -1,45 +1,58 @@
 
 import { useState } from 'react';
+import { useNavigate } from "react-router";
 import apiEndpoints from '../assets/apiEndpoints.json';
 import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
+
+import typeSearch from '../Common/TypeSearch.json';
 
 function SearchBar(){
     
     const apiEndpoint = apiEndpoints.api;
 
+    const [selectedOption, setSelectedOption] = useState('name');
     const [query, setQuery] = useState('');
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    
+    const navigate = useNavigate()
 
     const search = async(event) => {
+        if(query.trim() === "") return;
 
         event.preventDefault();
 
-        if(query.trim() === "") return;
-
-        try{
-            console.log(apiEndpoint)
-            const response = await axios.get(apiEndpoint);
-            setData(response.data);
-            console.log(response);
-        }catch(err){
-            setError(err.message);
-        }finally{
-            setLoading(false);
-        }
+        navigate('/wikis/'+`${selectedOption}/${query}`)
     }
 
     const handlerChange = (event) =>{
-        const {value} = event.target;
-        setQuery(value);
+        const {value} = event.target
+        setQuery(value)
+    }
+
+    const selectChange = (event) => {
+        const {value} = event.target
+        console.log(value)
+        setSelectedOption(value)
     }
 
     return (
             <form onSubmit={search} className='h-10 flex flex-row justify-center'>
+                <select
+                id='selectOption'
+                value={selectedOption}
+                onChange={selectChange}
+                required
+                >
+                {
+                    Object.entries(typeSearch).map(([key, value]) =>  (
+                        <option key={key} value={value[1]}>
+                            {value[0]}
+                        </option>
+                    ))
+                }
+                </select>
                 <input 
-                    type="text" 
+                    type='text' 
                     value={query}
                     onChange={handlerChange}
                     className='text-2xl border-2 border-black rounded-s-md w-96'

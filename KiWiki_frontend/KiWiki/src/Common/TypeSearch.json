@@ -1,0 +1,5 @@
+{
+    "name_select":["Nombre","name"],
+    "date_select":["Fecha","date"],
+    "creator_select":["Creador","creator"]
+}

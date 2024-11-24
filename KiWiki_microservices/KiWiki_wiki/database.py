@@ -34,7 +34,7 @@ class MONGOCRUD:
 
         return {}
 
-    async def get_name(self, name: str, search_field: str) -> dict:
+    async def get_name(self, name: str, search_field: str) -> List:
         item = await self.collection.find_one({search_field: name})
         if item:
             item["_id"] = str(item["_id"])
