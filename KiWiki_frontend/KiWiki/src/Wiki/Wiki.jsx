@@ -38,14 +38,14 @@ function Wiki(){
         <>
             <SearchBar/>
             <div>
-                {Object.entries(data).map(([key, value]) => (
+                {/* {Object.entries(data).map(([key, value]) => (
 
                     <ul key=''>
-                    <SingleWiki/>
+                        <SingleWiki/>
                     </ul>
                 
                 ))
-                }
+                } */}
                
             </div>
         </>
