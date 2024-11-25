@@ -12,7 +12,7 @@ function Wiki(){
     const [error, setError] = useState(null);
     const {selectedOpition, query} = useParams();
 
-    let urlApi = ''    
+    let urlApi = ''
 
     useEffect(() =>{
 
@@ -43,10 +43,10 @@ function Wiki(){
                 <ul key=''>
                     <SingleWiki/>
                 </ul>
-                
+
             ))
             } */}
-               
+
         </div>
     )
 }

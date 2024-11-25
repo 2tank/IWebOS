@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import CommentarySection from "../Commentary/CommentarySection";
 import SingleVersionSection from "./SingleVersionSection";
+import VersionHistory from "./VersionHistory";
 
 function EntrySection() {
 
@@ -29,14 +30,16 @@ function EntrySection() {
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
+
+
     return (
         <>
             <div className='flex flex-wrap flex-col bg-black text-white'>
                 <h1 className='flex justify-center'>PLACEHOLDER DEL FRONT DE ENTRY (todo este cuadrado negro)</h1>
-                <button className="flex justify-end mr-5" onClick={() => setShowHistory(!showHistory)} >Ver Historial</button>
+                <button className="flex justify-end mr-5" onClick={() => setShowHistory(!showHistory)} >{showHistory ? "Ocultar Historial" : "Ver Historial"}</button>
                 {showHistory ? (
                 <div>
-                    Aqui va el Historial
+                    <VersionHistory entryID={data._id}/>
                 </div>
                 ) : (
                     <div>
