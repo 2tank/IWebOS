@@ -24,15 +24,15 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
             paramString += `&user_id=${username}`
         }
         setExtraParam(paramString);
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         if (extraParam) {
           setUrlCommentaries(
             `http://localhost:8000/commentaries/?entry_id=${entryID}&entry_version_id=${entryVersionID}&only_main_commentaries=true${extraParam}`
           );
         }
-      }, [extraParam, entryID, entryVersionID]);
+    }, [extraParam, entryID, entryVersionID]);
 
     useEffect(() => {
         const fetchData = async() => {
@@ -67,7 +67,7 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
 
     return (
         <div>
-            <div className="container ml-0 sm:ml-6">
+            <div className="container">
                 {commentaries}
             </div>
         </div>

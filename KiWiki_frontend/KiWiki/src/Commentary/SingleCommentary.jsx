@@ -3,6 +3,7 @@ import axios from "axios"
 import defaultPicture from "../assets/image.png"
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import PostCommentaryReply from "./PostCommentaryReply"
 
 function SingleCommentary({id, reply = 0}) {
 
@@ -16,6 +17,8 @@ function SingleCommentary({id, reply = 0}) {
     const [responses, setResponses] = useState([]);
     const [grade, setGrade] = useState(-1);
     const [commentaryReplyDependantStyling, setCommentaryReplyDependantStyling] = useState(null);
+    const [replyFormActive, setReplyFormActive] = useState(false);
+    const [tokenReloadCommentary, setTokenReloadCommentary] = useState(false);
 
     const setStyling = () => {
         if(reply == 0) {
@@ -24,6 +27,10 @@ function SingleCommentary({id, reply = 0}) {
             setCommentaryReplyDependantStyling('mt-4');
         }
     };
+
+    const reloadCommentary = () => {
+        setTokenReloadCommentary((lastVal) => !lastVal);
+    }
 
     const loadResponses = () => {
         const responsesComponented = data.replies.map((replyCommentaryID) => <SingleCommentary id={replyCommentaryID} reply={reply + 1}/>);
@@ -35,6 +42,21 @@ function SingleCommentary({id, reply = 0}) {
         setResponses([]);
         setShowResponses(false);
     };
+
+    const activateReplyForm = () => {
+        setReplyFormActive(true);
+    };
+
+    const hideReplyForm = () => {
+        setReplyFormActive(false);
+    };
+
+    const responseCommentaryPosted = async() => {
+        hideReplyForm();
+        setHasResponses(true);
+        reloadCommentary();
+        hideResponses();
+    }
 
     useEffect(() => {
         const fetchData = async() => {
@@ -60,7 +82,7 @@ function SingleCommentary({id, reply = 0}) {
             }
         };
         fetchData();
-    }, []);
+    }, [tokenReloadCommentary]);
 
     //if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (loading) return (
@@ -69,17 +91,17 @@ function SingleCommentary({id, reply = 0}) {
             <div>
                 <div className='container'>
                     <div className={`flex flex-row flex-wrap bg-white text-black justify-start space-x-4 mx-auto ${commentaryReplyDependantStyling}`}>
-                        <div class="px-4 sm:max-w-sm w-full">
-                            <div class="animate-pulse flex space-x-4">
-                                <div class="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
-                                <div class="flex-1 py-1">
-                                    <div class="grid grid-cols-3 gap-2 sm:gap-4">
-                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
-                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
-                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                        <div className="px-4 sm:max-w-sm w-full">
+                            <div className="animate-pulse flex space-x-4">
+                                <div className="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
+                                <div className="flex-1 py-1">
+                                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                                        <div className="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                        <div className="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                        <div className="h-4 bg-slate-400 rounded-full col-span-1"></div>
                                     </div>
                                     <div className="mb-3"></div>
-                                    <div class="h-4 bg-slate-400 rounded-full"></div>
+                                    <div className="h-4 bg-slate-400 rounded-full"></div>
                                 </div>
                             </div>
                         </div>
@@ -90,16 +112,16 @@ function SingleCommentary({id, reply = 0}) {
             <div>
                 <div className='container'>
                     <div className={`flex flex-row flex-wrap bg-white text-black justify-start space-x-4 mx-auto ${commentaryReplyDependantStyling}`}>
-                        <div class="px-4 sm:max-w-sm w-full">
-                            <div class="animate-pulse flex space-x-4">
-                                <div class="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
-                                <div class="flex-1 py-1">
-                                    <div class="grid grid-cols-3 gap-2 sm:gap-4">
-                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
-                                        <div class="h-4 bg-slate-400 rounded-full col-span-2"></div>
+                        <div className="px-4 sm:max-w-sm w-full">
+                            <div className="animate-pulse flex space-x-4">
+                                <div className="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
+                                <div className="flex-1 py-1">
+                                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                                        <div className="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                        <div className="h-4 bg-slate-400 rounded-full col-span-2"></div>
                                     </div>
                                     <div className="mb-3"></div>
-                                    <div class="h-4 bg-slate-400 rounded-full"></div>
+                                    <div className="h-4 bg-slate-400 rounded-full"></div>
                                 </div>
                             </div>
                         </div>
@@ -131,11 +153,36 @@ function SingleCommentary({id, reply = 0}) {
                         <p className="text-sm sm:text-base">{data.content}</p>
                     </div>
                 </div>
-                <div className="bg-white text-black py-1 justify-start space-x-4 ml-10 sm:ml-16">
+                <div className="bg-white text-black space-x-4 ml-10 sm:ml-16">
+                    <div>
+                        {!replyFormActive ? 
+                            (
+                            <div className="justify-start inline-flex flex-row items-center rounded-full px-2 py-1 mb-1 ml-2 text-black font-semibold
+                            transition hover:duration-0 ease-out duration-300
+                            hover:bg-gray-200 hover:shadow-sm">
+                                <button onClick={activateReplyForm}>Responder</button>
+                            </div>
+                            )
+                            :
+                            (
+                            <div className="flex-col px-2 py-1 mb-1 ml-2 text-black">
+                                <PostCommentaryReply entryID={data.entry} entryVersionID={data.entry_version} commentaryInReply={data._id} 
+                                parentCommentaryPostReaction={responseCommentaryPosted}/>
+                                <div className="flex justify-end">
+                                    <div className="flex px-2 py-1 rounded-full text-black font-semibold
+                                transition hover:duration-0 ease-out duration-300
+                                hover:bg-gray-100 hover:shadow-sm">
+                                        <button onClick={hideReplyForm}>Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            )
+                        }
+                    </div>
                     {hasResponses ? 
                         showResponses ?
                             <div>
-                                <div className="inline-flex flex-row items-center rounded-full px-2 py-1 text-blue-600 font-semibold 
+                                <div className="justify-start inline-flex flex-row items-center rounded-full px-2 py-1 text-blue-600 font-semibold 
                                 transition hover:duration-0 ease-out duration-300
                                 hover:bg-blue-100 hover:shadow-sm">
                                     <button className="align-text-bottom text-sm sm:text-base mt-1 pr-1" onClick={hideResponses}>
@@ -143,10 +190,12 @@ function SingleCommentary({id, reply = 0}) {
                                         Ocultar respuestas
                                     </button>
                                 </div>
-                                <div>{responses}</div>
+                                <div>
+                                    {responses}
+                                </div>
                             </div>
                             :
-                            <div className="inline-flex flex-row items-center rounded-full px-2 py-1 text-blue-600 font-semibold
+                            <div className="justify-start inline-flex flex-row items-center rounded-full px-2 py-1 text-blue-600 font-semibold
                             transition hover:duration-0 ease-out duration-300
                             hover:bg-blue-100 hover:shadow-sm">
                                 <button className="align-text-bottom text-sm sm:text-base mt-1 pr-1" onClick={loadResponses}>
