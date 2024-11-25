@@ -38,7 +38,7 @@ function CommentarySection({entryID, entryVersionID}) {
 
     return (
         <div>
-            <div className="container ml-10">
+            <div className="container ml-0 sm:ml-6">
                 {commentaries}
             </div>
         </div>
