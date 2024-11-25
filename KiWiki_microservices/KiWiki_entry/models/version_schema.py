@@ -53,44 +53,35 @@ class versionSchema(BaseModel):
  
     model_config = {
         "json_schema_extra" : {
-            "example": {
-                "editor": "Nombre del editor",
-                "editDate": "2023-11-04T00:00:00Z",
-                "content": "<p>Este es el contenido en HTML</p>",
-                "attachments": [
-                    {
-                        "type": "image",
-                        "url": "https://imagen.com",
-                        "caption": "Descripción de la imagen",
-                        "alt_text": "Texto alternativo"
-                    },
-                    {
-                        "type": "file",
-                        "url": "https://archivo.com",
-                        "file_name": "documento.pdf"
-                    }
-                ],
-                "links": [
-                    {
-                        "type": "Internal",
-                        "url": "https://enlaceinterno.com",
-                        "text": "Enlace interno"
-                    },
-                    {
-                        "type": "External",
-                        "url": "https://enlaceexterno.com",
-                        "text": "Enlace externo"
-                    }
-                ],
-                "maps": [
-                    {
-                        "location": {
-                            "latitude": 40.712776,
-                            "longitude": -74.005974
-                        },
-                        "description": "Ubicación en Nueva York"
-                    }
-                ],
-            }
-        }
-    }
+            "example" :
+            {"editor": "Creador Prueba",
+            "editDate": "2024-11-02T15:23:52.461000",
+            "content": "pruebaNuevaVersion",
+            "attachments": [
+              {
+                "type": "file",
+                "url": "https://example.com/document.pdf",
+                "caption": "Documento de ejemplo",
+                "alt_text": None,
+                "file_name": "documento_prueba.pdf"
+              }
+            ],
+            "links": [
+              {
+                "type": "External",
+                "url": "https://example.com",
+                "text": "Enlace a Example"
+              }
+            ],
+            "maps": [
+              {
+                "location": {
+                  "latitude": 40.712776,
+                  "longitude": -74.005974
+                },
+                "description": "Ubicación en Nueva York"
+              }
+            ],
+            "reverted": False,
+            "entry_id": "672f52b8f8bc9f564411f89c"
+          }}}

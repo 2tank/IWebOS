@@ -19,8 +19,8 @@ async def get_version_by_id(id):
     version = await crud.get_id(id)
     return version
 
-async def get_versions_by_entryid(entry_id):
-    versions = await crud.get_versions_by_entryid(entry_id)
+async def get_versions_by_entryid(entry_id,reverted):
+    versions = await crud.get_versions_by_entryid(entry_id,reverted)
     return versions
 
 async def get_entry_by_version_id(id):

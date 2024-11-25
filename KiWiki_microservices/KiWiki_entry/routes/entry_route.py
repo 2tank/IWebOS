@@ -99,11 +99,11 @@ async def create_entry_version(id: str,version: versionSchema = Body(...)): #Lo 
 @router.get("/{id}/versions/")
 async def get_versions_by_entry_id(id: str):
     try:
-        versions = await version_logic.get_versions_by_entryid(id)
+        versions = await version_logic.get_versions_by_entryid(id,reverted=False);
         return versions
     except Exception as e:
-        print(f"Failed to find versions: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to found versions")
+        print(f"Failed to create version: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve versions")
 
 @router.get("/{id}/currentVersion/")
 async def get_actual_version_by_entry_id(id: str):

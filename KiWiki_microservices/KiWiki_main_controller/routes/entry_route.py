@@ -6,8 +6,6 @@ from models.version_schema import versionSchema
 from typing import Optional, List, Dict
 from datetime import datetime
 
-
-
 entry_url = config["entry_url"]
 router = APIRouter()
 

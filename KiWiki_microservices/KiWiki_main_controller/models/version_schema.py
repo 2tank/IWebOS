@@ -60,34 +60,33 @@ class versionSchema(BaseModel):
         "json_schema_extra" : {
             "example" :
             {"editor": "Creador Prueba",
-  "editDate": "2024-11-02T15:23:52.461000",
-  "content": "pruebaNuevaVersion",
-  "attachments": [
-    {
-      "type": "file",
-      "url": "https://example.com/document.pdf",
-      "caption": "Documento de ejemplo",
-      "alt_text": None,
-      "file_name": "documento_prueba.pdf"
-    }
-  ],
-  "links": [
-    {
-      "type": "External",
-      "url": "https://example.com",
-      "text": "Enlace a Example"
-    }
-  ],
-  "maps": [
-    {
-      "location": {
-        "latitude": 40.712776,
-        "longitude": -74.005974
-      },
-      "description": "Ubicación en Nueva York"
-    }
-  ],
-  "reverted": False,
-  "entry_id": "672f52b8f8bc9f564411f89c"
-}}}
-
+            "editDate": "2024-11-02T15:23:52.461000",
+            "content": "pruebaNuevaVersion",
+            "attachments": [
+              {
+                "type": "file",
+                "url": "https://example.com/document.pdf",
+                "caption": "Documento de ejemplo",
+                "alt_text": None,
+                "file_name": "documento_prueba.pdf"
+              }
+            ],
+            "links": [
+              {
+                "type": "External",
+                "url": "https://example.com",
+                "text": "Enlace a Example"
+              }
+            ],
+            "maps": [
+              {
+                "location": {
+                  "latitude": 40.712776,
+                  "longitude": -74.005974
+                },
+                "description": "Ubicación en Nueva York"
+              }
+            ],
+            "reverted": False,
+            "entry_id": "672f52b8f8bc9f564411f89c"
+          }}}

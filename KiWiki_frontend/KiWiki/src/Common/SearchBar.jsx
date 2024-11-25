@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router";
 import apiEndpoints from '../assets/apiEndpoints.json';
-import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 
 import typeSearch from '../Common/TypeSearch.json';
