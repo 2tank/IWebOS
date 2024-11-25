@@ -65,24 +65,48 @@ function SingleCommentary({id, reply = 0}) {
     //if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (loading) return (
         <div>
-            <div className='container'>
-                <div className={`flex flex-row flex-wrap bg-white text-black justify-start space-x-4 mx-auto ${commentaryReplyDependantStyling}`}>
-                    <div class="px-4 sm:max-w-sm w-full">
-                        <div class="animate-pulse flex space-x-4">
-                            <div class="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
-                            <div class="flex-1 py-1">
-                                <div class="grid grid-cols-3 gap-2 sm:gap-4">
-                                    <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
-                                    <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
-                                    <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
+        {reply == 0 ? 
+            <div>
+                <div className='container'>
+                    <div className={`flex flex-row flex-wrap bg-white text-black justify-start space-x-4 mx-auto ${commentaryReplyDependantStyling}`}>
+                        <div class="px-4 sm:max-w-sm w-full">
+                            <div class="animate-pulse flex space-x-4">
+                                <div class="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
+                                <div class="flex-1 py-1">
+                                    <div class="grid grid-cols-3 gap-2 sm:gap-4">
+                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                    </div>
+                                    <div className="mb-3"></div>
+                                    <div class="h-4 bg-slate-400 rounded-full"></div>
                                 </div>
-                                <div className="mb-3"></div>
-                                <div class="h-4 bg-slate-400 rounded-full"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            :
+            <div>
+                <div className='container'>
+                    <div className={`flex flex-row flex-wrap bg-white text-black justify-start space-x-4 mx-auto ${commentaryReplyDependantStyling}`}>
+                        <div class="px-4 sm:max-w-sm w-full">
+                            <div class="animate-pulse flex space-x-4">
+                                <div class="rounded-full bg-slate-400 h-10 w-10 sm:h-12 sm:w-12"></div>
+                                <div class="flex-1 py-1">
+                                    <div class="grid grid-cols-3 gap-2 sm:gap-4">
+                                        <div class="h-4 bg-slate-400 rounded-full col-span-1"></div>
+                                        <div class="h-4 bg-slate-400 rounded-full col-span-2"></div>
+                                    </div>
+                                    <div className="mb-3"></div>
+                                    <div class="h-4 bg-slate-400 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         </div>
     );
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
@@ -90,15 +114,15 @@ function SingleCommentary({id, reply = 0}) {
     return (
         <div>
             <div className='container'>
-                <div className={`flex flex-row flex-wrap bg-white text-black justify-start space-x-4 px-4 mx-auto ${commentaryReplyDependantStyling}`}>
+                <div className={`flex flex-row flex-wrap w-full bg-white text-black justify-start space-x-4 px-4 mx-auto ${commentaryReplyDependantStyling}`}>
                     <div className='flex flex-col'>
                         <img src={defaultPicture} className='h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-grey'/>
                     </div>
                     <div className="flex flex-col flex-wrap">
-                        <div className="flex flex-row flex-wrap space-x-4">
-                            <p className="text-sm sm:text-base font-bold">{data.user}</p>
+                        <div className="inline-flex flex-wrap">
+                            <p className="mr-2 sm:mr-4 text-sm sm:text-base font-bold">{data.user}</p>
                             {grade > -1 ?
-                                <p className="text-sm sm:text-base">Puntuacion: {grade}/10</p>
+                                <p className="mr-2 sm:mr-4 text-sm sm:text-base">Puntuacion: {grade}/10</p>
                                 :
                                 null
                             }
@@ -112,9 +136,9 @@ function SingleCommentary({id, reply = 0}) {
                         showResponses ?
                             <div>
                                 <div className="inline-flex flex-row items-center rounded-full px-2 py-1 text-blue-600 font-semibold 
-                                transition ease-out duration-300
+                                transition hover:duration-0 ease-out duration-300
                                 hover:bg-blue-100 hover:shadow-sm">
-                                    <button className="align-text-bottom mt-1 pr-1" onClick={hideResponses}>
+                                    <button className="align-text-bottom text-sm sm:text-base mt-1 pr-1" onClick={hideResponses}>
                                         <KeyboardArrowUpIcon color="blue" className="mb-1"/>
                                         Ocultar respuestas
                                     </button>
@@ -125,7 +149,7 @@ function SingleCommentary({id, reply = 0}) {
                             <div className="inline-flex flex-row items-center rounded-full px-2 py-1 text-blue-600 font-semibold
                             transition hover:duration-0 ease-out duration-300
                             hover:bg-blue-100 hover:shadow-sm">
-                                <button className="align-text-bottom mt-1 pr-1" onClick={loadResponses}>
+                                <button className="align-text-bottom text-sm sm:text-base mt-1 pr-1" onClick={loadResponses}>
                                     <KeyboardArrowDownIcon color="blue" className="mb-1"/>
                                     Mostrar respuestas
                                 </button>
