@@ -3,6 +3,7 @@ import {useEffect} from 'react';
 import logoWiki from '/assets/logo_wiki.png'
 import SearchBar from '../../Common/SearchBar'; 
 import '../CSS/HomePage.css'
+import Navbar from '../../Common/NavBar';
 
 
 function HomePage(){
@@ -13,6 +14,7 @@ function HomePage(){
 
     return(
     <div id='homeScreen' className='h-screen xl flex flex-col justify-center items-center'>
+      <Navbar/>
       <div className='flex flex-1 flex-col justify-end'>
         <img src={logoWiki} className='ml-7 w-80 h-80'></img>
       </div>
@@ -24,7 +26,6 @@ function HomePage(){
         <SearchBar></SearchBar>
       </div>
     </div>
-
     );
 
 

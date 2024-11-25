@@ -91,8 +91,8 @@ async def get_commentaries(
     ):
     try:
         filter = {}
-        if user_id:
-            filter["user"] = user_id
+        #if user_id:
+        #    filter["user_id"] = user_id
         if entry_id:
             filter["entry"] = entry_id
             if entry_version_id:
@@ -100,6 +100,11 @@ async def get_commentaries(
         if only_main_commentaries:
             filter["commentaryInReply"] = None
         commentaries = await commentary_logic.get_commentaries(filter)
+        #Eliminable en caso de necesitarse el metodo antiguo
+        if user_id:
+            for c in commentaries:
+                if user_id not in c.get("user"):
+                    commentaries.remove(c)
         if sort_by_newest:
             commentaries.sort(key=commentary_logic.extract_date, reverse=True)
         elif sort_by_oldest:
