@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import CommentarySection from "../Commentary/CommentarySection";
+import CommentaryComponent from "../Commentary/CommentaryComponent";
 
 function EntryTest() {
 
@@ -42,7 +43,7 @@ function EntryTest() {
             <div className='flex flex-wrap justify-center bg-yellow-300 text-black'>
                 <h1>Componente de comentarios comienza debajo</h1>
             </div>
-            <CommentarySection entryID={data._id} entryVersionID={data.actual_version} username={"01"}/>
+            <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version}/>
         </div>
     )
 
