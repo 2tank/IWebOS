@@ -4,6 +4,7 @@ import axios from 'axios';
 import SearchBar from '../Common/SearchBar.jsx';
 import SingleWiki from './SingleWiki.jsx';
 import apiEndpoint from '../assets/apiEndpoints.json';
+import Navbar from '../Common/NavBar.jsx';
 
 function Wiki(){
     const [data, setData] = useState(null);
@@ -35,20 +36,18 @@ function Wiki(){
     },[])
 
     return(
-        <>
-            <SearchBar/>
-            <div>
-                {/* {Object.entries(data).map(([key, value]) => (
+        <div>
+            <Navbar/>
+            {/* {Object.entries(data).map(([key, value]) => (
 
-                    <ul key=''>
-                        <SingleWiki/>
-                    </ul>
+                <ul key=''>
+                    <SingleWiki/>
+                </ul>
                 
-                ))
-                } */}
+            ))
+            } */}
                
-            </div>
-        </>
+        </div>
     )
 }
 

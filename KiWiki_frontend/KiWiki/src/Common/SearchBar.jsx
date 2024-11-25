@@ -37,7 +37,7 @@ function SearchBar(){
 
     return (
             <form onSubmit={search} className='h-10 flex flex-row justify-center'>
-                <select
+                <select className='text-black'
                 id='selectOption'
                 value={selectedOption}
                 onChange={selectChange}
@@ -55,7 +55,7 @@ function SearchBar(){
                     type='text' 
                     value={query}
                     onChange={handlerChange}
-                    className='text-2xl border-2 border-black rounded-s-md w-96'
+                    className='text-2xl border-2 border-black rounded-s-md w-96 text-black'
                 ></input>
                 <button><SearchIcon fontSize='large'/></button>
             </form>
