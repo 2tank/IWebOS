@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
-import SingleCommentary from "./SingleCommentary";
+import SingleCommentary from "./SingleCommentary"
 
 function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sort_by_oldest = false, username = null}) {
 
