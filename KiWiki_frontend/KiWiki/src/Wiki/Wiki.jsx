@@ -18,36 +18,35 @@ function Wiki(){
 
         console.log(selectedOpition);
         console.log(query);
-        urlApi = apiEndpoint.api + `${selectedOpition}/${query}`;
+        urlApi = apiEndpoint.api + '/wikis/' + `${selectedOpition}/${query}`;
         console.log(urlApi);
 
         const getData = async() => {
             try{
-                const response = await axios.get(urlApi);
+                const response = await axios.get(urlApi)
                 setData(response.data);
-                console.log(response);
             }catch(err){
                 setError(err.message);
             }finally{
                 setLoading(false);
             }
         };
-        getData();
+        getData()
     },[])
 
     return(
-        <div>
+            <>
             <Navbar/>
-            {/* {Object.entries(data).map(([key, value]) => (
+            <section className='w-screen flex items-center justify-center flex-col'>
+            {
+               data != null &&  data.map(item => (
+                        <SingleWiki key={item._id} item={item}></SingleWiki>
+                    ))
+            }
 
-                <ul key=''>
-                    <SingleWiki/>
-                </ul>
-
-            ))
-            } */}
-
-        </div>
+            </section>
+            </>
+            
     )
 }
 
