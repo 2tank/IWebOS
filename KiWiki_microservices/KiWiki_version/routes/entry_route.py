@@ -26,36 +26,41 @@ async def get_entries(
     day: Optional[int] = Query(None, ge=1, le=31),
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
+    getTags: Optional[bool] = Query(None),
     ):
     try:
-        filter = {}
-        #Filtro por Año|Mes|Día
-        if year:
-            if month and day:
-                start_date = datetime(year,month,day)
-                end_date = datetime(year,month,day,23,59,59)
-            elif month:
-                start_date = datetime(year,month,1)
-                if month == 12:
-                    end_date = datetime(year+1,1,1)
+        if getTags:
+            return list(get_args(entryType));
+        else:
+            filter = {}
+            #Filtro por Año|Mes|Día
+            if year:
+                if month and day:
+                    start_date = datetime(year,month,day)
+                    end_date = datetime(year,month,day,23,59,59)
+                elif month:
+                    start_date = datetime(year,month,1)
+                    if month == 12:
+                        end_date = datetime(year+1,1,1)
+                    else:
+                        end_date = datetime(year,month+1,1)
                 else:
-                    end_date = datetime(year,month+1,1)
-            else:
-                start_date = datetime(year,1,1)
-                end_date = datetime(year+1,1,1)
+                    start_date = datetime(year,1,1)
+                    end_date = datetime(year+1,1,1)
 
-            filter["creationDate"] = {"$gte": start_date, "$lte": end_date}
+                filter["creationDate"] = {"$gte": start_date, "$lte": end_date}
 
-        #Filtramos con expresión regular y la opción case-insensitive
-        if description:
-            filter["description"] = {"$regex": ".*{}.*".format(description), "$options": "i"}
+            #Filtramos con expresión regular y la opción case-insensitive
+            if description:
+                filter["description"] = {"$regex": ".*{}.*".format(description), "$options": "i"}
 
-        #Filtro por tags
-        if tags:
-            filter["tags"] = {"$in": tags}
+            #Filtro por tags
+            if tags:
+                filter["tags"] = {"$in": tags}
 
-        entries = await entry_logic.get_entries(filter)
-        return entries
+
+            entries = await entry_logic.get_entries(filter)
+            return entries
     except Exception as e:
         print(f"Failed to retrieve entries: {str(e)}")
         raise HTTPException(status_code=500,  detail="Failed to retrieve entries")

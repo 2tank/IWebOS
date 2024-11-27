@@ -9,7 +9,7 @@ function EntrySection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
-  const [entryCreator, setEntryCreator] = useState(false);  // Estado para mostrar/ocultar formulario
+  const [entryCreator, setEntryCreator] = useState(false); 
   const [newEntry, setNewEntry] = useState({
     title: "",
     creator: "",
@@ -45,12 +45,6 @@ function EntrySection() {
   const handleCreateEntry = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!newEntry.title || !newEntry.creator || !newEntry.description || newEntry.tags.length === 0) {
-      alert("Por favor, completa todos los campos obligatorios.");
-      return;
-    }
-
     try {
       const response = await axios.post("http://localhost:8000/entries", newEntry, {
         headers: { "Content-Type": "application/json" },
@@ -64,7 +58,7 @@ function EntrySection() {
       if (err.response?.status === 422) {
         setSubmitError("La entrada tiene un formato inválido. Por favor, revisa los datos.");
       } else if (err.response?.status === 500) {
-        setSubmitError("Hubo un error en el servidor. Intenta nuevamente más tarde.");
+        setSubmitError("Hubo un error en el servidor. Intenta nuevamente más tarde." + err);
       } else {
         setSubmitError("Ocurrió un error desconocido.");
       }
@@ -129,6 +123,7 @@ function EntrySection() {
               id="tags"
               name="tags"
               type="text"
+              required
               value={newEntry.tags.join(", ")}
               onChange={(e) =>
                 setNewEntry((prev) => ({
