@@ -3,6 +3,7 @@ import axios from "axios";
 import CommentarySection from "../Commentary/CommentarySection";
 import SingleVersionSection from "./SingleVersionSection";
 import VersionHistory from "./VersionHistory";
+import PostEntry from "./PostEntry";
 
 function EntrySection() {
   const [data, setData] = useState(null);
@@ -79,79 +80,7 @@ function EntrySection() {
       </button>
 
       {/* Formulario de creación de entrada */}
-      {entryCreator && (
-        <form onSubmit={handleCreateEntry} className="bg-gray-800 p-4">
-          <h2>Crear Nueva Entrada</h2>
-          <div className="mb-2">
-            <label htmlFor="title">Título</label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              value={newEntry.title}
-              onChange={handleInputChange}
-              required
-              className="block w-full p-2 text-black"
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="creator">Creador</label>
-            <input
-              id="creator"
-              name="creator"
-              type="text"
-              value={newEntry.creator}
-              onChange={handleInputChange}
-              required
-              className="block w-full p-2 text-black"
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="description">Descripción</label>
-            <textarea
-              id="description"
-              name="description"
-              value={newEntry.description}
-              onChange={handleInputChange}
-              required
-              className="block w-full p-2 text-black"
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="tags">Tags (separados por comas)</label>
-            <input
-              id="tags"
-              name="tags"
-              type="text"
-              required
-              value={newEntry.tags.join(", ")}
-              onChange={(e) =>
-                setNewEntry((prev) => ({
-                  ...prev,
-                  tags: e.target.value.split(",").map((tag) => tag.trim()),
-                }))
-              }
-              className="block w-full p-2 text-black"
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="wiki">Wiki (opcional)</label>
-            <input
-              id="wiki"
-              name="wiki"
-              type="text"
-              value={newEntry.wiki}
-              onChange={handleInputChange}
-              className="block w-full p-2 text-black"
-            />
-          </div>
-          {submitError && <p className="text-red-500">{submitError}</p>}
-          {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
-          <button type="submit" className="bg-green-500 text-white px-4 py-2">
-            Crear Entrada
-          </button>
-        </form>
-      )}
+      {entryCreator && <PostEntry/>}
 
       {showHistory ? (
         <VersionHistory entryID={data._id} />
