@@ -1,0 +1,29 @@
+.htmlcontent-container h1, 
+.htmlcontent-container h2, 
+.htmlcontent-container h3, 
+.htmlcontent-container h4, 
+.htmlcontent-container h5, 
+.htmlcontent-container h6, 
+.htmlcontent-container p, 
+.htmlcontent-container span, 
+.htmlcontent-container div {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.htmlcontent-container h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.htmlcontent-container h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.htmlcontent-container p {
+    margin-bottom: 1em;
+}

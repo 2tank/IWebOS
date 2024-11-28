@@ -4,7 +4,6 @@ from urls import config
 from models.entry_schema import entrySchema, entryType
 from models.version_schema import versionSchema
 from typing import Optional, List, Dict
-from datetime import datetime
 
 entry_url = config["entry_url"]
 router = APIRouter()
@@ -43,6 +42,7 @@ async def get_entries(
     day: Optional[int] = Query(None),
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
+    getTags: Optional[bool] = Query(None),
 ):
     """
     Obtiene una lista de entradas aplicando filtros opcionales.
@@ -67,6 +67,7 @@ async def get_entries(
             "day": day,
             "description": description,
             "tags": tags,
+            "getTags" : getTags,
         }
 
         filters = {k: v for k, v in filters.items() if v is not None and v != []}

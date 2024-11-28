@@ -8,8 +8,6 @@ import typeSearch from '../Common/TypeSearch.json';
 
 function SearchBar(){
     
-    const apiEndpoint = apiEndpoints.api;
-
     const [selectedOption, setSelectedOption] = useState('name');
     const [query, setQuery] = useState('');
     
