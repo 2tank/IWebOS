@@ -131,3 +131,8 @@ async def get_wikis_author(name_author: str) -> List:
 async def modify_wiki(id_wiki: str, wiki_data_modify: dict) -> dict:
     result = await wiki_crud.modify_wiki(id_wiki, wiki_data_modify)
     return result
+
+
+async def get_entries(id_wiki: str) -> List:
+    result = await wiki_crud.get_entries(id_wiki)
+    return result

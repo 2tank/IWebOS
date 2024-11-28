@@ -1,10 +1,12 @@
 from database import MONGOCRUD
 from bson import ObjectId
 
+
 import motor.motor_asyncio
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+import httpx
 
 
 load_dotenv(dotenv_path='.env')
@@ -172,5 +174,30 @@ class WIKICRUD(MONGOCRUD):
 
         wiki = await self.get_id(id_wiki)
         return wiki
+
+    
+
+    async def get_entries(self, id_wiki: str):
+        wiki = await self.get_id(id_wiki)
+        entries = []
+        
+        async with httpx.AsyncClient() as client:
+            for entry_id in wiki["entries"]:
+                print(entry_id)
+                try:
+                    response = await client.get(f'http://localhost:8002/entries/{entry_id}') #usar http://entry:8002/entries/{entry_id}
+                    
+                    if response.status_code == 200:
+                        entry_data = response.json() 
+                        entries.append(entry_data)
+                    else:
+                        print(f"Error obteniendo la entrada {entry_id}: {response.status_code}")
+                except httpx.RequestError as e:
+                    print(f"Error HTTP: {e}")
+                    
+        return entries
+
+
+
         
 
