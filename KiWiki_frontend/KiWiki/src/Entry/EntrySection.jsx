@@ -6,6 +6,7 @@ import VersionHistory from "./VersionHistory";
 import PostEntry from "./PostEntry";
 
 function EntrySection() {
+  
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

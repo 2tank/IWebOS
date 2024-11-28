@@ -1,25 +1,56 @@
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import axios from "axios";
+import FormInput from "../Common/FormInput";
+import FormCheckBox from "../Common/FormCheckBox";
 
 function PostEntry() {
 
-const [newEntry, setNewEntry] = useState({
-    title: "",
-    creator: "",
-    description: "",
-    tags: [],
-    wiki: "",
-    creationDate: "",
-    actual_version: "",
-    });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  const formInputClassName = "block w-full p-2 text-black";
+
+  // Inicializamos datos formulario
+  const [formState, setFormState] = useState({
+      title: "",
+      creator: "",
+      description: "",
+      tags: [],
+      });
 
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  // Cargamos los tags de las Entradas nada más cargar la página
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/entries/?getTags=True");
+        setData(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   // Manejo del cambio en los campos del formulario
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewEntry((prev) => ({ ...prev, [name]: value }));
+    const { name, value, checked } = e.target;
+    if(name == "tags"){
+      const selectedTags = new Set(formState.tags);
+      if(checked){
+        selectedTags.add(value);  
+      }else{
+        selectedTags.delete(value);
+      }
+      setFormState((prev) => ({ ...prev, tags: Array.from(selectedTags) }));
+    }else{
+      setFormState((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   // Envío del formulario para crear una nueva entrada
@@ -27,10 +58,12 @@ const [newEntry, setNewEntry] = useState({
     e.preventDefault();
 
     // Actualiza creationDate con la fecha y hora actual
-     const updatedEntry = {
-         ...newEntry,
-         creationDate: new Date().toISOString(),
-     };
+    const updatedEntry = {
+        ...formState,
+        wiki: "",
+        actual_version: "",
+        creationDate: new Date().toISOString(),
+    };
 
     try {
       const response = await axios.post("http://localhost:8000/entries", updatedEntry, {
@@ -38,93 +71,43 @@ const [newEntry, setNewEntry] = useState({
       });
       setSubmitSuccess(true); // Marca el éxito
       setSubmitError(null); // Limpia errores previos
-      setNewEntry({
+      setFormState({
         title: "",
         creator: "",
         description: "",
         tags: [],
-        wiki: "",
       }); // Resetea el formulario
-      console.log("Entrada creada:", response.data);
     } catch (err) {
       setSubmitSuccess(false); // Marca fallo
       if (err.response?.status === 422) {
-        setSubmitError("La entrada tiene un formato inválido. Por favor, revisa los datos.");
+        setSubmitError("La entrada tiene un formato inválido. Por favor, revisa los datos." + err);
       } else if (err.response?.status === 500) {
         setSubmitError("Hubo un error en el servidor. Intenta nuevamente más tarde.");
       } else {
         setSubmitError("Ocurrió un error desconocido.");
       }
-
-      console.error("Error al crear la entrada:", err);
     }
   };
+
+  if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
+  if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
   return (
     <form onSubmit={handleCreateEntry} className="bg-gray-800 p-4">
       <h2 className="text-white text-lg mb-4">Crear Nueva Entrada</h2>
       <div className="mb-2">
-        <label htmlFor="title" className="text-white">Título</label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          value={newEntry.title}
-          onChange={handleInputChange}
-          required
-          className="block w-full p-2 text-black"
-        />
+          <FormInput id={"title"} name={"title"} value={formState.title} label={"Título"}
+           onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
       <div className="mb-2">
-        <label htmlFor="creator" className="text-white">Creador</label>
-        <input
-          id="creator"
-          name="creator"
-          type="text"
-          value={newEntry.creator}
-          onChange={handleInputChange}
-          required
-          className="block w-full p-2 text-black"
-        />
+        <FormInput id={"creator"} name={"creator"} value={formState.creator} label={"Creador"}
+          onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
       <div className="mb-2">
-        <label htmlFor="description" className="text-white">Descripción</label>
-        <textarea
-          id="description"
-          name="description"
-          value={newEntry.description}
-          onChange={handleInputChange}
-          required
-          className="block w-full p-2 text-black"
-        />
+        <FormInput id={"description"} name={"description"} value={formState.description} label={"Descripción"}
+          onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
-      <div className="mb-2">
-        <label htmlFor="tags" className="text-white">Tags (separados por comas)</label>
-        <input
-          id="tags"
-          name="tags"
-          type="text"
-          value={newEntry.tags.join(", ")}
-          onChange={(e) =>
-            setNewEntry((prev) => ({
-              ...prev,
-              tags: e.target.value.split(",").map((tag) => tag.trim()),
-            }))
-          }
-          className="block w-full p-2 text-black"
-        />
-      </div>
-      <div className="mb-2">
-        <label htmlFor="wiki" className="text-white">Wiki (opcional)</label>
-        <input
-          id="wiki"
-          name="wiki"
-          type="text"
-          value={newEntry.wiki}
-          onChange={handleInputChange}
-          className="block w-full p-2 text-black"
-        />
-      </div>
+      <FormCheckBox title={"Tags"} name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
       {submitError && <p className="text-red-500">{submitError}</p>}
       {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
       <button type="submit" className="bg-green-500 text-white px-4 py-2">
