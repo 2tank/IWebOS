@@ -37,7 +37,7 @@ function SingleVersionSection({entryVersionID}){
     return (
         <div>
             <div className="flex justify-end">
-                <button className="bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded-full text-white" onClick={() => setVersionCreator(!versionCreator)}>
+                <button className="bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white" onClick={() => setVersionCreator(!versionCreator)}>
                 {versionCreator ? "Cancelar" : "Modificar Version"}
                 </button>
             </div>

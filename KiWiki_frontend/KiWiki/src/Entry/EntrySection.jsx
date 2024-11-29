@@ -48,7 +48,7 @@ function EntrySection() {
           <h1 className="pt-4 text-3xl font-bold">{data.title}</h1> 
 
           <div className="flex justify-end p-2 gap-3">
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onClick={() => setShowHistory(!showHistory)}>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 my-3 px-4 rounded-full" onClick={() => setShowHistory(!showHistory)}>
               {showHistory ? "Ocultar Historial" : "Ver Historial"}
             </button>
           </div>

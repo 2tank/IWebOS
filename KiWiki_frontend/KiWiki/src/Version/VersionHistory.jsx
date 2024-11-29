@@ -51,8 +51,9 @@ function VersionHistory({ entryID, onVersionChange }) {
     const rollbackVersion = async (versionID) => {
         try {
             setIsUpdating(true);
-            await axios.put(`http://localhost:8000/versions/${versionID}`);
-            await fetchCurrentVersion();
+            const response = await axios.put(`http://localhost:8000/versions/${versionID}`);
+            
+            await fetchCurrentVersion(); 
             if (onVersionChange) {
                 onVersionChange(versionID);
             }
@@ -62,6 +63,7 @@ function VersionHistory({ entryID, onVersionChange }) {
             setIsUpdating(false);
         }
     };
+    
 
     useEffect(() => {
         fetchData();
@@ -75,30 +77,29 @@ function VersionHistory({ entryID, onVersionChange }) {
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">
                 {data.map((version) => (
-                    <li key={version._id} className="p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                        {version._id}
+                    <li key={version._id} className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
                         <p className="text-lg font-semibold">Editor: <span className="font-normal">{version.editor}</span></p>
                         <p className="text-lg font-semibold">Fecha de Edición: <span className="font-normal">{formatDate(version.editDate)}</span></p>
                         <p className="text-lg font-semibold">Contenido:</p>
                         <p className="p-3 bg-gray-300 rounded-lg mt-2 text-sm">{version.content}</p>
                         {currentVersion && version._id === currentVersion._id ? (
                             <>
-                            <button
-                                disabled
-                                className="mt-4 bg-green-500 text-white  px-4 py-2 rounded cursor-not-allowed"
-                            >
-                                ACTUAL
-                            </button>
-                            <button
-                                    onClick={() => rollbackVersion(version._id)}
-                                    className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors"
-                                    disabled={isUpdating} // Deshabilitar mientras se está actualizando
-                                >
-                                    {isUpdating ? "Revirtiendo..." : "Revertir a esta versión"}
-                                </button>
+                                <div className="flex gap-3">
+                                    <button
+                                        disabled
+                                        className="mt-4 bg-green-500 text-white  px-4 py-2 rounded cursor-not-allowed"
+                                    >
+                                        ACTUAL
+                                    </button>
+                                    <button
+                                        onClick={() => rollbackVersion(version._id)}
+                                        className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors"
+                                        disabled={isUpdating} // Deshabilitar mientras se está actualizando
+                                    >
+                                        {isUpdating ? "Revirtiendo..." : "Revertir a esta versión"}
+                                    </button>
+                                </div>
                             </>
-
-
                         ) : (
                             <>
                                 <button
