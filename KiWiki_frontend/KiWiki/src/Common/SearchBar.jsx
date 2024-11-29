@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from "react-router";
 import apiEndpoints from '../assets/apiEndpoints.json';
@@ -52,7 +51,7 @@ function SearchBar(){
                     type='text' 
                     value={query}
                     onChange={handlerChange}
-                    className='text-2xl border-2 border-black rounded-s-md w-96 text-black'
+                    className='text-2xl border-2 border-black rounded-s-md w-full sm:w-96 text-black'
                 ></input>
                 <button><SearchIcon fontSize='large'/></button>
             </form>

@@ -7,24 +7,25 @@ const Navbar = () => {
   const shouldShowSearchBar = location.pathname !== "/";
 
   return (
-    <nav className="flex items-center justify-between px-5 bg-yellow-950 text-white">
+    <nav className="w-full flex flex-col sm:flex-row items-center justify-between p-4 bg-yellow-950 text-white">
       <div className="flex items-center">
         <Link to="/" className="hover:opacity-80">
             <Avatar sx={{ width: 80, height: 80 }} src='/assets/logo_wiki_blanco.png'/>
         </Link>
       </div>
 
-      <div className="flex-grow flex justify-center">
+      <div className="flex-grow flex justify-center mb-2 sm:mb-0">
         {shouldShowSearchBar && <SearchBar/>}
       </div>
 
       <div className='flex items-center mt-2 sm:mt-0'>
-      <Link to="/" className="hover:opacity-80 flex items-center flex-col">
+      <Link to="/" className="hover:opacity-80 flex items-center flex-col sm:flex-row">
             <Avatar src='/src/assets/image.png'/> 
-            <span>
+            <span className="ml-2 sm:ml-0">
                 Iniciar Sesion
             </span>
         </Link>
+        <i className="fas fa-bell ml-4"></i>
       </div>
     </nav>
   );
