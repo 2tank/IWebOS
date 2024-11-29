@@ -76,6 +76,7 @@ function VersionHistory({ entryID, onVersionChange }) {
             <ul className="space-y-6">
                 {data.map((version) => (
                     <li key={version._id} className="p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                        {version._id}
                         <p className="text-lg font-semibold">Editor: <span className="font-normal">{version.editor}</span></p>
                         <p className="text-lg font-semibold">Fecha de Edición: <span className="font-normal">{formatDate(version.editDate)}</span></p>
                         <p className="text-lg font-semibold">Contenido:</p>

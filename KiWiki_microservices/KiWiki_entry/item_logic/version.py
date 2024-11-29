@@ -44,7 +44,7 @@ async def rollback_version_by_id(id):
     deleted_version = None
 
     if actualVersionID == id:
-        # Obtener todas las versiones de la entrada, incluyendo las revertidas
+        # Obtener todas las versiones de la entrada, no incluyendo las revertidas
         versions = await crud.get_versions_by_entryid(entry_id, reverted=True)
         
         # Filtrar las versiones para obtener la más reciente que no esté revertida

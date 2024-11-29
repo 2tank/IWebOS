@@ -102,7 +102,7 @@ async def rollback_version_by_id(id: str):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.put(f"{version_url}/{id}/rollback")
+            response = await client.put(f"{version_url}/{id}")
             response.raise_for_status()
             return response.json()
     except Exception as e:
