@@ -3,16 +3,20 @@ import axios from "axios";
 import FormInput from "../Common/FormInput";
 import FormTextArea from "../Common/FormTextArea"
 
-function PostVersion({editor,content}){
+function PostVersion({editor,content,maps,entryID}){
 
     const [submitError, setSubmitError] = useState(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
 
+
     // Inicializamos datos formulario
     const [formState, setFormState] = useState({
         editor: editor.toString(),
         content: content.toString(),
+        longitude: "",
+        latitude: "",
+        mapdescription: "",
     });
 
     // Manejo del cambio en los campos del formulario
@@ -25,19 +29,33 @@ function PostVersion({editor,content}){
     const handleCreateVersion = async (e) => {
         e.preventDefault();
 
+
+        const map = {
+            location: {
+                latitude: parseFloat(formState.latitude),
+                longitude: parseFloat(formState.longitude),
+            },
+            description: formState.mapdescription,
+        };
         // Actualiza creationDate con la fecha y hora actual
+
+        const updatedMaps = [...maps, map];
+
+
         const updatedVersion = {
             ...formState,
             editDate: new Date().toISOString(),
             attachments: [],
             links: [],
-            maps: [],
+            maps: updatedMaps,
             reverted: false,
-            entry_id: entry_id.toString(),
+            entry_id: entryID.toString(),
         };
 
+        console.log(maps);
+
         try {
-        const response = await axios.post("http://localhost:8000/entries/" + entry_id.toString() + "/versions", updatedVersion, {
+        const response = await axios.post("http://localhost:8000/entries/" + entryID.toString() + "/versions", updatedVersion, {
             headers: { "Content-Type": "application/json" },
         });
         setSubmitSuccess(true); // Marca el éxito
@@ -45,6 +63,9 @@ function PostVersion({editor,content}){
         setFormState({
             editor: "",
             content: "",
+            latitude: "",
+            longitude: "",
+            mapdescription: "",
         }); // Resetea el formulario
         } catch (err) {
         setSubmitSuccess(false); // Marca fallo
@@ -53,7 +74,7 @@ function PostVersion({editor,content}){
         } else if (err.response?.status === 500) {
             setSubmitError("Hubo un error en el servidor. Intenta nuevamente más tarde." + err);
         } else {
-            setSubmitError("Ocurrió un error desconocido.");
+            setSubmitError("Ocurrió un error desconocido." + err);
         }
         }
     };
@@ -70,6 +91,18 @@ function PostVersion({editor,content}){
             <div className="mb-2">
                 <FormTextArea id={"content"} name={"content"} value={formState.content} label={"Contenido"}
                 onChange={handleInputChange} required={true} className={formInputClassName}/>
+            </div>
+            <div className="mb-2">
+                <FormInput id={"longitude"} name={"longitude"} value={formState.longitude} label={"Longitud"}
+                onChange={handleInputChange} required={false} className={formInputClassName}/>
+            </div>
+            <div className="mb-2">
+                <FormInput id={"latitude"} name={"latitude"} value={formState.latitude} label={"Latitud"}
+                onChange={handleInputChange} required={false} className={formInputClassName}/>
+            </div>
+            <div className="mb-2">
+                <FormTextArea id={"mapdescription"} name={"mapdescription"} value={formState.mapdescription } label={"Descripcion"}
+                onChange={handleInputChange} required={false} className={formInputClassName}/>
             </div>
             {submitError && <p className="text-red-500">{submitError}</p>}
             {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}

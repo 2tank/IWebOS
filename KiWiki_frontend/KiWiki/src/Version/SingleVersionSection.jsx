@@ -5,7 +5,7 @@ import PostVersion from "./PostVersion";
 import { formatDate } from "../Common/CommonOperations";
 import './CSS/html.css'
 
-function SingleVersionSection({entryVersionID}){
+function SingleVersionSection({entryVersionID,entryID}){
 
     const urlVersion = "http://localhost:8000/versions/" + entryVersionID;
 
@@ -41,7 +41,7 @@ function SingleVersionSection({entryVersionID}){
                 {versionCreator ? "Cancelar" : "Modificar Version"}
                 </button>
             </div>
-            {versionCreator && <PostVersion editor={data.editor} content={data.content}/>}
+            {versionCreator && <PostVersion editor={data.editor} content={data.content} maps={data.maps} entryID={entryID}/>}
             <div className="flex gap-3 text-black">
                 <span className="text-xs">Editado: {formatDate(data.editDate)}</span>
                 <span className="text-xs">Editor: {data.editor}</span>
