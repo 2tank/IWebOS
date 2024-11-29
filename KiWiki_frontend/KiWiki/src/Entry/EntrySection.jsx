@@ -20,7 +20,7 @@ function EntrySection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/entries/672f28bc819eda2c0728fab4");
+        const response = await axios.get("http://localhost:8000/entries/67499b921aa3cdbeefba9e6a");
         setData(response.data);
       } catch (err) {
         setError(err.message);
