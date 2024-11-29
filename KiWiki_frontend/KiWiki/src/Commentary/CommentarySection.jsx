@@ -10,6 +10,15 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [commentaries, setCommentaries] = useState([]);
+    const [adminMode, setAdminMode] = useState(false);
+
+    const handleDeleteCommentarySection = (id) => {
+        setData(data.filter((commentary) => commentary._id !== id));
+    };
+
+    const handleAdminMode = () => {
+        setAdminMode(!adminMode);
+    }
 
     const setFilters = () => {
         let paramString = "";
@@ -21,10 +30,14 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
           paramString += "&sort_by_newest=true";
         }
         if(username !== null) {
-            paramString += `&user_id=${username}`
+            paramString += `&user=${username}`
         }
         setExtraParam(paramString);
     };
+
+    useEffect(() => {
+        setFilters();
+    }, [sort_by_newest, sort_by_oldest, username]);
 
     useEffect(() => {
         if (extraParam) {
@@ -52,11 +65,10 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
 
     useEffect(() => {
         if(data !== null) {
-            console.log(data);
-            const repliesComponented = data.map((commentary) => <SingleCommentary id={commentary._id} reply={0}/>);
+            const repliesComponented = data.map((commentary) => <SingleCommentary key={commentary._id} id={commentary._id} reply={0} adminMode={adminMode} handleDeleteCommentarySection={handleDeleteCommentarySection}/>);
             setCommentaries(repliesComponented);
         }
-    }, [data]);
+    }, [data, adminMode]);
 
     useEffect(() => {
         setFilters();
@@ -68,6 +80,14 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
     return (
         <div>
             <div className="container">
+                <div className="flex flex-row flex-wrap items-center space-x-2 ml-4 mt-2">
+                    { adminMode ?
+                        <button onClick={handleAdminMode} className="bg-red-400 rounded-full p-2 font-bold">Admin mode: ON</button>
+                    :
+                        <button onClick={handleAdminMode} className="bg-gray-300 rounded-full p-2 font-semibold">Admin mode: OFF</button>
+                    }
+                    <p>(este modo desaparecerá una vez se designen permisos a los usuarios)</p>
+                </div>
                 {commentaries}
             </div>
         </div>

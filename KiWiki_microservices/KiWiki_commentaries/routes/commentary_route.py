@@ -1,10 +1,13 @@
+import re
 from datetime import datetime
 from http.client import HTTPException
 from typing import Optional
 
+from bson import ObjectId
 from fastapi import APIRouter, Body, Query
 
 import item_logic.commentary as commentary_logic
+from item_logic.commentary import commentaryCollection
 from models.commentary_schema import commentary, commentaryUpdate
 
 router = APIRouter()
@@ -48,6 +51,10 @@ async def get_commentary_get_responses(id: str):
 
 @router.delete("/{id}")
 async def delete_commentary(id: str):
+    comentarioParaEliminar = await commentary_logic.commentaryCollection.collection.find_one({"_id": ObjectId(id)})
+    if comentarioParaEliminar['replies']:
+        for replyID in comentarioParaEliminar['replies']:
+            await commentary_logic.deleteCommentary(replyID)
     result = await commentary_logic.deleteCommentary(id)
     return result
 
@@ -82,7 +89,7 @@ async def get_main_commentaries_in_entry_specific_version(id_entrada: str, id_ve
 
 @router.get("/")
 async def get_commentaries(
-        user_id: Optional[str] = Query(None),
+        user: Optional[str] = Query(None),
         entry_id: Optional[str] = Query(None),
         entry_version_id: Optional[str] = Query(None),
         only_main_commentaries: Optional[bool] = Query(None),
@@ -91,8 +98,10 @@ async def get_commentaries(
     ):
     try:
         filter = {}
-        #if user_id:
-        #    filter["user_id"] = user_id
+        if user:
+            # filter["user"] = user
+            # Utilizamos re.escape para evitar problemas con caracteres especiales en la cadena de búsqueda
+            filter["user"] = {"$regex": re.escape(user),"$options": "i"}  # "i" es para búsqueda insensible a mayúsculas/minúsculas
         if entry_id:
             filter["entry"] = entry_id
             if entry_version_id:
@@ -100,11 +109,7 @@ async def get_commentaries(
         if only_main_commentaries:
             filter["commentaryInReply"] = None
         commentaries = await commentary_logic.get_commentaries(filter)
-        #Eliminable en caso de necesitarse el metodo antiguo
-        if user_id:
-            for c in commentaries:
-                if user_id not in c.get("user"):
-                    commentaries.remove(c)
+
         if sort_by_newest:
             commentaries.sort(key=commentary_logic.extract_date, reverse=True)
         elif sort_by_oldest:
