@@ -1,7 +1,7 @@
 function FormTextArea({id,name,label,value,onChange,required = False, className}){
     return(
         <>
-            <label htmlFor={id} className="text-white">{label}</label>
+            <label htmlFor={id} className="font-bold">{label}</label>
             <textarea
             id={id}
             name = {name}

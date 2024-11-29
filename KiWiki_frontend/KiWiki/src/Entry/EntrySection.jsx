@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import CommentarySection from "../Commentary/CommentarySection";
 import SingleVersionSection from "../Version/SingleVersionSection";
 import VersionHistory from "../Version/VersionHistory";
 import Navbar from '../Common/NavBar';
@@ -48,7 +47,7 @@ function EntrySection() {
           <h1 className="pt-4 text-3xl font-bold">{data.title}</h1> 
 
           <div className="flex justify-end p-2 gap-3">
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 my-3 px-4 rounded-full" onClick={() => setShowHistory(!showHistory)}>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 mt-3 px-4 rounded-full" onClick={() => setShowHistory(!showHistory)}>
               {showHistory ? "Ocultar Historial" : "Ver Historial"}
             </button>
           </div>
@@ -62,7 +61,7 @@ function EntrySection() {
                 <span className="text-xs" >Redactor: {data.creator}</span><br/>
               </div>
               <span className="block text-base text-gray-700">{data.description}</span>
-              <hr className="w-2/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
+              <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
               <SingleVersionSection entryVersionID={data.actual_version} />
               <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
             </div>
