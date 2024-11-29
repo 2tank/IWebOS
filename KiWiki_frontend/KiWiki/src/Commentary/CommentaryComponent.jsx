@@ -23,7 +23,7 @@ function CommentaryComponent({entryID, entryVersionID}) {
 
     return(
         <div>
-            <div className="container ml-0 sm:ml-6 mt-2 sm:mt-6">
+            <div className="container mt-2 sm:mt-6">
                 <CommentaryFilters setOrderByNewest={setOrderByNewest} setOrderByOldest={setOrderByOldest} 
                     setFilterUser={setFilterUser} />
                 <PostCommentary entryID={entryID} entryVersionID={entryVersionID} reloadCommentaries={updateCommentaries}/>

@@ -54,7 +54,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
 
   return (
     <div>
-      <div className='ml-4 border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
+      <div className='border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
         <h1 className='font-bold mb-2 underline'>Comenta sobre la entrada:</h1>
         <form onSubmit={handleSubmit} className='space-y-2'>
             <div className='flex flex-row flex-wrap'>

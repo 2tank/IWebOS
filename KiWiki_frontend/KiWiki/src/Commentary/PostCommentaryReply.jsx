@@ -24,10 +24,8 @@ function PostCommentary({entryID, entryVersionID, commentaryInReply, parentComme
           'Content-Type': 'application/json',
         },
       });
-      //setResponseMessage(response.data.message);  // Get message from FastAPI response
     } catch (error) {
       console.error("Error posting data:", error);
-      //setResponseMessage('An error occurred.');
     } finally {
         parentCommentaryPostReaction();
     }
@@ -41,7 +39,7 @@ function PostCommentary({entryID, entryVersionID, commentaryInReply, parentComme
 
   return (
     <div>
-      <div className='ml-4 border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
+      <div className='border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
         <form onSubmit={handleSubmit} className='space-y-2'>
             <div className='flex flex-row flex-wrap'>
                 <label>Usuario:</label>
@@ -79,7 +77,6 @@ function PostCommentary({entryID, entryVersionID, commentaryInReply, parentComme
               </div>
           </div>
         </form>
-        {/*<p>{responseMessage}</p>*/}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')).render(
         {/* <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
         <Route path='/wikis/:selectedOpition/:query' element={<Wiki/>}></Route>
-        <Route path='/entryTest' element={<EntryTest/>} /> {/*DEJADME ESTO PORFA, voy a ensuciar esto para los comentarios y cuando esten listo los exporto a la entry*/}
+        {/*<Route path='/entryTest' element={<EntryTest/>} /> DEJADME ESTO PORFA, voy a ensuciar esto para los comentarios y cuando esten listo los exporto a la entry*/}
       </Routes>
     </Router>
 )

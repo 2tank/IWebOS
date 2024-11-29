@@ -6,6 +6,7 @@ import VersionHistory from "../Version/VersionHistory";
 import Navbar from '../Common/NavBar';
 import { formatDate } from "../Common/CommonOperations";
 import "../Common/CSS/commonCSS.css";
+import CommentaryComponent from "../Commentary/CommentaryComponent";
 
 function EntrySection() {
   
@@ -63,7 +64,7 @@ function EntrySection() {
               <span className="block text-base text-gray-700">{data.description}</span>
               <hr className="w-2/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
               <SingleVersionSection entryVersionID={data.actual_version} />
-              <CommentarySection entryID={data._id} entryVersionID={data.actual_version} />
+              <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
             </div>
           )}
           </div>

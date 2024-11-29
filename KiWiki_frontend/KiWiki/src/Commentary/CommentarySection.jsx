@@ -80,7 +80,7 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
     return (
         <div>
             <div className="container">
-                <div className="flex flex-row flex-wrap items-center space-x-2 ml-4 mt-2">
+                <div className="flex flex-row flex-wrap items-center space-x-2 mt-2">
                     { adminMode ?
                         <button onClick={handleAdminMode} className="bg-red-400 rounded-full p-2 font-bold">Admin mode: ON</button>
                     :

@@ -53,7 +53,7 @@ function CommentaryFilters({setOrderByNewest, setOrderByOldest, setFilterUser}) 
 
     return (
         <div>
-            <div className='ml-4 border-2 border-gray-300 bg-gray-300 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base mb-2'>
+            <div className='border-2 border-gray-300 bg-gray-300 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base mb-2'>
                 <div className="flex flex-row mb-2">
                     <h1 className='font-bold underline'>Filtrado de comentarios: </h1>
                 </div>
