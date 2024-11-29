@@ -8,7 +8,7 @@ function SingleWiki({ item }) {
 
     const clickWiki = () => {
 
-        navigate('/wiki/'+`${item.name}`+'/entries/' , {
+        navigate('/wikis/'+`${item.name}`+'/entries/' , {
             state: { id: item._id },
           });
         };

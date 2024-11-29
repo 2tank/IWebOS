@@ -197,9 +197,6 @@ async def get_wikis_author(name_author: str):
         raise HTTPException(status_code=400, detail="Cannot obtain by current creator") from e
 
 
-    
-
-
 @router.patch("/{id_wiki}/modify_wiki")
 async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) -> dict:
     try:
@@ -208,4 +205,14 @@ async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) ->
         return response
     except Exception as e:
         print(f"Se produjo un erro: {e}")
+        raise HTTPException(status_code=400, detail="Put parameters correctly") from e
+
+
+@router.get("/{nombre_wiki}/entries")
+async def get_wiki_entries(nombre_wiki: str, id_wiki: str) -> List:
+    try:
+        response = await wiki_logic.get_entries(id_wiki)
+        return response
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Put parameters correctly") from e

@@ -197,3 +197,20 @@ async def delete_entries(id_wiki: str, id_entry: str) -> dict:
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=400, detail="Cannot delete an entry")
+
+#MODIFICAR
+@router.get("/{nombre_wiki}/entries")
+async def get_wikis_entries(nombre_wiki: str, id_wiki: str) -> List[dict]:
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{wiki_url}/{nombre_wiki}/entries")
+            response.raise_for_status()
+            return response.json()
+
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=400, detail="Failed to fetch entries for this wiki")
+
+    except Exception as e:
+        print(f"Se produjo un error: {e}")
+        raise HTTPException(status_code=400, detail="Cannot retrieve entries for this wiki")
