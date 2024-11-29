@@ -31,7 +31,7 @@ async def post_commetary(commentary: commentary = Body(...)):
 
 @router.get("/")
 async def get_commentaries(
-        user_id: Optional[str] = Query(None),
+        user: Optional[str] = Query(None),
         entry_id: Optional[str] = Query(None),
         entry_version_id: Optional[str] = Query(None),
         only_main_commentaries: Optional[bool] = Query(None),
@@ -40,7 +40,7 @@ async def get_commentaries(
     ):
     try:
         filters = {
-            "user_id": user_id,
+            "user": user,
             "entry_id": entry_id,
             "entry_version_id": entry_version_id,
             "only_main_commentaries": only_main_commentaries,

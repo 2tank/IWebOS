@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PostCommentaryReply from "./PostCommentaryReply"
 
-function SingleCommentary({id, reply = 0}) {
+function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteCommentarySection, childDelete}) {
 
     const urlCommentaryID = "http://localhost:8000/commentaries/" + id;
 
@@ -20,6 +20,14 @@ function SingleCommentary({id, reply = 0}) {
     const [replyFormActive, setReplyFormActive] = useState(false);
     const [tokenReloadCommentary, setTokenReloadCommentary] = useState(false);
 
+    const childDeleteFather = (id) => {
+        setResponses(data.replies.filter((replyCommentaryID) => replyCommentaryID !== id));
+        if(responses.length == 0) {
+            hideResponses();
+            setHasResponses(false);
+        }
+    }
+
     const setStyling = () => {
         if(reply == 0) {
             setCommentaryReplyDependantStyling('mt-8');
@@ -33,7 +41,7 @@ function SingleCommentary({id, reply = 0}) {
     }
 
     const loadResponses = () => {
-        const responsesComponented = data.replies.map((replyCommentaryID) => <SingleCommentary id={replyCommentaryID} reply={reply + 1}/>);
+        const responsesComponented = data.replies.map((replyCommentaryID) => <SingleCommentary key={replyCommentaryID} id={replyCommentaryID} reply={reply + 1} adminMode={adminMode} childDelete={childDeleteFather}/>);
         setResponses(responsesComponented);
         setShowResponses(true);
     };
@@ -83,6 +91,22 @@ function SingleCommentary({id, reply = 0}) {
         };
         fetchData();
     }, [tokenReloadCommentary]);
+
+    const deleteCommentary = async() => {
+        try {
+            await axios.delete(urlCommentaryID);
+            if(reply == 0) {
+                handleDeleteCommentarySection(id);
+            }
+            else {
+                childDelete(id);
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+        
+        }
+    };
 
     //if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (loading) return (
@@ -141,7 +165,7 @@ function SingleCommentary({id, reply = 0}) {
                         <img src={defaultPicture} className='h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-grey'/>
                     </div>
                     <div className="flex flex-col flex-wrap">
-                        <div className="inline-flex flex-wrap">
+                        <div className="inline-flex flex-wrap items-center">
                             <p className="mr-2 sm:mr-4 text-sm sm:text-base font-bold">{data.user}</p>
                             {grade > -1 ?
                                 <p className="mr-2 sm:mr-4 text-sm sm:text-base">Puntuacion: {grade}/10</p>
@@ -149,11 +173,18 @@ function SingleCommentary({id, reply = 0}) {
                                 null
                             }
                             <p className="text-sm sm:text-base text-gray-700">{data.date}</p>
+                            {adminMode ? 
+                            <button onClick={deleteCommentary} className="bg-red-300 rounded-full px-2 py-1 ml-2 sm:ml-4">Borrar comentario</button>
+                            :
+                            null
+                            }
                         </div>
-                        <p className="text-sm sm:text-base">{data.content}</p>
+                        <div className="inline-flex flex-wrap max-w-xs sm:max-w-sm md:max-w-lg xl:max-w-5xl 2xl:max-w-7xl">
+                            <p className="text-sm sm:text-base w-full max-w-full break-words hyphens-auto">{data.content}</p>
+                        </div>
                     </div>
                 </div>
-                <div className="bg-white text-black space-x-4 ml-10 sm:ml-16">
+                <div className="bg-white text-black space-x-4 ml-14 sm:ml-16">
                     <div>
                         {!replyFormActive ? 
                             (
@@ -167,14 +198,7 @@ function SingleCommentary({id, reply = 0}) {
                             (
                             <div className="flex-col px-2 py-1 mb-1 ml-2 text-black">
                                 <PostCommentaryReply entryID={data.entry} entryVersionID={data.entry_version} commentaryInReply={data._id} 
-                                parentCommentaryPostReaction={responseCommentaryPosted}/>
-                                <div className="flex justify-end">
-                                    <div className="flex px-2 py-1 rounded-full text-black font-semibold
-                                transition hover:duration-0 ease-out duration-300
-                                hover:bg-gray-100 hover:shadow-sm">
-                                        <button onClick={hideReplyForm}>Cancelar</button>
-                                    </div>
-                                </div>
+                                parentCommentaryPostReaction={responseCommentaryPosted} hideReplyForm={hideReplyForm}/>
                             </div>
                             )
                         }
