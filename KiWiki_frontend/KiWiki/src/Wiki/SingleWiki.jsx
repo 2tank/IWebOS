@@ -8,10 +8,10 @@ function SingleWiki({ item }) {
 
     const clickWiki = () => {
 
-        navigate('/wikis/'+`${item.name}`+'/entries/' , {
-            state: { id: item._id },
+        navigate('/wikis/'+`${item.name}`+'/entries' , {
+            state: { "id": item._id },
           });
-        };
+    }
     
   
   

@@ -10,29 +10,27 @@ function Wiki(){
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const {selectedOpition, query} = useParams();
-
+    const {selectedOption, query} = useParams();
+    console.log(selectedOption)
     let urlApi = ''
 
     useEffect(() =>{
 
-        console.log(selectedOpition);
-        console.log(query);
-        urlApi = apiEndpoint.api + '/wikis/' + `${selectedOpition}/${query}`;
-        console.log(urlApi);
-
-        const getData = async() => {
-            try{
-                const response = await axios.get(urlApi)
-                setData(response.data);
-            }catch(err){
-                setError(err.message);
-            }finally{
-                setLoading(false);
-            }
-        };
+        urlApi = apiEndpoint.api + '/wikis/' + `${selectedOption}/${query}`;
         getData()
-    },[])
+    },[query])
+
+
+    const getData = async() => {
+        try{
+            const response = await axios.get(urlApi)
+            setData(response.data);
+        }catch(err){
+            setError(err.message);
+        }finally{
+            setLoading(false);
+        }
+    };
 
     return(
             <>
