@@ -8,11 +8,12 @@ from typing import List, Literal
 entryType = Literal['POLITICS', 'SPORTS', 'CINEMA']  # A expandir...
 
 class entrySchema(BaseModel):
-    title: str = Field(..., max_length=20, description="Titulo de la Entrada")
+    title: str = Field(..., max_length=40, description="Titulo de la Entrada")
     creator : str = Field(..., max_length=20, description="Creador de la Entrada")
     creationDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))) ,description="Fecha creación de la Entrada")
-    description: str = Field(...,max_length=50, description="Descripción de la entrada")
+    description: str = Field(...,max_length=200, description="Descripción de la entrada")
     tags: List[entryType] = Field(default_factory=list,description="Tags asociados a la entrada")
+    wiki: str = Field(..., description="Wiki asociada a la entrada")
     actual_version: str = None
 
     model_config = {
@@ -21,11 +22,11 @@ class entrySchema(BaseModel):
             {
                 "title": "Entrada Prueba",
                 "creator": "Creador Prueba",
-                "creationDate": "2024-11-02T15:23:52.461000",
                 "description": "Descripcion Prueba",
                 "tags": [
                     "POLITICS"
                 ],
+                "wiki": "",
                 "actual_version": ""
             }
         }
