@@ -1,4 +1,4 @@
-import {useEffect, useState } from "react";
+import {useState } from "react";
 import axios from "axios";
 import FormInput from "../Common/FormInput";
 import FormTextArea from "../Common/FormTextArea"
@@ -7,7 +7,7 @@ function PostVersion({editor,content}){
 
     const [submitError, setSubmitError] = useState(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
-    const formInputClassName = "block w-full resize-y p-2 text-black break-words";
+    const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
 
     // Inicializamos datos formulario
     const [formState, setFormState] = useState({
@@ -60,21 +60,23 @@ function PostVersion({editor,content}){
 
     return (
         <>
-        <form onSubmit={handleCreateVersion} className="bg-gray-800 p-4">
-        <h2 className="text-white text-lg mb-4">Crear Nueva Version</h2>
-        <div className="mb-2">
-            <FormInput id={"editor"} name={"editor"} value={formState.editor} label={"Editor"}
-            onChange={handleInputChange} required={true} className={formInputClassName}/>
+        <form onSubmit={handleCreateVersion} className="my-4">
+        <div className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
+            <h2 className="text-xl font-bold mb-4">Crear Nueva Version</h2>
+            <div className="mb-2">
+                <FormInput id={"editor"} name={"editor"} value={formState.editor} label={"Editor"}
+                onChange={handleInputChange} required={true} className={formInputClassName}/>
+            </div>
+            <div className="mb-2">
+                <FormTextArea id={"content"} name={"content"} value={formState.content} label={"Contenido"}
+                onChange={handleInputChange} required={true} className={formInputClassName}/>
+            </div>
+            {submitError && <p className="text-red-500">{submitError}</p>}
+            {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
+            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+            Crear Version
+            </button>
         </div>
-        <div className="mb-2">
-            <FormTextArea id={"content"} name={"content"} value={formState.content} label={"Contenido"}
-            onChange={handleInputChange} required={true} className={formInputClassName}/>
-        </div>
-        {submitError && <p className="text-red-500">{submitError}</p>}
-        {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
-        <button type="submit" className="bg-green-500 text-white px-4 py-2">
-        Crear Version
-        </button>
         </form>
         </>
     );

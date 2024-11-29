@@ -41,12 +41,12 @@ function SingleVersionSection({entryVersionID}){
                 {versionCreator ? "Cancelar" : "Modificar Version"}
                 </button>
             </div>
+            {versionCreator && <PostVersion editor={data.editor} content={data.content}/>}
             <div className="flex gap-3 text-black">
                 <span className="text-xs">Editado: {formatDate(data.editDate)}</span>
                 <span className="text-xs">Editor: {data.editor}</span>
             </div>
             <div className="htmlcontent-container mt-2" dangerouslySetInnerHTML={{ __html: sanitizedHtmlContent }} />
-            {versionCreator && <PostVersion editor={data.editor} content={data.content}/>}
         </div>
     );
 }
