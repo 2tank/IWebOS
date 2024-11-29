@@ -104,7 +104,7 @@ async def create_entry_version(id: str,version: versionSchema):
 @router.get("/{id}/versions/")
 async def get_versions_by_entry_id(id: str):
     try:
-        versions = await version_logic.get_versions_by_entryid(id)
+        versions = await version_logic.get_versions_by_entryid(id,reverted=False)
         return versions
     except Exception as e:
         print(f"Failed to find versions: {str(e)}")
