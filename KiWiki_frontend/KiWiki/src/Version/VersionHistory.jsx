@@ -49,16 +49,22 @@ function VersionHistory({ entryID, onVersionChange }) {
     };
 
     const rollbackVersion = async (versionID) => {
+
         try {
+            let response = null;
             setIsUpdating(true);
-            const response = await axios.put(`http://localhost:8000/versions/${versionID}`);
-            
-            await fetchCurrentVersion(); 
-            if (onVersionChange) {
-                onVersionChange(versionID);
+            response = await axios.put(`http://localhost:8000/versions/${versionID}`);
+
+            console.log(response)
+
+            await fetchCurrentVersion();
+
+
+            if (onVersionChange && response) {
+                onVersionChange(response.data);
             }
         } catch (err) {
-            alert("No se pudo revertir la versión.");
+            alert("No se pudo revertir la versión." +err);
         } finally {
             setIsUpdating(false);
         }
