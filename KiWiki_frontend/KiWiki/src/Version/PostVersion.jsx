@@ -3,17 +3,16 @@ import axios from "axios";
 import FormInput from "../Common/FormInput";
 import FormTextArea from "../Common/FormTextArea"
 
-function PostVersion({entry_id}){
+function PostVersion({editor,content}){
 
     const [submitError, setSubmitError] = useState(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
-
     const formInputClassName = "block w-full resize-y p-2 text-black break-words";
 
     // Inicializamos datos formulario
     const [formState, setFormState] = useState({
-        editor: "",
-        content: "",
+        editor: editor.toString(),
+        content: content.toString(),
     });
 
     // Manejo del cambio en los campos del formulario
@@ -68,7 +67,7 @@ function PostVersion({entry_id}){
             onChange={handleInputChange} required={true} className={formInputClassName}/>
         </div>
         <div className="mb-2">
-            <FormTextArea id={"content"} name={"content"} value={formState.content} label={"content"}
+            <FormTextArea id={"content"} name={"content"} value={formState.content} label={"Contenido"}
             onChange={handleInputChange} required={true} className={formInputClassName}/>
         </div>
         {submitError && <p className="text-red-500">{submitError}</p>}

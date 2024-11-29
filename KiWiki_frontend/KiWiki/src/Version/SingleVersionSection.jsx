@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import DOMPurify from "dompurify";
+import PostVersion from "./PostVersion";
+import { formatDate } from "../Common/CommonOperations";
 import './CSS/html.css'
 
 function SingleVersionSection({entryVersionID}){
@@ -10,6 +12,8 @@ function SingleVersionSection({entryVersionID}){
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [versionCreator, setVersionCreator] = useState(false);
 
     useEffect(() => {
         const fetchData = async() => {
@@ -32,17 +36,17 @@ function SingleVersionSection({entryVersionID}){
 
     return (
         <div>
-            <div className="flex flex-wrap flex-col bg-green-700 text-white">
-                <h1 className='flex justify-center'>PLACEHOLDER DEL FRONT DE VERSION</h1>
-                <h2>Data version:</h2>
-                <ul>
-                    <li>ID: {data._id}</li>
-                    <li>editor: {data.editor}</li>
-                    <li>editDate: {data.editDate}</li>
-                </ul>
+            <div className="flex justify-end">
+                <button className="bg-green-500 hover:bg-green-700 font-bold py-2 px-4 rounded-full text-white" onClick={() => setVersionCreator(!versionCreator)}>
+                {versionCreator ? "Cancelar" : "Modificar Version"}
+                </button>
             </div>
-            Contenido:
-            <div className="htmlcontent-container" dangerouslySetInnerHTML={{ __html: sanitizedHtmlContent }} />
+            <div className="flex gap-3 text-black">
+                <span className="text-xs">Editado: {formatDate(data.editDate)}</span>
+                <span className="text-xs">Editor: {data.editor}</span>
+            </div>
+            <div className="htmlcontent-container mt-2" dangerouslySetInnerHTML={{ __html: sanitizedHtmlContent }} />
+            {versionCreator && <PostVersion editor={data.editor} content={data.content}/>}
         </div>
     );
 }

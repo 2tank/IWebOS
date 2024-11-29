@@ -14,16 +14,19 @@
 
 .htmlcontent-container h1 {
     font-size: 2em;
-    font-weight: bold;
     margin-bottom: 0.5em;
+    font-weight: bold;
+    color: black;
 }
 
 .htmlcontent-container h2 {
     font-size: 1.5em;
-    font-weight: bold;
     margin-bottom: 0.5em;
+    font-weight: bold;
+    color: black;
 }
 
 .htmlcontent-container p {
     margin-bottom: 1em;
+    color: black;
 }
