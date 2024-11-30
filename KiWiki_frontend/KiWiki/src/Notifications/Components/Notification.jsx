@@ -1,4 +1,4 @@
-function Notification({ title, user, notifDate, notifType }) {
+function Notification({ title, user, notifDate, notifType, read, approved }) {
     return (
         <div className="bg-white p-4 m-2 rounded shadow-md w-full max-w-xl">
             <h2 className="text-xl font-bold mb-2">{title}</h2>

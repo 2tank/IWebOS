@@ -2,11 +2,14 @@ import { Link, useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar'; 
 import Avatar from '@mui/material/Avatar';
 import Notification from './Notification'
+import { useNotification } from './NotificationContext';
 
 const Navbar = () => {
   const location = useLocation();
   const shouldShowSearchBar = location.pathname !== "/";
 
+  const {unreadCount} = useNotification();
+  
   return (
     <nav className="w-full flex flex-col sm:flex-row items-center justify-between p-4 bg-yellow-950 text-white">
       <div className="flex items-center">
@@ -22,7 +25,7 @@ const Navbar = () => {
 
       <div className='flex items-center mt-2 sm:mt-0'>
       <Link to="/notifications">
-        <Notification/>
+        <Notification unreadCount={unreadCount} />
       </Link>
       <Link to="/" className="hover:opacity-80 flex items-center flex-col sm:flex-row">
             <Avatar src='/src/assets/image.png'/> 

@@ -7,8 +7,9 @@ import EntrySection from './Entry/EntrySection.jsx';
 import Wiki from './Wiki/Wiki.jsx';
 import EntryTest from './Entry/EntryTest.jsx';
 import NotificationPage from './Notifications/NotificationPage.jsx';
+import NotificationProvider from './Common/NotificationContext.jsx';
 createRoot(document.getElementById('root')).render(
-
+  <NotificationProvider>
   <Router>
       <Routes>
         <Route path="/" element={<HomePage/>} />
@@ -20,4 +21,5 @@ createRoot(document.getElementById('root')).render(
         <Route path="/notifications" element={<NotificationPage/>} />
       </Routes>
     </Router>
+    </NotificationProvider>
 )
