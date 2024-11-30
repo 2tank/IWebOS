@@ -35,14 +35,15 @@ function Wiki(){
     return(
             <>
             <Navbar/>
-            <section className='w-screen flex items-center justify-center flex-col'>
-            {
-               data != null &&  data.map(item => (
-                        <SingleWiki key={item._id} item={item}></SingleWiki>
-                    ))
-            }
-
-            </section>
+            <div className='w-screen min-h-screen bg-gray-100'>
+                <section className='flex flex-grow items-center justify-center flex-col p-5 w-4/6 mx-auto'>
+                {
+                data != null &&  data.map(item => (
+                            <SingleWiki key={item._id} item={item}></SingleWiki>
+                        ))
+                }
+                </section>
+            </div>
             </>
             
     )
