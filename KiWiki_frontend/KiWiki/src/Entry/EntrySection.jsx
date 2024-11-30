@@ -6,6 +6,8 @@ import Navbar from '../Common/NavBar';
 import { formatDate } from "../Common/CommonOperations";
 import "../Common/CSS/commonCSS.css";
 import CommentaryComponent from "../Commentary/CommentaryComponent";
+import UploadFile from "../Common/UploadFile";
+import FileViewer from "../Common/FileViewer";
 
 function EntrySection() {
 
@@ -63,6 +65,8 @@ function EntrySection() {
               <span className="block text-base text-gray-700">{data.description}</span>
               <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
               <SingleVersionSection entryVersionID={data.actual_version} entryID={data._id} />
+              <FileViewer fileUrl={'https://res.cloudinary.com/dlj4y9vd3/image/upload/v1732993540/suertxagtygksuffmrub.png'} />
+              <UploadFile/>
               <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
             </div>
           )}
