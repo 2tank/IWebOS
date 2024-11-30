@@ -23,11 +23,12 @@ function VersionHistory({ entryID, onVersionChange }) {
         }
     };
 
-    const fetchData = async () => {
+    const fetchData = async (url) => {
         try {
-            const response = await axios.get(urlEntrada);
+            const response = await axios.get(url);
             setData(response.data);
             await fetchCurrentVersion();
+            console.log(url);
         } catch (err) {
             setError("Error al cargar las versiones.");
         } finally {
@@ -53,8 +54,27 @@ function VersionHistory({ entryID, onVersionChange }) {
     const handleFilterVersion = async(e) => {
         e.preventDefault();
 
-        
+        const year = e.target.year.value;
+        const month = e.target.month.value;
+        const day = e.target.day.value;
+        const editor = e.target.editor.value;
 
+        let filterURL = `http://localhost:8000/versions/?entry_id=${entryID}`;
+
+        if(year){
+            filterURL += `&?year=${year}`;
+        }
+        if(month){
+            filterURL += `&?month=${month}`;
+        }
+        if(day){
+            filterURL += `&?day=${day}`;
+        }
+        if(editor){
+            filterURL += `&?editor=${editor}`;
+        }
+
+        fetchData(filterURL);
     };
 
     const rollbackVersion = async (versionID) => {
@@ -81,7 +101,7 @@ function VersionHistory({ entryID, onVersionChange }) {
     
 
     useEffect(() => {
-        fetchData();
+        fetchData(urlEntrada);
     }, [entryID]);
 
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
@@ -89,6 +109,7 @@ function VersionHistory({ entryID, onVersionChange }) {
 
     return (
         <div className="p-6 rounded-lg shadow-lg">
+            {entryID}
             <DateFilter handleFilterVersion={handleFilterVersion}/>
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">

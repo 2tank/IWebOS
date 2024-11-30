@@ -30,7 +30,7 @@ function VersionFilter({handleFilterVersion}){
         <TuneIcon className='hover:bg-gray-300 hover:cursor-pointer rounded-lg' onClick={() => setShowFilter(!showFilter)}/>
         {showFilter && (
             <form onSubmit={handleFilterVersion}>
-                <flex className='flex gap-2 mt-4 mb-2'>
+                <div className='flex gap-2 mt-4 mb-2'>
                     <FormNumberInput name={"year"} value={formState.year} label={"Año: "}
                     onChange={handleInputChange} required={formState.month != "" || formState.day!= "" ? true : false} className={"bg-gray-300 rounded w-14"} max={new Date().getFullYear()} min={1900}/>
                     <FormNumberInput name={"month"} value={formState.month} label={"Mes: "}
@@ -39,7 +39,7 @@ function VersionFilter({handleFilterVersion}){
                     onChange={handleInputChange} required={false} className={"bg-gray-300 rounded w-10 text-black"} max={getMaxDay(formState.year,formState.month)} min={1}/>
                     <FormTextInput name={"editor"} value={formState.editor} label={"Editor: "}
                     onChange={handleInputChange} required={false} className={"bg-gray-300 rounded text-black"}/>
-                </flex>
+                </div>
                 <button type='submit' className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 mt-3 px-4 rounded-full' >Filtrar</button>
             </form>
         )}
