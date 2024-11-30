@@ -34,7 +34,7 @@ function SingleEntry({ item }){
 
       <footer className="flex justify-between items-center text-gray-600 text-sm border-t pt-2">
         <span>Fecha de creación: {new Date(item.creationDate).toLocaleDateString()}</span>
-        <span>Etiquetas: {item.tags ? item.tags : 0}</span>
+        <span>Etiquetas: {item.tags ? item.tags : "-"}</span>
       </footer>
     </div>
   );
