@@ -1,6 +1,6 @@
 import {useEffect, useState } from "react";
 import axios from "axios";
-import FormInput from "../Common/FormInput";
+import FormTextInput from "../Common/FormInput";
 import FormCheckBox from "../Common/FormCheckBox";
 
 function PostEntry() {
@@ -96,18 +96,18 @@ function PostEntry() {
     <form onSubmit={handleCreateEntry} className="bg-gray-800 p-4">
       <h2 className="text-white text-lg mb-4">Crear Nueva Entrada</h2>
       <div className="mb-2">
-          <FormInput id={"title"} name={"title"} value={formState.title} label={"Título"}
+          <FormTextInput name={"title"} value={formState.title} label={"Título"}
            onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
       <div className="mb-2">
-        <FormInput id={"creator"} name={"creator"} value={formState.creator} label={"Creador"}
+        <FormTextInput name={"creator"} value={formState.creator} label={"Creador"}
           onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
       <div className="mb-2">
-        <FormInput id={"description"} name={"description"} value={formState.description} label={"Descripción"}
+        <FormTextInput name={"description"} value={formState.description} label={"Descripción"}
           onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
-      <FormCheckBox title={"Tags"} name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
+      <FormCheckBox name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
       {submitError && <p className="text-red-500">{submitError}</p>}
       {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
       <button type="submit" className="bg-green-500 text-white px-4 py-2">

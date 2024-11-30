@@ -12,7 +12,9 @@ async def get_versions(
     year: Optional[int] = Query(None, ge=1900, le=datetime.now().year),
     month: Optional[int] = Query(None, ge=1, le=12),
     day: Optional[int] = Query(None, ge=1, le=31),
-    content_word: Optional[str] = Query(None)
+    content_word: Optional[str] = Query(None),
+    editor: Optional[str] = Query(None),
+    entry_id: Optional[str] = Query(None),
     ):
     try:
         filter = {}
@@ -34,6 +36,12 @@ async def get_versions(
 
         if content_word:
             filter["content"] = {"$regex": ".*{}.*".format(content_word), "$options": "i"}
+
+        if editor:
+            filter["editor"] = {"$regex": ".*{}.*".format(editor), "$options" : "i"}
+
+        if entry_id:
+            filter["entry_id"] = entry_id
 
         versions = await version_logic.get_versions(filter)
         return versions

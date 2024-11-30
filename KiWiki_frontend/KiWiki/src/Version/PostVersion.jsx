@@ -1,6 +1,6 @@
 import {useState } from "react";
 import axios from "axios";
-import FormInput from "../Common/FormInput";
+import FormTextInput from "../Common/FormTextInput";
 import FormTextArea from "../Common/FormTextArea"
 import AddLocationIcon from '@mui/icons-material/AddLocation';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -98,11 +98,11 @@ function PostVersion({editor,content,maps,entryID}){
         <div className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
             <h2 className="text-xl font-bold mb-4">Crear Nueva Version</h2>
             <div className="mb-2">
-                <FormInput id={"editor"} name={"editor"} value={formState.editor} label={"Editor"}
+                <FormTextInput name={"editor"} value={formState.editor} label={"Editor"}
                 onChange={handleInputChange} required={true} className={formInputClassName}/>
             </div>
             <div className="mb-2">
-                <FormTextArea id={"content"} name={"content"} value={formState.content} label={"Contenido"}
+                <FormTextArea name={"content"} value={formState.content} label={"Contenido"}
                 onChange={handleInputChange} required={true} className={formInputClassName}/>
             </div>
 

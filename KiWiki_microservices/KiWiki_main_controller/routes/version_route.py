@@ -14,7 +14,9 @@ async def get_versions(
     year: Optional[int] = Query(None),
     month: Optional[int] = Query(None),
     day: Optional[int] = Query(None),
-    content_word: Optional[str] = Query(None)
+    content_word: Optional[str] = Query(None),
+    editor: Optional[str] = Query(None),
+    entry_id: Optional[str] = Query(None),
 ):
     """
     Obtiene versiones filtradas por fecha y contenido.
@@ -34,6 +36,8 @@ async def get_versions(
             "month": month,
             "day": day,
             "content_word": content_word,
+            "editor" : editor,
+            "entry_id": entry_id,
         }
 
         # Eliminamos del diccionario aquellos valores que sean None
