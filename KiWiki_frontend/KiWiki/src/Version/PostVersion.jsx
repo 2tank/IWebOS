@@ -119,16 +119,16 @@ function PostVersion({editor,content,maps,entryID}){
                     <div name="divAddMapa">
                         <div className="flex gap-4">
                             <div className="mb-2">
-                                <FormInput id={"longitude"} name={"longitude"} value={formState.longitude} label={"Longitud"}
+                                <FormTextInput name={"longitude"} value={formState.longitude} label={"Longitud"}
                                 onChange={handleInputChange} required={false} className={formInputClassName}/>
                             </div>
                             <div className="mb-2">
-                                <FormInput id={"latitude"} name={"latitude"} value={formState.latitude} label={"Latitud"}
+                                <FormTextInput name={"latitude"} value={formState.latitude} label={"Latitud"}
                                 onChange={handleInputChange} required={false} className={formInputClassName}/>
                             </div>
                         </div>
                         <div className="mb-2">
-                            <FormTextArea id={"mapdescription"} name={"mapdescription"} value={formState.mapdescription } label={"Descripcion"}
+                            <FormTextArea name={"mapdescription"} value={formState.mapdescription } label={"Descripcion"}
                             onChange={handleInputChange} required={false} className={formInputClassName}/>
                         </div>
                     </div>)
@@ -136,10 +136,10 @@ function PostVersion({editor,content,maps,entryID}){
 
                 {submitError && <p className="text-red-500">{submitError}</p>}
                 {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
-                <button type="submit" className="bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
-                Crear Version
-                </button>
             </div>
+            <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
+                Crear Version
+            </button>
         </div>
         </form>
         </>

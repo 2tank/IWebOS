@@ -28,7 +28,6 @@ function VersionHistory({ entryID, onVersionChange }) {
             const response = await axios.get(url);
             setData(response.data);
             await fetchCurrentVersion();
-            console.log(url);
         } catch (err) {
             setError("Error al cargar las versiones.");
         } finally {
@@ -62,16 +61,16 @@ function VersionHistory({ entryID, onVersionChange }) {
         let filterURL = `http://localhost:8000/versions/?entry_id=${entryID}`;
 
         if(year){
-            filterURL += `&?year=${year}`;
+            filterURL += `&year=${year}`;
         }
         if(month){
-            filterURL += `&?month=${month}`;
+            filterURL += `&month=${month}`;
         }
         if(day){
-            filterURL += `&?day=${day}`;
+            filterURL += `&day=${day}`;
         }
         if(editor){
-            filterURL += `&?editor=${editor}`;
+            filterURL += `&editor=${editor}`;
         }
 
         fetchData(filterURL);
@@ -102,14 +101,13 @@ function VersionHistory({ entryID, onVersionChange }) {
 
     useEffect(() => {
         fetchData(urlEntrada);
-    }, [entryID]);
+    }, []);
 
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
     return (
         <div className="p-6 rounded-lg shadow-lg">
-            {entryID}
             <DateFilter handleFilterVersion={handleFilterVersion}/>
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">
