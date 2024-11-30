@@ -58,7 +58,7 @@ function CommentaryFilters({setOrderByNewest, setOrderByOldest, setFilterUser}) 
                     <h1 className='font-bold underline'>Filtrado de comentarios: </h1>
                 </div>
                 <form onSubmit={handleSubmit} className='space-y-2'>
-                    <div className='flex flex-row flex-wrap space-x-4 space-y-2'>
+                    <div className='flex flex-row flex-wrap space-x-4 space-y-2 items-center'>
                         <div className="flex-col">
                             <label>Nombre de usuario:</label>
                             <input

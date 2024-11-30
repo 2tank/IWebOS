@@ -4,6 +4,7 @@ import defaultPicture from "../assets/image.png"
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PostCommentaryReply from "./PostCommentaryReply"
+import {formatDateTime} from "../Common/CommonOperations"
 
 function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteCommentarySection, childDelete}) {
 
@@ -76,9 +77,12 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
                 if(response.data.commentaryInReply == null && reply == 0 && response.data.entryRating != null) {
                     setGrade(response.data.entryRating);
                 }
+                /*
                 const dateSplitted = response.data.date.split('T');
                 const timeSplitted = dateSplitted[1].split('.');
                 const formattedDate = dateSplitted[0] + ' ' + timeSplitted[0];
+                */
+                const formattedDate = formatDateTime(response.data.date);
                 setData({
                     ...response.data,
                     date: formattedDate
