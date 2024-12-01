@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation} from "react-router-dom";
 import axios from "axios";
 import FormTextInput from "../Common/FormTextInput";
 import FormTextArea from "../Common/FormTextArea";
@@ -10,6 +11,12 @@ import AddPhotoIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelImageIcon from '@mui/icons-material/HideImage';
 
 function PostVersion({ editor, content, maps, entryID }) {
+
+  const location = useLocation();
+  const { id } = location.state || {};
+
+  //METER GET
+
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
@@ -22,12 +29,18 @@ function PostVersion({ editor, content, maps, entryID }) {
     maps: [],
   });
 
-  const handleInputChange = (e, index) => {
+  const handleMapInputChange = (e, index) => {
     const { name, value } = e.target;
     const updatedMaps = [...formState.maps];
     updatedMaps[index][name] = value;
     setFormState((prev) => ({ ...prev, maps: updatedMaps }));
   };
+
+   // Manejo del cambio en los campos del formulario
+   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormState((prev) => ({ ...prev, [name]: value }));
+};
 
   const addNewMap = () => {
 
@@ -105,7 +118,6 @@ function PostVersion({ editor, content, maps, entryID }) {
           <div className="flex flex-col items-left mb-4">
             <div>
                     <button type="button" onClick={addNewMap} className="mb-4">
-
                     <AddLocationIcon fontSize="large" className={`cursor-pointer ${buttonClass}`} />
                     </button>
 
@@ -124,16 +136,16 @@ function PostVersion({ editor, content, maps, entryID }) {
                 <div className="mt-1 flex gap-4">
                   <div className="mb-2">
                     <FormTextInput name={"longitude"} value={map.longitude} label={"Longitud"}
-                      onChange={(e) => handleInputChange(e, index)} required={false} className={formInputClassName} />
+                      onChange={(e) => handleMapInputChange(e, index)} required={false} className={formInputClassName} />
                   </div>
                   <div className="mb-2">
                     <FormTextInput name={"latitude"} value={map.latitude} label={"Latitud"}
-                      onChange={(e) => handleInputChange(e, index)} required={false} className={formInputClassName} />
+                      onChange={(e) => handleMapInputChange(e, index)} required={false} className={formInputClassName} />
                   </div>
                 </div>
                 <div className="mb-2">
                   <FormTextArea name={"mapdescription"} value={map.mapdescription} label={"Descripción"}
-                    onChange={(e) => handleInputChange(e, index)} required={false} className={formInputClassName} />
+                    onChange={(e) => handleMapInputChange(e, index)} required={false} className={formInputClassName} />
                 </div>
               </div>
             ))}

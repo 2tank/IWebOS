@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react"
+import { useNavigate, useParams} from "react-router-dom";
 import axios from "axios"
 import DOMPurify from "dompurify";
-import PostVersion from "./PostVersion";
 import { formatDate } from "../Common/CommonOperations";
 import './CSS/html.css'
 
 function SingleVersionSection({entryVersionID,entryID}){
+
+    const navigate = useNavigate();
+
+    const { nameWiki,entry_id } = useParams(); 
 
     const urlVersion = "http://localhost:8000/versions/" + entryVersionID;
 
@@ -13,7 +17,12 @@ function SingleVersionSection({entryVersionID,entryID}){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [versionCreator, setVersionCreator] = useState(false);
+    const clickEditVersion = () => {
+
+        navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${entry_id}` + '/versionedit' , {
+            state: { entryID: entryID },
+          });
+    }
 
     useEffect(() => {
         const fetchData = async() => {
@@ -37,11 +46,10 @@ function SingleVersionSection({entryVersionID,entryID}){
     return (
         <div>
             <div className="flex justify-end">
-                <button className="bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white" onClick={() => setVersionCreator(!versionCreator)}>
-                {versionCreator ? "Cancelar" : "Modificar Version"}
+                <button className="bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white" onClick={clickEditVersion}>
+                Editar Version
                 </button>
             </div>
-            {versionCreator && <PostVersion editor={data.editor} content={data.content} maps={data.maps} entryID={entryID}/>}
             <div className="flex gap-3 text-black">
                 <span className="text-xs">Editado: {formatDate(data.editDate)}</span>
                 <span className="text-xs">Editor: {data.editor}</span>

@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 
 
@@ -7,9 +6,11 @@ function SingleEntry({ item }){
 
     const navigate = useNavigate()
 
+    const { nameWiki } = useParams();
+
     const clickWiki = () => {
 
-        navigate('/wikis/'+`${item.name}`+'/entries' , {
+        navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item._id}` , {
             state: { "id": item._id },
           });
     }
@@ -17,7 +18,7 @@ function SingleEntry({ item }){
   
     return (
     
-    <div onClick={clickWiki} tabIndex={0} className="flex w-full flex-col bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900">
+    <div onClick={clickWiki} tabIndex={0} className="flex w-full hover:cursor-pointer flex-col bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900">
       <header className="flex items-center space-x-4 mb-4 ">
 
         <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>
