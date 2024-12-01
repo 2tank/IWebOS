@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router-dom";
 import axios from 'axios';
-import SearchBar from '../Common/SearchBar.jsx';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+
+
 import SingleWiki from './SingleWiki.jsx';
 import apiEndpoint from '../assets/apiEndpoints.json';
 import Navbar from '../Common/NavBar.jsx';
@@ -34,16 +37,25 @@ function Wiki(){
 
     return(
             <>
-            <Navbar/>
-            <div className='w-screen min-h-screen bg-gray-100'>
+            <section className='w-screen min-h-screen bg-gray-100 relative'>
+            
+                <Navbar/>
                 <section className='flex flex-grow items-center justify-center flex-col p-5 w-4/6 mx-auto'>
-                {
-                data != null &&  data.map(item => (
-                            <SingleWiki key={item._id} item={item}></SingleWiki>
-                        ))
-                }
+                    {
+                    data != null &&  data.map(item => (
+                                <SingleWiki key={item._id} item={item}></SingleWiki>
+                            ))
+                    }
                 </section>
-            </div>
+            
+                <Link className='w-16 h-16 m-16 fixed bottom-0 right-0' to='/wikis/create'>
+                
+                    <AddCircleIcon style={{width:'100%', height:'100%'}}fontSize="large" color='success'></AddCircleIcon>
+                
+                </Link>
+
+
+            </section>
             </>
             
     )
