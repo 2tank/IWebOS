@@ -76,14 +76,21 @@ function NotificationPage() {
         setCurrentPage(1);
     };
 
-    const markAllAsRead = () => {
-        setData((prevData) =>
-            prevData.map((notification) => ({
-                ...notification,
-                read: true,
-            }))
-        );
-    };
+    const markAllAsRead = async () => {
+        try {
+            await axioNos.patch("http://localhost:8000/notification/read/");
+            setData((prevData) =>
+                prevData.map((notification) => ({
+                    ...notification,
+                    read: true,
+                }))
+            );
+        } catch (err) {
+            console.error("Error en la solicitud:", err); // Inspecciona el error aquí
+            setError("Error al marcar todas las notificaciones como leídas");
+        }
+    };    
+    
     
 
     // Funciones de aceptación y denegación de notificación
