@@ -2,8 +2,13 @@ import {useState } from "react";
 import axios from "axios";
 import FormTextInput from "../Common/FormTextInput";
 import FormTextArea from "../Common/FormTextArea"
-import AddLocationIcon from '@mui/icons-material/AddLocation';
-import CancelIcon from '@mui/icons-material/Cancel';
+import UploadFile from "../Common/UploadFile";
+
+import AddLocationIcon from '@mui/icons-material/AddLocationAlt';
+// import AddLocationIcon from '@mui/icons-material/AddLocation';
+import CancelLocationIcon from '@mui/icons-material/Cancel';
+import AddPhotoIcon from '@mui/icons-material/AddPhotoAlternate';
+import CancelImageIcon from '@mui/icons-material/HideImage';
 
 function PostVersion({editor,content,maps,entryID}){
 
@@ -11,6 +16,7 @@ function PostVersion({editor,content,maps,entryID}){
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
     const [showAddMap,setShowAddMap] = useState(false);
+    const [showAddImage,setShowAddImage] = useState(false);
 
 
     // Inicializamos datos formulario
@@ -39,7 +45,7 @@ function PostVersion({editor,content,maps,entryID}){
         let updatedMaps = maps;
 
 
-        if (!isNaN(latitude) && !isNaN(longitude) && formState.latitude !== "" && formState.longitude !== "") {
+        if (!isNaN(latitude) || !isNaN(longitude) || formState.latitude !== "" || formState.longitude !== "") {
 
             map = {
                 location: {
@@ -109,11 +115,20 @@ function PostVersion({editor,content,maps,entryID}){
 
 
             <div className="flex flex-col items-left mb-4">
-                <button type="button" onClick={() => setShowAddMap(!showAddMap)}>
-                    {showAddMap ?
-                    <CancelIcon fontSize="large" className="cursor-pointer" /> :
-                    <AddLocationIcon fontSize="large" className="cursor-pointer"/>}
-                </button>
+                <div>
+                    <button type="button" onClick={() => setShowAddMap(!showAddMap)}>
+                        {showAddMap ?
+                        <CancelLocationIcon fontSize="large" className="cursor-pointer" /> :
+                        <AddLocationIcon fontSize="large" className="cursor-pointer"/>}
+                    </button>
+
+                    <button type="button" onClick={() => setShowAddImage(!showAddImage)}>
+                        {showAddImage ?
+                        <CancelImageIcon fontSize="large" className="cursor-pointer" /> :
+                        <AddPhotoIcon fontSize="large" className="cursor-pointer"/>}
+                    </button>
+                </div>
+
 
                 { showAddMap && (
                     <div name="divAddMapa">
@@ -132,6 +147,14 @@ function PostVersion({editor,content,maps,entryID}){
                             onChange={handleInputChange} required={false} className={formInputClassName}/>
                         </div>
                     </div>)
+                }
+
+
+                { showAddImage && (
+                    <div>
+                        <UploadFile/>
+                    </div>
+                    )
                 }
 
                 {submitError && <p className="text-red-500">{submitError}</p>}

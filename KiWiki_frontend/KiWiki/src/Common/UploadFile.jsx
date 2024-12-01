@@ -46,14 +46,14 @@ const UploadFile = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Subir un archivo a la wiki</h2>
-      
+      <h2 className="text-xl font-bold mb-4">Subir un archivo a la versión</h2>
+
       <input
         type="file"
         onChange={handleFileChange}
         className="border p-2 mb-4"
       />
-      
+
       {file && !loading && (
         <div className="mt-4">
           <p><strong>Vista previa:</strong></p>
@@ -62,7 +62,7 @@ const UploadFile = () => {
           ) : (
             <p>Archivo seleccionado: {file.name}</p>
           )}
-          
+
           <button
             onClick={handleUpload}
             className="mt-2 bg-green-500 text-white py-2 px-4 rounded"
