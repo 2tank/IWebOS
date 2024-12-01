@@ -28,11 +28,17 @@ async def update_notification(id,req):
 
 # --- ADDITIONAL OPERATIONS FOR NOTIFICATION ------------------------------
 
-# Acceptar la petición de la notificación
+# Aprobar o denegar la notificación
 async def approve_notification(id: str):
-    update_data = {"approved": True}  # Cambia el estado de 'read' a True
+    update_data = {"approved": True, "read": True}
     updated_notification = await crud.update_id(id, update_data)
     return updated_notification
+
+async def deny_notification(id: str):
+    update_data = {"approved": False, "read": True}
+    updated_notification = await crud.update_id(id, update_data)
+    return updated_notification
+
 
 # Marcar como leida la notificación
 async def mark_notification_as_read(id: str):
