@@ -48,6 +48,7 @@ class WIKICRUD(MONGOCRUD):
             {"_id": ObjectId(id_wiki)},
             {"$push": {"entries": id_entry}}
         )
+
         if result.modified_count == 0:
             raise ValueError("No Wiki document found with the provided ID")
 
@@ -71,6 +72,7 @@ class WIKICRUD(MONGOCRUD):
             {"_id": ObjectId(id_wiki)},
             {"$pull": {"entries": id_entry}}
         )
+
         if result.modified_count == 0:
             raise ValueError("No Wiki document found with the provided ID")
 
