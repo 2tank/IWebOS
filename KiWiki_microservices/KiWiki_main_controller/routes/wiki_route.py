@@ -199,11 +199,11 @@ async def delete_entries(id_wiki: str, id_entry: str) -> dict:
         raise HTTPException(status_code=400, detail="Cannot delete an entry")
 
 #MODIFICAR
-@router.get("/{nombre_wiki}/entries")
-async def get_wikis_entries(nombre_wiki: str, id_wiki: str) -> List[dict]:
+@router.get("/{id_wiki}/entries")
+async def get_wikis_entries(id_wiki: str) -> List[dict]:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(f"{wiki_url}/{nombre_wiki}/entries")
+            response = await client.get(f"{wiki_url}/{id_wiki}/entries")
             response.raise_for_status()
             return response.json()
 

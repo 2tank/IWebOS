@@ -208,8 +208,8 @@ async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) ->
         raise HTTPException(status_code=400, detail="Put parameters correctly") from e
 
 
-@router.get("/{nombre_wiki}/entries")
-async def get_wiki_entries(nombre_wiki: str, id_wiki: str) -> List:
+@router.get("/{id_wiki}/entries")
+async def get_wiki_entries(id_wiki: str) -> List:
     try:
         response = await wiki_logic.get_entries(id_wiki)
         return response
