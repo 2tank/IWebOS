@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { formatDate } from "../Common/CommonOperations";
+import DateFilter from "./DateFilter";
+import FormInput from "../Common/FormTextInput";
 
 function VersionHistory({ entryID, onVersionChange }) {
     const [data, setData] = useState(null);
@@ -21,9 +23,9 @@ function VersionHistory({ entryID, onVersionChange }) {
         }
     };
 
-    const fetchData = async () => {
+    const fetchData = async (url) => {
         try {
-            const response = await axios.get(urlEntrada);
+            const response = await axios.get(url);
             setData(response.data);
             await fetchCurrentVersion();
         } catch (err) {
@@ -46,6 +48,32 @@ function VersionHistory({ entryID, onVersionChange }) {
         } finally {
             setIsUpdating(false); // Finalizar la actualización
         }
+    };
+
+    const handleFilterVersion = async(e) => {
+        e.preventDefault();
+
+        const year = e.target.year.value;
+        const month = e.target.month.value;
+        const day = e.target.day.value;
+        const editor = e.target.editor.value;
+
+        let filterURL = `http://localhost:8000/versions/?entry_id=${entryID}`;
+
+        if(year){
+            filterURL += `&year=${year}`;
+        }
+        if(month){
+            filterURL += `&month=${month}`;
+        }
+        if(day){
+            filterURL += `&day=${day}`;
+        }
+        if(editor){
+            filterURL += `&editor=${editor}`;
+        }
+
+        fetchData(filterURL);
     };
 
     const rollbackVersion = async (versionID) => {
@@ -72,14 +100,15 @@ function VersionHistory({ entryID, onVersionChange }) {
     
 
     useEffect(() => {
-        fetchData();
-    }, [entryID]);
+        fetchData(urlEntrada);
+    }, []);
 
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
     return (
         <div className="p-6 rounded-lg shadow-lg">
+            <DateFilter handleFilterVersion={handleFilterVersion}/>
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">
                 {data.map((version) => (

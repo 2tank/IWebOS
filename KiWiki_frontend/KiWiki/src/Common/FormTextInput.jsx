@@ -1,9 +1,8 @@
-function FormInput({id,name,label,value,onChange,required = False, className}){
+function FormInput({name,label,value,onChange,required = False, className}){
     return(
         <>
-            <label htmlFor={id} className="font-bold">{label}</label>
+            <label className="font-bold">{label}</label>
             <input
-            id={id}
             name = {name}
             type = "text"
             value={value}

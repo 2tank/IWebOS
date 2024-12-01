@@ -10,41 +10,40 @@ function Wiki(){
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const {selectedOpition, query} = useParams();
-
+    const {selectedOption, query} = useParams();
+    console.log(selectedOption)
     let urlApi = ''
 
     useEffect(() =>{
 
-        console.log(selectedOpition);
-        console.log(query);
-        urlApi = apiEndpoint.api + '/wikis/' + `${selectedOpition}/${query}`;
-        console.log(urlApi);
-
-        const getData = async() => {
-            try{
-                const response = await axios.get(urlApi)
-                setData(response.data);
-            }catch(err){
-                setError(err.message);
-            }finally{
-                setLoading(false);
-            }
-        };
+        urlApi = apiEndpoint.api + '/wikis/' + `${selectedOption}/${query}`;
         getData()
-    },[])
+    },[query])
+
+
+    const getData = async() => {
+        try{
+            const response = await axios.get(urlApi)
+            setData(response.data);
+        }catch(err){
+            setError(err.message);
+        }finally{
+            setLoading(false);
+        }
+    };
 
     return(
             <>
             <Navbar/>
-            <section className='w-screen flex items-center justify-center flex-col'>
-            {
-               data != null &&  data.map(item => (
-                        <SingleWiki key={item._id} item={item}></SingleWiki>
-                    ))
-            }
-
-            </section>
+            <div className='w-screen min-h-screen bg-gray-100'>
+                <section className='flex flex-grow items-center justify-center flex-col p-5 w-4/6 mx-auto'>
+                {
+                data != null &&  data.map(item => (
+                            <SingleWiki key={item._id} item={item}></SingleWiki>
+                        ))
+                }
+                </section>
+            </div>
             </>
             
     )

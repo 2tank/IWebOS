@@ -1,9 +1,10 @@
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
-import { useNavigate } from 'react-router-dom';
-import apiEndpoint from '../assets/apiEndpoints.json';
 
-function SingleWiki({ item }) {
-  
+
+function SingleEntry({ item }){
+
     const navigate = useNavigate()
 
     const clickWiki = () => {
@@ -12,8 +13,7 @@ function SingleWiki({ item }) {
             state: { "id": item._id },
           });
     }
-    
-  
+    console.log(item.creator)
   
     return (
     
@@ -23,7 +23,7 @@ function SingleWiki({ item }) {
         <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>
 
         <div className="flex flex-col">
-          <h2 className="text-xl font-bold text-gray-800">{item.name}</h2>
+          <h2 className="text-xl font-bold text-gray-800">{item.title}</h2>
           <p className="text-sm text-gray-500">Creado por: {item.creator}</p>
         </div>
       </header>
@@ -33,12 +33,12 @@ function SingleWiki({ item }) {
       </section>
 
       <footer className="flex justify-between items-center text-gray-600 text-sm border-t pt-2">
-        <span>Fecha: {new Date(item.date).toLocaleDateString()}</span>
-        <span>Entradas: {item.entries ? (Array.isArray(item.entries) ? item.entries.length : item.entries.size) : 0}</span>
+        <span>Fecha de creación: {new Date(item.creationDate).toLocaleDateString()}</span>
+        <span>Etiquetas: {item.tags ? item.tags : "-"}</span>
       </footer>
     </div>
   );
+
 }
 
-
-export default SingleWiki;
+export default SingleEntry;

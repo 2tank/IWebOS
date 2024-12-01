@@ -1,18 +1,19 @@
-function FormTextArea({name,label,value,onChange,required = False, className}){
+function FormInput({name,label,value,onChange,required = False, className, max, min}){
     return(
         <>
             <label className="font-bold">{label}</label>
-            <textarea
+            <input
             name = {name}
+            type = "number"
             value={value}
             onChange = {onChange}
             required = {required}
             className = {className}
-            wrap="soft"
-            rows="10"
+            max={max}
+            min={min}
             /> 
         </>
     );
 }
 
-export default FormTextArea;
+export default FormInput;

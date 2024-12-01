@@ -6,13 +6,15 @@ import Navbar from '../Common/NavBar';
 import { formatDate } from "../Common/CommonOperations";
 import "../Common/CSS/commonCSS.css";
 import CommentaryComponent from "../Commentary/CommentaryComponent";
+import UploadFile from "../Common/UploadFile";
+import FileViewer from "../Common/FileViewer";
 
 function EntrySection() {
-  
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const [showHistory, setShowHistory] = useState(false);
 
   // Fetch data for the entry
@@ -44,7 +46,7 @@ function EntrySection() {
       <div className="min-h-screen flex flex-col bg-gray-100 text-black">
         <Navbar/>
        <div className="flex-grow p-5 w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
-          <h1 className="pt-4 text-3xl font-bold">{data.title}</h1> 
+          <h1 className="pt-4 text-3xl font-bold">{data.title}</h1>
 
           <div className="flex justify-end p-2 gap-3">
             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 mt-3 px-4 rounded-full" onClick={() => setShowHistory(!showHistory)}>
@@ -62,12 +64,14 @@ function EntrySection() {
               </div>
               <span className="block text-base text-gray-700">{data.description}</span>
               <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
-              <SingleVersionSection entryVersionID={data.actual_version} />
+              <SingleVersionSection entryVersionID={data.actual_version} entryID={data._id} />
+              <FileViewer fileUrl={'https://res.cloudinary.com/dlj4y9vd3/image/upload/v1732993540/suertxagtygksuffmrub.png'} />
+              <UploadFile/>
               <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
             </div>
           )}
           </div>
-      </div> 
+      </div>
   );
 }
 
