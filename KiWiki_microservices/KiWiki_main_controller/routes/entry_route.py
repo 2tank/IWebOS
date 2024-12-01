@@ -272,3 +272,21 @@ async def update_version_by_id(entry_id: str, version_id: str):
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to update actual version")
+
+
+@router.put("/{entry_id}/wiki/{wiki_id}")
+async def add_wiki_to_entry(entry_id: str, wiki_id: str):
+    """
+    Añade el id de la wiki asociada a una entrada existente.
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.put(f"{entry_url}/{entry_id}/wiki/{wiki_id}")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to update the wiki")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update actual")

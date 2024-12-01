@@ -94,9 +94,9 @@ async def deny_notification(id: str = Query(...)):
 
 
 @router.patch("/read")
-async def mark_notification_as_read(id: str = Query(...)):
+async def mark_all_notifications_as_read():
     try:
-        updated_notification = await notification_logic.mark_notification_as_read(id)
-        return updated_notification
+        # Llamada a la función para marcar todas las notificaciones como leídas
+        await notification_logic.mark_all_notifications_as_read()
     except:
-        raise HTTPException(status_code=500, detail="Could not mark given notification as read")
+        raise HTTPException(status_code=500, detail="Could not mark notifications as read")
