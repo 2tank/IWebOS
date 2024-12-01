@@ -1,11 +1,11 @@
-.htmlcontent-container h1, 
-.htmlcontent-container h2, 
-.htmlcontent-container h3, 
-.htmlcontent-container h4, 
-.htmlcontent-container h5, 
-.htmlcontent-container h6, 
-.htmlcontent-container p, 
-.htmlcontent-container span, 
+.htmlcontent-container h1,
+.htmlcontent-container h2,
+.htmlcontent-container h3,
+.htmlcontent-container h4,
+.htmlcontent-container h5,
+.htmlcontent-container h6,
+.htmlcontent-container p,
+.htmlcontent-container span,
 .htmlcontent-container div {
     margin: 0;
     padding: 0;
@@ -29,4 +29,28 @@
 .htmlcontent-container p {
     margin-bottom: 1em;
     color: black;
+}
+
+/* Animación de rebote */
+@keyframes bounce {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(1.2);
+    }
+    50% {
+      transform: scale(0.9);
+    }
+    70% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+/* Clase que se aplicará al botón cuando se haga clic */
+.bounce-animation {
+animation: bounce 0.3s ease-in-out;
 }
