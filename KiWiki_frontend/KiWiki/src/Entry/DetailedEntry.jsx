@@ -4,12 +4,16 @@ import SingleVersionSection from "../Version/SingleVersionSection";
 import VersionHistory from "../Version/VersionHistory";
 import Navbar from '../Common/NavBar';
 import { formatDate } from "../Common/CommonOperations";
+import { useLocation } from 'react-router-dom';
 import "../Common/CSS/commonCSS.css";
 import CommentaryComponent from "../Commentary/CommentaryComponent";
 import UploadFile from "../Common/UploadFile";
 import FileViewer from "../Common/FileViewer";
 
-function EntrySection() {
+function DetailedEntry() {
+
+  const location = useLocation();
+  const { id } = location.state || {};
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +25,7 @@ function EntrySection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/entries/67499b921aa3cdbeefba9e6a");
+        const response = await axios.get("http://localhost:8000/entries/" + id);
         setData(response.data);
       } catch (err) {
         setError(err.message);
@@ -75,4 +79,4 @@ function EntrySection() {
   );
 }
 
-export default EntrySection;
+export default DetailedEntry;
