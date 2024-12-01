@@ -9,7 +9,7 @@ load_dotenv(dotenv_path='.env')
 MONGO_DETAILS = os.getenv("MONGO_URI")
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
-database = client.IWebOS   
+database = client.IWebOS
 
 class MONGOCRUD:
     def __init__(self,collection_name):

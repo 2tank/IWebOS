@@ -1,8 +1,10 @@
 from fastapi.encoders import jsonable_encoder
+from crud_nofication import NOTIFCRUD
 
 from database import MONGOCRUD
 
-crud = MONGOCRUD('Notification') #Crud basico expandible con herencia.
+crud = MONGOCRUD('Notification')
+crud_notif = NOTIFCRUD()
 
 # --- BASIC CRUD OPERATIONS -----------------------------------------------
 async def add_notification(notification):
@@ -28,14 +30,19 @@ async def update_notification(id,req):
 
 # --- ADDITIONAL OPERATIONS FOR NOTIFICATION ------------------------------
 
-# Acceptar la petición de la notificación
+# Aprobar o denegar la notificación
 async def approve_notification(id: str):
-    update_data = {"approved": True}  # Cambia el estado de 'read' a True
+    update_data = {"approved": True, "read": True}
     updated_notification = await crud.update_id(id, update_data)
     return updated_notification
 
-# Marcar como leida la notificación
-async def mark_notification_as_read(id: str):
-    update_data = {"read": True}  # Cambia el estado de 'read' a True
+async def deny_notification(id: str):
+    update_data = {"approved": False, "read": True}
     updated_notification = await crud.update_id(id, update_data)
     return updated_notification
+
+
+# Marcar todas las notificaciones como leídas
+async def mark_all_notifications_as_read():
+    update_data = {"read": True}  # Cambia el estado de 'read' a True
+    await crud_notif.update_many(update_data)  # Usamos update_many para actualizar múltiples documentos

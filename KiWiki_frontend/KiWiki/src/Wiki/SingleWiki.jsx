@@ -1,6 +1,9 @@
 import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import apiEndpoint from '../assets/apiEndpoints.json';
+import axios from 'axios';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function SingleWiki({ item }) {
   
@@ -12,20 +15,52 @@ function SingleWiki({ item }) {
             state: { "id": item._id },
           });
     }
+
+    const modifyHandler = (event) =>{
+      event.stopPropagation()
+      navigate('/wikis/'+`${item.name}`+'/modify' , {
+        state: { "id": item._id },
+      });
+    }
+    
+    const deleteHandler = (event) =>{
+      event.stopPropagation()
+      axios.delete(apiEndpoint.api + '/wikis/' + item._id)
+
+    }
     
   
   
     return (
     
-    <div onClick={clickWiki} tabIndex={0} className="flex w-full hover:cursor-pointer flex-col bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900">
-      <header className="flex items-center space-x-4 mb-4 ">
+    <div onClick={clickWiki} tabIndex={0} className="flex w-full flex-col hover:cursor-pointer bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900">
+      <header className="flex items-center space-x-4 mb-4">
 
-        <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>
+        <div className='flex'>
+          <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>
+        </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-1 flex-col">
           <h2 className="text-xl font-bold text-gray-800">{item.name}</h2>
           <p className="text-sm text-gray-500">Creado por: {item.creator}</p>
         </div>
+        <div className='flex-1 flex flex-row justify-end'>
+          <button
+            onClick={modifyHandler}
+            className='m-3'
+            tabIndex={0}
+          >
+            <EditIcon color='warning' fontSize='large'></EditIcon>
+          </button>
+          <button
+            onClick={deleteHandler}
+            className='m-3'
+            tabIndex={0}
+          >
+            <DeleteIcon color='error' fontSize='large'></DeleteIcon>
+          </button>
+        </div>
+        
       </header>
 
       <section className="mb-4">

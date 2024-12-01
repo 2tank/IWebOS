@@ -127,3 +127,15 @@ async def update_version_by_id(entry_id : str,version_id : str):
     except Exception as e:
         print(f"Failed to update actual version: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update actual version")
+
+
+
+@router.put("/{entry_id}/wiki/{wiki_id}")
+async def add_wiki_to_entry(entry_id : str, wiki_id : str):
+    try:
+        print(entry_id, wiki_id)
+        response = await entry_logic.add_wiki_to_entry(entry_id,wiki_id)
+        return response
+    except Exception as e:
+        print(f"Failed to update the wiki: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update the wiki")

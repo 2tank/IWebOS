@@ -40,3 +40,6 @@ async def get_actualVersion_by_entryid(id):
     version = await version_crud.get_id(versionID)
     return version
 
+async def add_wiki_to_entry(entry_id: str, wiki_id: str):
+    response = await crud.add_wiki_to_entry(entry_id, wiki_id)
+    return response

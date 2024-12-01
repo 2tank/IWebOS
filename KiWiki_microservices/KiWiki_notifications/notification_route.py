@@ -73,3 +73,30 @@ async def update_notification(id: str, req: NotificationSchema = Body(...)):
         return updated_notification
     except:
         raise HTTPException(status_code=500, detail="Could not update given notification")
+
+# --- ADDITIONAL OPERATIONS FOR NOTIFICATION ------------------------------
+
+@router.patch("/approve")
+async def approve_notification(id: str = Query(...)):
+    try:
+        updated_notification = await notification_logic.approve_notification(id)
+        return updated_notification
+    except:
+        raise HTTPException(status_code=500, detail="Could not approve given notification")
+
+@router.patch("/deny")
+async def deny_notification(id: str = Query(...)):
+    try:
+        updated_notification = await notification_logic.deny_notification(id)
+        return updated_notification
+    except:
+        raise HTTPException(status_code=500, detail="Could not deny the given notification")
+
+
+@router.patch("/read")
+async def mark_all_notifications_as_read():
+    try:
+        # Llamada a la función para marcar todas las notificaciones como leídas
+        await notification_logic.mark_all_notifications_as_read()
+    except:
+        raise HTTPException(status_code=500, detail="Could not mark notifications as read")
