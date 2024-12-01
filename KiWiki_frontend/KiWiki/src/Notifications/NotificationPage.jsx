@@ -76,6 +76,43 @@ function NotificationPage() {
         setCurrentPage(1);
     };
 
+    const markAllAsRead = () => {
+        setData((prevData) =>
+            prevData.map((notification) => ({
+                ...notification,
+                read: true,
+            }))
+        );
+    };
+    
+
+    // Funciones de aceptación y denegación de notificación
+    const handleAccept = async (id) => {
+        try {
+            await axios.patch(`http://localhost:8000/notification/approve/${id}`);
+            // Actualizar la lista de notificaciones para reflejar el cambio
+            const updatedNotifications = data.map(notification =>
+                notification.id === id ? { ...notification, approved: true } : notification
+            );
+            setData(updatedNotifications);
+        } catch (error) {
+            setError("Error al aceptar la notificación");
+        }
+    };
+
+    const handleDeny = async (id) => {
+        try {
+            await axios.patch(`http://localhost:8000/notification/deny/${id}`);
+            // Actualizar la lista de notificaciones para reflejar el cambio
+            const updatedNotifications = data.map(notification =>
+                notification.id === id ? { ...notification, approved: false } : notification
+            );
+            setData(updatedNotifications);
+        } catch (error) {
+            setError("Error al denegar la notificación");
+        }
+    };
+
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
@@ -117,10 +154,15 @@ function NotificationPage() {
                                     <option value="OTHER">Sin responder</option>
                                     <option value="ACCEPTED">Aceptadas</option>
                                     <option value="DENIED">Denegadas</option>
-                                    
                                 </select>
                             </div>
                         </div>
+                        <button
+                            onClick={markAllAsRead} // Conecta la función
+                            className="text-blue-500 hover:underline font-medium w-full sm:w-auto"
+                        >
+                            Marcar todos como leídos
+                        </button>
                     </section>
 
                     {/* Renderizar notificaciones visibles */}
@@ -135,8 +177,8 @@ function NotificationPage() {
                                 notifDate={notification.notifDate}
                                 notifType={notification.notifType}
                                 read={notification.read}
-                                onAccept={handleAccept} // Pasamos la función de aceptar
-                                onDeny={handleDeny}     // Pasamos la función de denegar
+                                onAccept={() => handleAccept(notification.id)} // Pasa el ID de la notificación
+                                onDeny={() => handleDeny(notification.id)}     // Pasa el ID de la notificación
                             />
                         ))
                     )}

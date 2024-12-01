@@ -12,10 +12,16 @@ function Notification({ title, user, notifDate, notifType, read, onAccept, onDen
             </p>
             <p className="text-gray-700">Type: {notifType}</p>
             <div className="flex justify-end mt-4">
-                <button className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-700">
+                <button
+                    className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-700"
+                    onClick={onAccept}
+                >
                     Aceptar
                 </button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">
+                <button
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+                    onClick={onDeny}
+                >
                     Denegar
                 </button>
             </div>
