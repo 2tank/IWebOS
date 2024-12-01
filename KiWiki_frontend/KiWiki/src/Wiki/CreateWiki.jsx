@@ -19,14 +19,25 @@ function CreateWiki(){
 
     const location = useLocation()
     const {id} = location.state || {} 
-    if(id == null){
-        new Date().toISOString().split('T')[0]
-    }else{
-        const {fecha, ...newDataConvert} = GetInfoWiki(id)
-        setFormData(newDataConvert)
-        setDate(fecha)
-    }
+    
+    useEffect(() => {
+        if (id == null) {
+            setDate(new Date().toISOString().split('T')[0]); 
+        } else {
+            const fetchData = async () => {
+                try {
+                    const {fecha, ...newDataConvert} = await GetInfoWiki(id)
+                    setFormData(newDataConvert)
+                    setDate(fecha);
+                } catch (error) {
+                    console.error('Error fetching wiki info:', error);
+                }
+            };
 
+            fetchData();
+        }
+    }, [id]);
+    
     const handleChange = (event) => {
 
         setFormData({
