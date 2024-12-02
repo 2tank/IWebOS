@@ -87,3 +87,40 @@ async def update_notification(id: str, req: NotificationSchema = Body(...)):
         raise HTTPException(status_code=500, detail="Error reaching microservice: " + str(http_err))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Could not update given notification: " + str(e))
+
+
+@router.patch("/approve")
+async def approve_notification(id: str = Query(...)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(f"{notification_url}/approve", params={"id": id})
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        raise HTTPException(status_code=500, detail="Error approving notification: " + str(http_err))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Could not approve the notification: " + str(e))
+
+@router.patch("/deny")
+async def deny_notification(id: str = Query(...)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(f"{notification_url}/deny", params={"id": id})
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        raise HTTPException(status_code=500, detail="Error denying notification: " + str(http_err))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Could not deny the notification: " + str(e))
+
+@router.patch("/read")
+async def mark_all_notifications_as_read():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(f"{notification_url}/read")
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        raise HTTPException(status_code=500, detail="Error marking notifications as read: " + str(http_err))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Could not mark notifications as read: " + str(e))
