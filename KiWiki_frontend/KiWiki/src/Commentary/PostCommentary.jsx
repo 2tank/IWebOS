@@ -89,7 +89,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
                   max="10"
                   value={rating}
                   onChange={(e) => setRating(e.target.value)}
-                  className='appearance-none bg-transparent caret-blue-400 accent-blue-400 rounded-full max-h-2'
+                  className='appearance-none bg-transparent caret-green-400 accent-green-400 rounded-full max-h-2'
                   style={{
                     background: `linear-gradient(to right, #60a5fa ${rating * 10}%, #d1d5db ${rating * 10}%)`,
                   }}
@@ -105,7 +105,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
             </div>
             <div className="flex px-2 py-1 rounded-full text-black font-semibold
             transition hover:duration-0 ease-out duration-300
-          hover:bg-blue-100 hover:shadow-sm">
+          hover:bg-green-100 hover:shadow-sm">
               <button type="submit">Enviar</button>
             </div>
           </div>

@@ -98,7 +98,7 @@ function CommentaryFilters({setOrderByNewest, setOrderByOldest, setFilterUser}) 
                         </div>
                         <div className="flex px-2 py-1 rounded-full text-black font-semibold
                         transition hover:duration-0 ease-out duration-300
-                        hover:bg-blue-100 hover:shadow-sm">
+                        hover:bg-green-100 hover:shadow-sm">
                         <button type="submit">Enviar</button>
                         </div>
                     </div>
