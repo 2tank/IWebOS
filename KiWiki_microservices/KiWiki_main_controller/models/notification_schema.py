@@ -14,7 +14,7 @@ class NotificationSchema(BaseModel):
     user: str = Field(...)
     notifDate: datetime = Field(default_factory=lambda: datetime.now(timezone(timedelta(hours=2))))
     notifType: NotificationType = Field(...)
-    approved: bool = Field(default=False)
+    approved: bool = Field(default=None)
     read: bool = Field(default=False)
 
     @field_serializer("notifDate")
