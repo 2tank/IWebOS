@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '../Common/NavBar.jsx';
 import apiEndpoint from '../assets/apiEndpoints.json'
 import GetInfoWiki from './GetInfoWiki.js';
+import { format, parse } from "@formkit/tempo"
 
 
 function CreateWiki(){
@@ -21,13 +22,15 @@ function CreateWiki(){
 
     const [date, setDate] = useState('')
 
+
+
     const location = useLocation()
 
     const {id} = location.state || {} 
     
     useEffect(() => {
         if (id == null) {
-            setDate(new Date().toISOString().split('T')[0]); 
+            setDate(new Date()); 
         } else {
             setModify(true)
             const fetchData = async () => {
@@ -35,7 +38,7 @@ function CreateWiki(){
                     const {fecha, ...newDataConvert} = await GetInfoWiki(id)
                     setModifyData([newDataConvert.nombre, newDataConvert.descripcion])
                     setFormData(newDataConvert)
-                    setDate(fecha);
+                    setDate(new Date(fecha));
                 } catch (error) {
                     console.error('Error fetching wiki info:', error);
                 }
@@ -55,9 +58,7 @@ function CreateWiki(){
 
     async function formHandler(event){
         event.preventDefault()
-
         if(modify){
-            console.log('pene')
 
             const patchData = {}
 
@@ -70,8 +71,6 @@ function CreateWiki(){
             }
 
             if(Object.keys(patchData).length > 0){
-                console.log('pene2')
-                console.log(patchData)
                 await axios.patch(apiEndpoint.api+ '/wikis/' + id + '/modify_wiki/', patchData)
                 .then((response) => {
                     console.log(response)
@@ -106,7 +105,8 @@ function CreateWiki(){
             <Navbar/>
 
             <form onSubmit={formHandler} className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 space-y-6 mt-9">
-                <h2 className="text-2xl font-bold text-gray-700">Crear Wiki</h2>
+                <h2 className="text-2xl font-bold text-gray-700">                        {id == null ? 'Crear Wiki' : 'Editar Wiki'}
+                </h2>
 
                 <div className="flex flex-col">
                     <label htmlFor="nombre" className="text-sm font-medium text-gray-600">Nombre</label>
@@ -153,7 +153,7 @@ function CreateWiki(){
                         type="date" 
                         id="fecha" 
                         name="fecha" 
-                        value={date} 
+                        value={format(date, "YYYY-MM-DD", "en")} 
                         className="mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-yellow-900 focus:outline-none"
                         readOnly
                     />
@@ -163,7 +163,7 @@ function CreateWiki(){
                     <button 
                         className="bg-green-500 text-white font-medium py-2 px-4 rounded-md hover:bg-green-600 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                     >
-                        Crear Wiki
+                        {id == null ? 'Crear Wiki' : 'Editar Wiki'}
                     </button>
                 </div>
             </form>

@@ -32,7 +32,7 @@ function SearchBar(){
     }
 
     return (
-            <form onSubmit={search} className='h-10 flex flex-row justify-center'>
+            <form onSubmit={search} className='h-10 flex flex-row justify-center space-x-1'>
                 <select className='text-black'
                 id='selectOption'
                 value={selectedOption}

@@ -9,7 +9,7 @@ import axios from "axios";
 function ListEntries(){
 
     const location = useLocation()
-    const {id} = location.state || {} 
+    const {id, name} = location.state || {} 
       
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -19,7 +19,6 @@ function ListEntries(){
 
     useEffect(() => {
 
-        console.log("HOLA")
         getData()
 
     },[id])
@@ -43,6 +42,7 @@ function ListEntries(){
             <Navbar/>
             <div className='w-screen min-h-screen bg-gray-100'>
             <section className='flex flex-grow items-center justify-center flex-col p-5 w-4/6 mx-auto'>
+                <h1 className='w-full text-left text-2xl font-bold'>Listado de entradas de {name} </h1>
                 {
                 data != null &&  data.map(item => (
                         <SingleEntry key={item._id} item={item}></SingleEntry>

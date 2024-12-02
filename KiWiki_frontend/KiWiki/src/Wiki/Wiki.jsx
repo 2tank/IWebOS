@@ -14,7 +14,6 @@ function Wiki(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const {selectedOption, query} = useParams();
-    console.log(selectedOption)
     let urlApi = ''
 
     useEffect(() =>{
@@ -40,7 +39,9 @@ function Wiki(){
             <section className='w-screen min-h-screen bg-gray-100 relative'>
             
                 <Navbar/>
+
                 <section className='flex flex-grow items-center justify-center flex-col p-5 w-4/6 mx-auto'>
+                        <h1 className='w-full text-left text-2xl font-bold'>Listado de wikis:</h1>
                     {
                     data != null &&  data.map(item => (
                                 <SingleWiki key={item._id} item={item}></SingleWiki>

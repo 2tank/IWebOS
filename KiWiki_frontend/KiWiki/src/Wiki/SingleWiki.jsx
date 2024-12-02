@@ -12,7 +12,8 @@ function SingleWiki({ item }) {
     const clickWiki = () => {
 
         navigate('/wikis/'+`${item.name}`+'/entries' , {
-            state: { "id": item._id },
+            state: { "id": item._id,
+                    "name": item.name},
           });
     }
 
@@ -33,11 +34,11 @@ function SingleWiki({ item }) {
   
     return (
     
-    <div onClick={clickWiki} tabIndex={0} className="flex w-full flex-col hover:cursor-pointer bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-900">
+    <div onClick={clickWiki} tabIndex={0} className="flex w-full flex-col bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-green-900 focus:outline-none focus:ring-2 focus:ring-green-900">
       <header className="flex items-center space-x-4 mb-4">
 
         <div className='flex'>
-          <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>
+          <Avatar>{item.name.charAt(0).toUpperCase()}</Avatar>
         </div>
 
         <div className="flex flex-1 flex-col">

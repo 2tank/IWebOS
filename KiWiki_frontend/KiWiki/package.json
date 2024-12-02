@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "@formkit/tempo": "^0.1.2",
     "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.8",
     "axios": "^1.7.8",
