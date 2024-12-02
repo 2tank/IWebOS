@@ -78,7 +78,7 @@ function NotificationPage() {
 
     const markAllAsRead = async () => {
         try {
-            await axioNos.patch("http://localhost:8000/notification/read/");
+            await axios.patch("http://localhost:8000/notification/read/");
             setData((prevData) =>
                 prevData.map((notification) => ({
                     ...notification,
