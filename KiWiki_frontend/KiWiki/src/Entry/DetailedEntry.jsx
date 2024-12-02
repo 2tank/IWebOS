@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
+import { formatDate } from "../Common/CommonOperations";
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import SingleVersionSection from "../Version/SingleVersionSection";
 import VersionHistory from "../Version/VersionHistory";
 import Navbar from '../Common/NavBar';
-import { formatDate } from "../Common/CommonOperations";
-import { useLocation } from 'react-router-dom';
-import "../Common/CSS/commonCSS.css";
 import CommentaryComponent from "../Commentary/CommentaryComponent";
-import UploadFile from "../Common/UploadFile";
-import FileViewer from "../Common/FileViewer";
+
+import "../Common/CSS/commonCSS.css";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 function DetailedEntry() {
 
@@ -20,6 +21,11 @@ function DetailedEntry() {
   const [error, setError] = useState(null);
 
   const [showHistory, setShowHistory] = useState(false);
+
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1); 
+  };
 
   // Fetch data for the entry
   useEffect(() => {
@@ -50,6 +56,7 @@ function DetailedEntry() {
       <div className="min-h-screen flex flex-col bg-gray-100 text-black">
         <Navbar/>
        <div className="flex-grow p-5 w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
+          <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/> 
           <h1 className="pt-4 text-3xl font-bold">{data.title}</h1>
 
           <div className="flex justify-end p-2 gap-3">
@@ -69,8 +76,8 @@ function DetailedEntry() {
               <span className="block text-base text-gray-700">{data.description}</span>
               <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
               <SingleVersionSection entryVersionID={data.actual_version} entryID={data._id} />
-              <FileViewer fileUrl={'https://res.cloudinary.com/dlj4y9vd3/image/upload/v1732993540/suertxagtygksuffmrub.png'} />
-              <UploadFile/>
+              {/*<FileViewer fileUrl={'https://res.cloudinary.com/dlj4y9vd3/image/upload/v1732993540/suertxagtygksuffmrub.png'} />
+              <UploadFile/>*/}
               <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
             </div>
           )}

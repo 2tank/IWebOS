@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { formatDate } from "../Common/CommonOperations";
-import DateFilter from "./DateFilter";
-import FormInput from "../Common/FormTextInput";
+import VersionFilter from "./VersionFilter";
 
 function VersionHistory({ entryID, onVersionChange }) {
     const [data, setData] = useState(null);
@@ -108,7 +107,7 @@ function VersionHistory({ entryID, onVersionChange }) {
 
     return (
         <div className="p-6 rounded-lg shadow-lg">
-            <DateFilter handleFilterVersion={handleFilterVersion}/>
+            <VersionFilter handleFilterVersion={handleFilterVersion}/>
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">
                 {data.map((version) => (
