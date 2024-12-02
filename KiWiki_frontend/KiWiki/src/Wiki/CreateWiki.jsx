@@ -15,18 +15,25 @@ function CreateWiki(){
         descripcion:""
     });
 
+    const [modify, setModify] = useState(false)
+
+    const [modifyData, setModifyData] = useState([])
+
     const [date, setDate] = useState('')
 
     const location = useLocation()
+
     const {id} = location.state || {} 
     
     useEffect(() => {
         if (id == null) {
             setDate(new Date().toISOString().split('T')[0]); 
         } else {
+            setModify(true)
             const fetchData = async () => {
                 try {
                     const {fecha, ...newDataConvert} = await GetInfoWiki(id)
+                    setModifyData([newDataConvert.nombre, newDataConvert.descripcion])
                     setFormData(newDataConvert)
                     setDate(fecha);
                 } catch (error) {
@@ -39,27 +46,56 @@ function CreateWiki(){
     }, [id]);
     
     const handleChange = (event) => {
-
+        
         setFormData({
             ...formData,
             [event.target.name]: event.target.value
         });  
     };
 
-    const formHandler = () => {
+    async function formHandler(event){
+        event.preventDefault()
 
-        axios.post(apiEndpoint.api + '/wikis/',{
-            name: formData.nombre,
-            creator: formData.creador,
-            description: formData.descripcion,
-            date: date
-        })
-        .then((response) => {
-            console.log(response)
-        })
-        .catch((error) => {
-            console.log(error)
-        });
+        if(modify){
+            console.log('pene')
+
+            const patchData = {}
+
+            if(formData.nombre != modifyData[0]){
+                patchData.name = formData.nombre
+            }
+
+            if(formData.descripcion != modifyData[1]){
+                patchData.description = formData.descripcion
+            }
+
+            if(Object.keys(patchData).length > 0){
+                console.log('pene2')
+                console.log(patchData)
+                await axios.patch(apiEndpoint.api+ '/wikis/' + id + '/modify_wiki/', patchData)
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+
+            }
+
+        }else{
+            await axios.post(apiEndpoint.api + '/wikis/',{
+                name: formData.nombre,
+                creator: formData.creador,
+                description: formData.descripcion,
+                date: date
+            })
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        }
 
     }
 

@@ -138,7 +138,7 @@ async def get_wikis_date(request: Dict = Body(...)) -> List[dict]:
 async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) -> dict:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.patch(f"{wiki_url}/{id_wiki}/modify_wiki", json=wiki_data.model_dump())
+            response = await client.patch(f"{wiki_url}/{id_wiki}/modify_wiki", json=wiki_data.model_dump(exclude_unset=True))
             response.raise_for_status()
             return response.json()
 
