@@ -9,7 +9,7 @@ function SingleVersionSection({entryVersionID,entryID}){
 
     const navigate = useNavigate();
 
-    const { nameWiki,entry_id } = useParams(); 
+    const { nameWiki,entry_id } = useParams();
 
     const urlVersion = "http://localhost:8000/versions/" + entryVersionID;
 
@@ -20,7 +20,7 @@ function SingleVersionSection({entryVersionID,entryID}){
     const clickEditVersion = () => {
 
         navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${entry_id}` + '/versionedit' , {
-            state: { entryID: entryID },
+            state: { id: entryVersionID },
           });
     }
 
