@@ -74,3 +74,20 @@ class ENTRYCRUD(MONGOCRUD):
         result = await self.version_collection.find_one({"_id" : ObjectId(version_id)})
         result["_id"] = str(result["_id"]) 
         return result
+
+    
+
+    async def add_wiki_to_entry(self, entry_id: str, wiki_id: str) -> dict:
+        """
+        Añade el id de la wiki asociada a una entrada existente.
+        """
+        result = await self.collection.update_one(
+            {"_id": ObjectId(entry_id)}, 
+            {"$set": {"wiki": wiki_id}}
+        )
+
+        if result.modified_count == 0:
+            raise ValueError("No Wiki document found with the provided ID")
+
+        return {"message": "Entry ID added to Wiki entries successfully"}
+        
