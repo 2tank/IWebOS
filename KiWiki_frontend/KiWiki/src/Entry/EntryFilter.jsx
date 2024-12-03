@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import FormNumberInput from '../Common/FormNumberInput';
-import FormTextArea from '../Common/FormTextArea';
 import FormTextInput from '../Common/FormTextInput';
 import FormCheckBox from '../Common/FormCheckBox'
 import TuneIcon from '@mui/icons-material/Tune';
@@ -14,7 +13,7 @@ function EntryFilter({formState, setFormState,handleFilterEntry}){
     const [error, setError] = useState(null);
 
     const checkBoxClassName = "flex w-fit pr-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-amber-950 " +
-    "dark:border-amber-600 dark:text-white mb-2 mt-2";
+    "dark:border-amber-600 dark:text-white";
 
     // Cargamos los tags de las Entradas nada más cargar la página
     useEffect(() => {
@@ -61,12 +60,13 @@ function EntryFilter({formState, setFormState,handleFilterEntry}){
             <TuneIcon className='hover:bg-gray-300 hover:cursor-pointer rounded-lg' onClick={() => setShowFilter(!showFilter)}/>
             {showFilter && (
             <div className='mb-4 mt-2'>
-                <form onSubmit={handleFilterEntry} className='flex flex-col items-center gap-2 '>
+                <form onSubmit={handleFilterEntry} className='flex flex-col items-center gap-2'>
+                    <FormCheckBox label={"Tags: "} className={checkBoxClassName} name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
                     <div>
-                        <FormTextArea name={"description"} value={formState.description} label={"Descripcion: "}
+                        <FormTextInput name={"description"} value={formState.description} label={"Descripcion: "}
                         onChange={handleInputChange} required={false} className={"bg-gray-300 w-full rounded text-black"}/>
                     </div>
-                    <div className='flex gap-2'>
+                    <div className='flex gap-2 mb-2'>
                         <FormNumberInput name={"year"} value={formState.year} label={"Año: "}
                         onChange={handleInputChange} required={formState.month != "" || formState.day!= "" ? true : false} className={"bg-gray-300 rounded w-full sm:w-14"} max={new Date().getFullYear()} min={1900}/>
                         <FormNumberInput name={"month"} value={formState.month} label={"Mes: "}
@@ -74,7 +74,6 @@ function EntryFilter({formState, setFormState,handleFilterEntry}){
                         <FormNumberInput name={"day"} value={formState.day} label={"Dia: "}
                         onChange={handleInputChange} required={false} className={"bg-gray-300 rounded w-full sm:w-14 text-black"} max={getMaxDay(formState.year,formState.month)} min={1}/>
                     </div>
-                    <FormCheckBox className={checkBoxClassName} name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
                     <button type='submit' className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-full' >Filtrar</button>
                 </form>
             </div>

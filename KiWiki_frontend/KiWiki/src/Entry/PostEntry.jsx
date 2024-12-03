@@ -1,6 +1,6 @@
 import {useEffect, useState } from "react";
 import axios from "axios";
-import FormTextInput from "../Common/FormInput";
+import FormTextInput from "../Common/FormTextInput";
 import FormCheckBox from "../Common/FormCheckBox";
 
 function PostEntry() {
@@ -107,7 +107,7 @@ function PostEntry() {
         <FormTextInput name={"description"} value={formState.description} label={"Descripción"}
           onChange={handleInputChange} required={true} className={formInputClassName}/>
       </div>
-      <FormCheckBox name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
+      <FormCheckBox name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags} label={"Tags: "}/>
       {submitError && <p className="text-red-500">{submitError}</p>}
       {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
       <button type="submit" className="bg-green-500 text-white px-4 py-2">

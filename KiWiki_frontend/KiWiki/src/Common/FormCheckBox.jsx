@@ -1,8 +1,8 @@
 
-function FormCheckBox({title,name,data,onChange,selectedElems, className}){
+function FormCheckBox({label,name,data,onChange,selectedElems, className}){
     return(
         <>
-        <label className="font-bold" >{title}</label>
+        <label className="font-bold" >{label}</label>
         <ul className={className}>
             {data.map((e) => (
             <li className="w-fit border-b border-gray-200 rounded-t-lg dark:border-gray-600">
