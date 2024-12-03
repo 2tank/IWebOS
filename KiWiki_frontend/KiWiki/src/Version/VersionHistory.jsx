@@ -96,7 +96,7 @@ function VersionHistory({ entryID, onVersionChange }) {
             setIsUpdating(false);
         }
     };
-    
+
 
     useEffect(() => {
         fetchData(urlEntrada);

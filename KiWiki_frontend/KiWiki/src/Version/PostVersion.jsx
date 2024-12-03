@@ -31,6 +31,7 @@ function PostVersion() {
   const [buttonClass, setButtonClass] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [entryId, setEntryId] = useState(null); // Estado para guardar entry_id
 
   const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
 
@@ -47,6 +48,11 @@ function PostVersion() {
       try {
         const response = await axios.get(finalUrl);
         console.log("Respuesta de la API:", response.data);
+        console.log("ENTRYID:", response.data.entry_id);
+
+        setEntryId(response.data.entry_id);
+
+
         setFormState({
           editor: response.data.editor,
           content: response.data.content,
@@ -108,12 +114,12 @@ function PostVersion() {
         description: map.mapdescription,
       })),
       reverted: false,
-      entry_id: id,
+      entry_id: entryId,
     };
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/entries/${id}/versions`, updatedVersion, {
+        `http://localhost:8000/entries/${entryId}/versions`, updatedVersion, {
         headers: { "Content-Type": "application/json" },
       });
       setSubmitSuccess(true);
@@ -129,7 +135,7 @@ function PostVersion() {
     }
   };
 
-  
+
   return (
     <>
       {loading ? (
@@ -138,7 +144,7 @@ function PostVersion() {
         <div className="min-h-screen flex flex-col bg-gray-100 text-black">
           <Navbar/>
           <div className="flex-grow p-5 w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
-            <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/> 
+            <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
             <form onSubmit={handleCreateVersion} className="my-4">
               <div className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
                 <h2 className="text-xl font-bold mb-4">Crear Nueva Versión</h2>
