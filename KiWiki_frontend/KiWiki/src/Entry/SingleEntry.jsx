@@ -18,7 +18,7 @@ function SingleEntry({ item }){
   
     return (
     
-    <div onClick={clickWiki} tabIndex={0} className="flex w-full hover:cursor-pointer flex-col bg-white shadow-md rounded-lg p-6 m-4 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-green-900 focus:outline-none focus:ring-2 focus:ring-green-900">
+    <div onClick={clickWiki} tabIndex={0} className="flex w-full hover:cursor-pointer border-2 border-gray-300 flex-col bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-green-900 focus:outline-none focus:ring-2 focus:ring-green-900">
       <header className="flex items-center space-x-4 mb-4 ">
 
         <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>

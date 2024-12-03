@@ -7,6 +7,8 @@ const UploadFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  const [uploadedUrl,setUploadedUrl] = useState("");
+
   const handleFileChange = (e) => {
     setError(false);
     const selectedFile = e.target.files[0];
@@ -35,6 +37,8 @@ const UploadFile = () => {
       alert('Archivo subido correctamente');
       console.log('Archivo subido:', response.data);
       //La url del archivo se saca con response.data.url
+      console.log(response.data.url)
+      setUploadedUrl(response.data.url)
       setFileUrl(null);
       setFile(null);
     } catch (error) {
@@ -53,6 +57,8 @@ const UploadFile = () => {
         onChange={handleFileChange}
         className="border p-2 mb-4"
       />
+      <br/>
+      {"URL generada: " + uploadedUrl}
 
       {file && !loading && (
         <div className="mt-4">

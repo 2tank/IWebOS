@@ -2,13 +2,9 @@ from pydantic import BaseModel, Field, HttpUrl, field_validator
 from datetime import datetime, timezone, timedelta
 from typing import List, Optional,  Literal
 
-linkType = Literal['External','Internal']
-
 class Attachment(BaseModel):
     type: str = Field(...,description="Tipo de archivo 'image', 'file'...") 
     url: str = Field(..., description="Url adjunto al archivo")
-    caption: Optional[str] = Field(None,description="Descripción del archivo")
-    alt_text: Optional[str] = Field(None,description="Texto alternativo para imágenes")
     file_name: Optional[str] = Field(None, description="Nombre del archivo, solo para archivos que no son imágenes")
 
     @field_validator('url')
@@ -20,7 +16,6 @@ class Attachment(BaseModel):
         return value
 
 class Link(BaseModel):
-    type: linkType = Field(...,description="Tipo de enlace external o Internal") 
     url: str = Field(...,description="URL del enlace")
     text: str = Field(...,description="Texto del enlace")
 

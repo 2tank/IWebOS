@@ -77,7 +77,7 @@ function DetailedEntry() {
               <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
               <SingleVersionSection entryVersionID={data.actual_version} entryID={data._id} />
               {/*<FileViewer fileUrl={'https://res.cloudinary.com/dlj4y9vd3/image/upload/v1732993540/suertxagtygksuffmrub.png'} />
-              <UploadFile/>*/}
+              */}
               <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
             </div>
           )}

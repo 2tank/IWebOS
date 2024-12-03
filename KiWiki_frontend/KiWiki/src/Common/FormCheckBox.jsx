@@ -1,11 +1,11 @@
 
-function FormCheckBox({title,name,data,onChange,selectedElems}){
+function FormCheckBox({title,name,data,onChange,selectedElems, className}){
     return(
         <>
-        <label className="text-white" >{title}</label>
-        <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white mb-2 mt-2">
+        <label className="font-bold" >{title}</label>
+        <ul className={className}>
             {data.map((e) => (
-            <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+            <li className="w-fit border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                 <div class="flex items-center ps-3">
                     <label key={e} className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                     <input

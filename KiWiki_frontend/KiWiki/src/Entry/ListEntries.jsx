@@ -16,6 +16,14 @@ function ListEntries(){
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    const [formState,setFormState] = useState({
+        year: "",
+        month: "",
+        day: "",
+        description: "",
+        tags: [],
+    });
+
     let urlApi = ''
 
     useEffect(() => {
@@ -42,27 +50,18 @@ function ListEntries(){
     const handleFilterEntry = async(e) => {
         e.preventDefault();
 
-        const year = e.target.year.value;
-        const month = e.target.month.value;
-        const day = e.target.day.value;
-        const description = e.target.description.value;
-
         let filterURL = `http://localhost:8000/entries/?wiki=${id}`;
 
-        if(year){
-            filterURL += `&year=${year}`;
-        }
-        if(month){
-            filterURL += `&month=${month}`;
-        }
-        if(day){
-            filterURL += `&day=${day}`;
-        }
-        if(description){
-            filterURL += `&description=${description}`;
+        if (formState.year) filterURL += `&year=${formState.year}`;
+        if (formState.month) filterURL += `&month=${formState.month}`;
+        if (formState.day) filterURL += `&day=${formState.day}`;
+        if (formState.description) filterURL += `&description=${formState.description}`;
+        if (formState.tags && formState.tags.length > 0) {
+            formState.tags.forEach((tag) => {
+                filterURL += `&tags=${tag}`;
+            });
         }
 
-        // Usar axios para obtener los datos filtrados
         try {
             const response = await axios.get(filterURL);
             setData(response.data);
@@ -71,18 +70,14 @@ function ListEntries(){
         }
     };
 
-
     return(
         <>
             <Navbar/>
 
-            <div className='w-screen min-h-screen bg-gray-100'>
-            <div className='flex justify-center pt-4'>
-                    <EntryFilter handleFilterEntry={handleFilterEntry} />
-            </div>
-
-            <section className='flex flex-grow items-center justify-center flex-col p-5 w-4/6 mx-auto'>
-                <h1 className='w-full text-left text-2xl font-bold'>Listado de entradas de {name} </h1>
+            <div className='flex-grow w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
+            <section className='flex flex-grow flex-col p-8'>
+                <EntryFilter formState={formState} setFormState={setFormState} handleFilterEntry={handleFilterEntry} />
+                <h1 className='w-full text-center text-2xl font-bold border-b border-gray-600 mb-4'>Listado de entradas de {name} </h1>
                 {
                 data != null &&  data.map(item => (
                         <SingleEntry key={item._id} item={item}></SingleEntry>
