@@ -27,6 +27,7 @@ async def get_entries(
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
     getTags: Optional[bool] = Query(None),
+    wiki: Optional[str] = Query(None),
     ):
     try:
         if getTags:
@@ -58,6 +59,8 @@ async def get_entries(
             if tags:
                 filter["tags"] = {"$in": tags}
 
+            if wiki:
+                filter["wiki"] = {"$regex": ".*{}.*".format(wiki), "$options": "i"}
 
             entries = await entry_logic.get_entries(filter)
             return entries

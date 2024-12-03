@@ -43,6 +43,7 @@ async def get_entries(
     description: Optional[str] = Query(None),
     tags: Optional[List[entryType]] = Query(None),
     getTags: Optional[bool] = Query(None),
+    wiki: Optional[str] = Query(None),
 ):
     """
     Obtiene una lista de entradas aplicando filtros opcionales.
@@ -68,6 +69,7 @@ async def get_entries(
             "description": description,
             "tags": tags,
             "getTags" : getTags,
+            "wiki" : wiki,
         }
 
         filters = {k: v for k, v in filters.items() if v is not None and v != []}
