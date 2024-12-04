@@ -40,7 +40,7 @@ const UploadFile = ({setFormState}) => {
       console.log(response.data)
       setFormState((prev) => ({
         ...prev,
-        attachments: [...prev.attachments, { type: "response.data.format", url: "response.data.url", file_name: "response.data.display_name" }]
+        attachments: [...prev.attachments, { type: response.data.format, url: response.data.url, file_name: response.data.display_name }]
       }));
       setUploadedUrl(response.data.url)
       setFileUrl(null);

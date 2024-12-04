@@ -4,6 +4,8 @@ import axios from "axios";
 import FormTextInput from "../Common/FormTextInput";
 import FormTextArea from "../Common/FormTextArea";
 import UploadFile from "../Common/UploadFile";
+import MapsViewer from './Mapsviewer';
+import FilesViewer from "./FilesViewer";
 import Navbar from "../Common/NavBar";
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -22,7 +24,7 @@ function PostVersion() {
   };
 
   const urlVersion = "http://localhost:8000/versions/";
-  // URL para obtener la versión
+
   const finalUrl = `${urlVersion}${id}`;
 
   const [submitError, setSubmitError] = useState(null);
@@ -42,12 +44,13 @@ function PostVersion() {
     attachments: [],
   });
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(finalUrl);
         setEntryId(response.data.entry_id);
-
+  
         setFormState({
           editor: response.data.editor,
           content: response.data.content,
@@ -58,10 +61,9 @@ function PostVersion() {
         setError("Error al cargar los datos.");
       } finally {
         console.log("fail")
-        setLoading(false); // Desactivar el estado de carga
+        setLoading(false);
       }
     };
-
     if (id) fetchData();
   }, [id]);
 
@@ -125,12 +127,6 @@ function PostVersion() {
       });
       setSubmitSuccess(true);
       setSubmitError(null);
-      setFormState({
-        editor: "",
-        content: "",
-        maps: [],
-        attachments: [],
-      });
     } catch (err) {
       setSubmitSuccess(false);
       setSubmitError("Ocurrió un error al crear la versión.");
@@ -158,6 +154,12 @@ function PostVersion() {
                   <FormTextArea name={"content"} value={formState.content} label={"Contenido"}
                     onChange={handleInputChange} required={true} className={formInputClassName} />
                 </div>
+
+                <span className="font-bold" >Mapas</span>
+                <MapsViewer maps={formState.maps} />
+
+                <span className="font-bold" >Archivos</span>
+                <FilesViewer attachments={formState.attachments} />
 
                 <div className="flex flex-col items-left mb-4">
                   <div>
