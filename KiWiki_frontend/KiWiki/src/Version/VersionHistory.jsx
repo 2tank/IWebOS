@@ -13,6 +13,13 @@ function VersionHistory({ entryID, onVersionChange }) {
     const urlEntrada = `http://localhost:8000/entries/${entryID}/versions/`;
     const urlGetActual = `http://localhost:8000/entries/${entryID}/currentVersion/`;
 
+    const [formState,setFormState] = useState({
+        year: "",
+        month: "",
+        day: "",
+        editor: "",
+    });
+
     const fetchCurrentVersion = async () => {
         try {
             const response = await axios.get(urlGetActual);
@@ -107,7 +114,7 @@ function VersionHistory({ entryID, onVersionChange }) {
 
     return (
         <div className="p-6 rounded-lg shadow-lg">
-            <VersionFilter handleFilterVersion={handleFilterVersion}/>
+            <VersionFilter handleFilterVersion={handleFilterVersion} formState={formState} setFormState={setFormState}/>
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">
                 {data.map((version) => (

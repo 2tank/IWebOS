@@ -1,15 +1,11 @@
 from pydantic import BaseModel, Field, HttpUrl, field_validator, field_serializer
 from datetime import datetime, timezone, timedelta
-from typing import List, Optional,  Literal
-
-linkType = Literal['External','Internal']
+from typing import List, Optional
 
 class Attachment(BaseModel):
-    type: str = Field(...,description="Tipo de archivo 'image', 'file'...")
+    type: str = Field(...,description="Tipo de archivo 'image', 'file'...") 
     url: str = Field(..., description="Url adjunto al archivo")
-    caption: Optional[str] = Field(None,description="Descripción del archivo")
-    alt_text: Optional[str] = Field(None,description="Texto alternativo para imágenes")
-    file_name: Optional[str] = Field(None, description="Nombre del archivo, solo para archivos que no son imágenes")
+    file_name: str = Field(None, description="Nombre del archivo")
 
     @field_validator('url')
     def validate_attachment_url(cls, value):
@@ -20,7 +16,6 @@ class Attachment(BaseModel):
         return value
 
 class Link(BaseModel):
-    type: linkType = Field(...,description="Tipo de enlace external o Internal")
     url: str = Field(...,description="URL del enlace")
     text: str = Field(...,description="Texto del enlace")
 
@@ -59,21 +54,19 @@ class versionSchema(BaseModel):
     model_config = {
         "json_schema_extra" : {
             "example" :
-            {"editor": "Creador Prueba",
-            "editDate": "2024-11-02T15:23:52.461000",
+            {
+            "editor": "Creador Prueba",
+            "editDate": "2024-11-02T15:23:52.461000+02:00",
             "content": "pruebaNuevaVersion",
             "attachments": [
               {
                 "type": "file",
                 "url": "https://example.com/document.pdf",
-                "caption": "Documento de ejemplo",
-                "alt_text": None,
                 "file_name": "documento_prueba.pdf"
               }
             ],
             "links": [
               {
-                "type": "External",
                 "url": "https://example.com",
                 "text": "Enlace a Example"
               }
@@ -89,4 +82,6 @@ class versionSchema(BaseModel):
             ],
             "reverted": False,
             "entry_id": "672f52b8f8bc9f564411f89c"
-          }}}
+            }
+          }
+        }

@@ -39,24 +39,20 @@ function PostVersion() {
     editor: "",
     content: "",
     maps: [],
+    attachments: [],
   });
 
   useEffect(() => {
-    console.log('ID:', id); // Verificar que el ID esté presente
-
     const fetchData = async () => {
       try {
         const response = await axios.get(finalUrl);
-        console.log("Respuesta de la API:", response.data);
-        console.log("ENTRYID:", response.data.entry_id);
-
         setEntryId(response.data.entry_id);
-
 
         setFormState({
           editor: response.data.editor,
           content: response.data.content,
           maps: response.data.maps,
+          attachments: response.data.attachments,
         });
       } catch (err) {
         setError("Error al cargar los datos.");
@@ -113,6 +109,11 @@ function PostVersion() {
         },
         description: map.mapdescription,
       })),
+      attachments: formState.attachments.map((attachment) => ({
+        type: attachment.type,
+        url: attachment.url,
+        file_name: attachment.file_name,
+      })),
       reverted: false,
       entry_id: entryId,
     };
@@ -128,6 +129,7 @@ function PostVersion() {
         editor: "",
         content: "",
         maps: [],
+        attachments: [],
       });
     } catch (err) {
       setSubmitSuccess(false);
@@ -192,7 +194,7 @@ function PostVersion() {
 
                   {showAddImage && (
                     <div>
-                      <UploadFile />
+                      <UploadFile setFormState={setFormState}/>
                     </div>
                   )}
 

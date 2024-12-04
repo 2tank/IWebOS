@@ -60,7 +60,7 @@ function EntryFilter({formState, setFormState,handleFilterEntry}){
             <TuneIcon className='hover:bg-gray-300 hover:cursor-pointer rounded-lg' onClick={() => setShowFilter(!showFilter)}/>
             {showFilter && (
             <div className='mb-4 mt-2'>
-                <form onSubmit={handleFilterEntry} className='flex flex-col items-center gap-2'>
+                <form onSubmit={handleFilterEntry} className='flex flex-col items-center gap-1'>
                     <FormCheckBox label={"Tags: "} className={checkBoxClassName} name={"tags"} data={data} onChange={handleInputChange} selectedElems={formState.tags}/>
                     <div>
                         <FormTextInput name={"description"} value={formState.description} label={"Descripcion: "}

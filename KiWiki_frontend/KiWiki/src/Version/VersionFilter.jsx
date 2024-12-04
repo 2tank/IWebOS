@@ -3,16 +3,9 @@ import FormNumberInput from '../Common/FormNumberInput';
 import FormTextInput from '../Common/FormTextInput';
 import TuneIcon from '@mui/icons-material/Tune';
 
-function VersionFilter({handleFilterVersion}){
+function VersionFilter({handleFilterVersion, formState, setFormState}){
 
     const [showFilter,setShowFilter] = useState(false);
-
-    const [formState,setFormState] = useState({
-        year: "",
-        month: "",
-        day: "",
-        editor: "",
-    });
 
     // Manejo del cambio en los campos del formulario
     const handleInputChange = (e) => {

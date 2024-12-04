@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 from datetime import datetime, timezone, timedelta
-from typing import List, Optional,  Literal
+from typing import List, Optional
 
 class Attachment(BaseModel):
     type: str = Field(...,description="Tipo de archivo 'image', 'file'...") 
     url: str = Field(..., description="Url adjunto al archivo")
-    file_name: Optional[str] = Field(None, description="Nombre del archivo, solo para archivos que no son imágenes")
+    file_name: str = Field(None, description="Nombre del archivo")
 
     @field_validator('url')
     def validate_attachment_url(cls, value):
@@ -49,21 +49,19 @@ class versionSchema(BaseModel):
     model_config = {
         "json_schema_extra" : {
             "example" :
-            {"editor": "Creador Prueba",
-            "editDate": "2024-11-02T15:23:52.461000",
+            {
+            "editor": "Creador Prueba",
+            "editDate": "2024-11-02T15:23:52.461000+02:00",
             "content": "pruebaNuevaVersion",
             "attachments": [
               {
                 "type": "file",
                 "url": "https://example.com/document.pdf",
-                "caption": "Documento de ejemplo",
-                "alt_text": None,
                 "file_name": "documento_prueba.pdf"
               }
             ],
             "links": [
               {
-                "type": "External",
                 "url": "https://example.com",
                 "text": "Enlace a Example"
               }
@@ -79,4 +77,6 @@ class versionSchema(BaseModel):
             ],
             "reverted": False,
             "entry_id": "672f52b8f8bc9f564411f89c"
-          }}}
+            }
+          }
+        }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const UploadFile = () => {
+const UploadFile = ({setFormState}) => {
   const [file, setFile] = useState(null);
   const [fileUrl, setFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,11 @@ const UploadFile = () => {
       alert('Archivo subido correctamente');
       console.log('Archivo subido:', response.data);
       //La url del archivo se saca con response.data.url
-      console.log(response.data.url)
+      console.log(response.data)
+      setFormState((prev) => ({
+        ...prev,
+        attachments: [...prev.attachments, { type: "response.data.format", url: "response.data.url", file_name: "response.data.display_name" }]
+      }));
       setUploadedUrl(response.data.url)
       setFileUrl(null);
       setFile(null);
