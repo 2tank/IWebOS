@@ -83,9 +83,7 @@ function NotificationPage() {
     const handleAccept = async (id) => {
         try {
             console.log("Id de mierdda", id);
-            await axios.patch("http://localhost:8000/notification/approve", null, {
-                params: { notification_id: id }
-            });            
+            await axios.patch("http://localhost:8000/notification/approve/${id}");
             // Actualizar la lista de notificaciones para reflejar el cambio
             const updatedNotifications = data.map(notification =>
                 notification.id === id ? { ...notification, approved: true } : notification
@@ -98,7 +96,7 @@ function NotificationPage() {
 
     const handleDeny = async (id) => {
         try {
-            await axios.patch("http://localhost:8000/notification/deny", { params: { id }} );
+            await axios.patch("http://localhost:8000/notification/deny${id}");
             // Actualizar la lista de notificaciones para reflejar el cambio
             const updatedNotifications = data.map(notification =>
                 notification.id === id ? { ...notification, approved: false } : notification
