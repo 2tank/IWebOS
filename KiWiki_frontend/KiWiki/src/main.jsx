@@ -9,6 +9,7 @@ import Wiki from './Wiki/Wiki.jsx';
 import ListEntries from './Entry/ListEntries.jsx';
 import PostVersion from './Version/PostVersion.jsx';
 import CreateWiki from './Wiki/CreateWiki.jsx';
+import PostEntry from './Entry/PostEntry.jsx';
 
 createRoot(document.getElementById('root')).render(
   <Router>
@@ -16,13 +17,14 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<HomePage/>} />
         <Route path="/wikis/:nameWiki/entries/:entry_id" element={<DetailedEntry/>} />
         <Route path="/wikis/:nameWiki/entries/:entry_id/versionedit" element={<PostVersion/>}/> 
-        {/* <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
+        <Route path='/wikis/:nameWiki/entries' element={<ListEntries/>}></Route>
+        <Route path='/wikis/:wiki_id/create' element={<PostEntry/>}></Route>
         <Route path='/wikis/:selectedOption/:query/:dateOption' element={<Wiki/>}></Route>
         <Route path='/wikis/:selectedOption/:query' element={<Wiki/>}></Route>
-        <Route path='/wikis/:nameWiki/entries' element={<ListEntries/>}></Route>
         <Route path='/wikis/create' element={<CreateWiki/>}></Route>
         <Route path='/wikis/:nameWiki/modify' element={<CreateWiki/>}></Route>
+        {/* <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
       </Routes>
     </Router>
 )

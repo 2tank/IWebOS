@@ -53,7 +53,7 @@ function SingleWiki({ item }) {
           >
             <EditIcon color='warning' fontSize='large'></EditIcon>
           </button>
-          <button
+          <button 
             onClick={deleteHandler}
             className='m-3'
             tabIndex={0}

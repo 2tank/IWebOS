@@ -1,24 +1,40 @@
 import { useNavigate, useParams} from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
+import axios from "axios";
+import apiEndpoint from '../assets/apiEndpoints.json'
 
-function SingleEntry({ item }){
+function SingleEntry({item,wiki_id,setData}){
 
     const navigate = useNavigate()
 
     const { nameWiki } = useParams();
 
-    const clickWiki = () => {
-
+    const clickEntry = () => {
         navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item._id}` , {
             state: { "id": item._id },
           });
     }
-    console.log(item.creator)
+    
+    const modifyHandler = (event) =>{
+      event.stopPropagation()
+      navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item._id}` + '/modify' , {
+        state: { "id": item._id },
+      });
+    }
+    
+    const deleteHandler = async(event) =>{
+      event.stopPropagation();
+      await axios.delete(apiEndpoint.api + '/entries/' + item._id);
+      await axios.delete(apiEndpoint.api + '/wikis/' + wiki_id + '/delete_entry/' +  item._id);
+      setData((prevData) => prevData.filter((entry) => entry._id !== item._id));
+    }
   
     return (
     
-    <div onClick={clickWiki} tabIndex={0} className="flex w-full hover:cursor-pointer border-2 border-gray-300 flex-col bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-green-900 focus:outline-none focus:ring-2 focus:ring-green-900">
+    <div onClick={clickEntry} tabIndex={0} className="flex w-full hover:cursor-pointer border-2 border-gray-300 flex-col bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 hover:border-2 hover:border-green-900 focus:outline-none focus:ring-2 focus:ring-green-900">
       <header className="flex items-center space-x-4 mb-4 ">
 
         <Avatar>{item.creator.charAt(0).toUpperCase()}</Avatar>
@@ -26,6 +42,22 @@ function SingleEntry({ item }){
         <div className="flex flex-col">
           <h2 className="text-xl font-bold text-gray-800">{item.title}</h2>
           <p className="text-sm text-gray-500">Creado por: {item.creator}</p>
+        </div>
+        <div className='flex-1 flex flex-row justify-end'>
+          <button
+            onClick={modifyHandler}
+            className='m-3'
+            tabIndex={0}
+          >
+            <EditIcon color='warning' fontSize='large'></EditIcon>
+          </button>
+          <button 
+            onClick={deleteHandler}
+            className='m-3'
+            tabIndex={0}
+          >
+            <DeleteIcon color='error' fontSize='large'></DeleteIcon>
+          </button>
         </div>
       </header>
 

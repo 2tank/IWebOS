@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, Link, useParams } from "react-router-dom";
 import apiEndpoint from '../assets/apiEndpoints.json'
 import SingleEntry from './SingleEntry'
 import Navbar from '../Common/NavBar'
 import EntryFilter from "./EntryFilter";
+
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import axios from "axios";
 
@@ -27,9 +29,7 @@ function ListEntries(){
     let urlApi = ''
 
     useEffect(() => {
-
         getData()
-
     },[id])
 
     const getData = async() => {
@@ -50,7 +50,7 @@ function ListEntries(){
     const handleFilterEntry = async(e) => {
         e.preventDefault();
 
-        let filterURL = `http://localhost:8000/entries/?wiki=${id}`;
+        let filterURL = apiEndpoint.api + `/entries/?wiki=${id}`;
 
         if (formState.year) filterURL += `&year=${formState.year}`;
         if (formState.month) filterURL += `&month=${formState.month}`;
@@ -75,14 +75,18 @@ function ListEntries(){
             <Navbar/>
 
             <div className='flex-grow w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
-            <section className='flex flex-grow flex-col p-8'>
+            <section className='flex flex-grow flex-col p-8 gap-3'>
                 <EntryFilter formState={formState} setFormState={setFormState} handleFilterEntry={handleFilterEntry} />
                 <h1 className='w-full text-center text-2xl font-bold border-b border-gray-600 mb-4'>Listado de entradas de {name} </h1>
                 {
                 data != null &&  data.map(item => (
-                        <SingleEntry key={item._id} item={item}></SingleEntry>
+                        <SingleEntry key={item._id} item={item} wiki_id={id} setData={setData}></SingleEntry>
                     ))
                 }
+                
+                <Link className='w-16 h-16 m-16 fixed bottom-0 right-0' to={`/wikis/${id}/create`}>
+                <AddCircleIcon style={{width:'100%', height:'100%'}} fontSize="large" color='success'></AddCircleIcon>
+                </Link>
             </section>
             </div>
         </>
