@@ -117,7 +117,7 @@ async def delete_wiki(id_wiki: str) -> dict:
     result = await wiki_crud.delete_id(id_wiki)
     return result
 
-async def get_wikis_date(content: datetime, condition: str) -> List:
+async def get_wikis_date(content: str, condition: str) -> List:
     result = await wiki_crud.get_wiki_date(content, condition)
     return result
 

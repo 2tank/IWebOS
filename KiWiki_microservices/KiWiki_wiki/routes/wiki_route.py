@@ -176,7 +176,7 @@ async def get_wikis_date(data: Dict = Body(...)) -> List[dict]:
     """
     try:
 
-        wiki_date = datetime.fromisoformat(data["content"])
+        wiki_date = (data["content"])
         wikis = await wiki_logic.get_wikis_date(wiki_date, data["condition"])
         return wikis
     except Exception as e:

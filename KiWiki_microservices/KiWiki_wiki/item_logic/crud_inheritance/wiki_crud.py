@@ -79,6 +79,21 @@ class WIKICRUD(MONGOCRUD):
         return {"message": "Entry ID deleted to Wiki entries successfully"}
 
 
+    def parse_date(self, date_str: str) -> datetime:
+        """
+        Convierte una fecha en formato 'día/mes/año' a un objeto datetime con la hora en 00:00:00.
+
+        Args:
+            date_str (str): La fecha en formato 'día/mes/año' (ejemplo '29/7/1981').
+
+        Returns:
+            datetime: El objeto datetime correspondiente con la hora puesta a 00:00:00.
+        """
+        # Convierte el formato 'día/mes/año' a un objeto datetime
+        date = datetime.strptime(date_str, "%d/%m/%Y")
+        # Aseguramos que la hora sea 00:00:00 para ignorar la parte de hora
+        return date.replace(hour=0, minute=0, second=0, microsecond=0)
+
     async def get_wikis_same_date(self, wiki_date: datetime):
         """
         Obtiene las wikis que tienen la misma fecha especificada.
@@ -94,7 +109,6 @@ class WIKICRUD(MONGOCRUD):
             item["_id"] = str(item["_id"])
             items.append(item)
         return items
-
 
     async def get_wikis_higher_date(self, wiki_date: datetime):
         """
@@ -112,7 +126,6 @@ class WIKICRUD(MONGOCRUD):
             items.append(item)
         return items
 
-
     async def get_wikis_lower_date(self, wiki_date: datetime):
         """
         Obtiene las wikis con una fecha anterior a la especificada.
@@ -129,13 +142,12 @@ class WIKICRUD(MONGOCRUD):
             items.append(item)
         return items
 
-
-    async def get_wiki_date(self, wiki_date: datetime, condition: str):
+    async def get_wiki_date(self, wiki_date: str, condition: str):
         """
         Obtiene wikis basadas en la condición de fecha especificada.
 
         Args:
-            wiki_date (datetime): La fecha de referencia para el filtro.
+            wiki_date (str): La fecha en formato 'día/mes/año' (ejemplo '29/7/1981').
             condition (str): La condición de la fecha ('higher', 'lower', o 'same').
 
         Returns:
@@ -144,12 +156,15 @@ class WIKICRUD(MONGOCRUD):
         Raises:
             ValueError: Si la condición no es 'higher', 'lower', o 'same'.
         """
+        # Convertir la fecha en formato 'día/mes/año' a datetime
+        wiki_date_obj = self.parse_date(wiki_date)
+
         if condition == "higher":
-            result = await self.get_wikis_higher_date(wiki_date)
+            result = await self.get_wikis_higher_date(wiki_date_obj)
         elif condition == "lower":
-            result = await self.get_wikis_lower_date(wiki_date)
+            result = await self.get_wikis_lower_date(wiki_date_obj)
         elif condition == "same":
-            result = await self.get_wikis_same_date(wiki_date)
+            result = await self.get_wikis_same_date(wiki_date_obj)
         else:
             raise ValueError("Condition error: debe ser 'higher', 'lower', o 'same'")
 

@@ -18,6 +18,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/wikis/:nameWiki/entries/:entry_id/versionedit" element={<PostVersion/>}/> 
         {/* <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
+        <Route path='/wikis/:selectedOption/:query/:dateOption' element={<Wiki/>}></Route>
         <Route path='/wikis/:selectedOption/:query' element={<Wiki/>}></Route>
         <Route path='/wikis/:nameWiki/entries' element={<ListEntries/>}></Route>
         <Route path='/wikis/create' element={<CreateWiki/>}></Route>
