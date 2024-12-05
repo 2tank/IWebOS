@@ -79,33 +79,15 @@ function NotificationPage() {
 
     const { markAllAsRead } = useNotification();   // Traer la función del NotificationContext
 
-    // Funciones de aceptación y denegación de notificación
-    const handleAccept = async (id) => {
-        try {
-            console.log("Id de mierdda", id);
-            await axios.patch("http://localhost:8000/notification/approve/${id}");
-            // Actualizar la lista de notificaciones para reflejar el cambio
-            const updatedNotifications = data.map(notification =>
-                notification.id === id ? { ...notification, approved: true } : notification
-            );
-            setData(updatedNotifications);
-        } catch (error) {
-            setError("Error al aceptar la notificación");
-        }
+    // Función para actualizar el estado de las notificaciones
+    const handleUpdateNotification = (id, approved) => {
+        setData((prevData) =>
+            prevData.map((notification) =>
+                notification._id === id ? { ...notification, approved } : notification
+            )
+        );
     };
-
-    const handleDeny = async (id) => {
-        try {
-            await axios.patch("http://localhost:8000/notification/deny${id}");
-            // Actualizar la lista de notificaciones para reflejar el cambio
-            const updatedNotifications = data.map(notification =>
-                notification.id === id ? { ...notification, approved: false } : notification
-            );
-            setData(updatedNotifications);
-        } catch (error) {
-            setError("Error al denegar la notificación");
-        }
-    };
+    
 
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
@@ -166,13 +148,13 @@ function NotificationPage() {
                         currentNotifications.map((notification, index) => (
                             <Notification
                                 key={index}
+                                id={notification._id}
                                 title={notification.title}
                                 user={notification.user}
                                 notifDate={notification.notifDate}
                                 notifType={notification.notifType}
                                 read={notification.read}
-                                onAccept={() => handleAccept(notification.id)} // Pasa el ID de la notificación
-                                onDeny={() => handleDeny(notification.id)}     // Pasa el ID de la notificación
+                                onUpdate={handleUpdateNotification}
                             />
                         ))
                     )}

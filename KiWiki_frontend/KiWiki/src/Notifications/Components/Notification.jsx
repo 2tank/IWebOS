@@ -1,4 +1,24 @@
-function Notification({ title, user, notifDate, notifType, read, onAccept, onDeny }) {
+import axios from "axios";
+
+function Notification({ id, title, user, notifDate, notifType, read, onUpdate }) {
+    const handleAccept = async (id) => {
+        try {
+            await axios.patch(`http://localhost:8000/notification/approve/${id}`);
+            onUpdate(id, true);
+        } catch (error) {
+            console.error("Error al aceptar la notificación:", error);
+        }
+    };
+
+    const handleDeny = async (id) => {
+        try {
+            await axios.patch(`http://localhost:8000/notification/deny/${id}`);
+            onUpdate(id, false);
+        } catch (error) {
+            console.error("Error al denegar la notificación:", error);
+        }
+    };
+
     return (
         <div
             className={`p-4 m-2 rounded shadow-md w-full max-w-xl ${
@@ -6,21 +26,21 @@ function Notification({ title, user, notifDate, notifType, read, onAccept, onDen
             }`}
         >
             <h2 className="text-xl font-bold mb-2">{title}</h2>
-            <p className="text-gray-700 mb-1">User: {user}</p>
+            <p className="text-gray-700 mb-1">Usuario: {user}</p>
             <p className="text-gray-700 mb-1">
-                Date: {new Date(notifDate).toLocaleDateString()}
+                Fecha: {new Date(notifDate).toLocaleDateString()}
             </p>
-            <p className="text-gray-700">Type: {notifType}</p>
+            <p className="text-gray-700">Tipo: {notifType}</p>
             <div className="flex justify-end mt-4">
                 <button
                     className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-700"
-                    onClick={onAccept}
+                    onClick={() => handleAccept(id)}
                 >
                     Aceptar
                 </button>
                 <button
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-                    onClick={onDeny}
+                    onClick={() => handleDeny(id)}
                 >
                     Denegar
                 </button>
