@@ -14,6 +14,8 @@ import CancelLocationIcon from '@mui/icons-material/Cancel';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import HideSourceIcon from '@mui/icons-material/HideSource';
 
+import apiEndPoints from '../assets/apiEndpoints.json'
+
 function PostVersion() {
   const location = useLocation();
   const { id } = location.state || {};
@@ -23,7 +25,7 @@ function PostVersion() {
       navigate(-1);
   };
 
-  const urlVersion = "http://localhost:8000/versions/";
+  const urlVersion = apiEndPoints.api +  "/versions/";
 
   const finalUrl = `${urlVersion}${id}`;
 
@@ -41,6 +43,7 @@ function PostVersion() {
     editor: "",
     content: "",
     maps: [],
+    originalMaps: [],
     attachments: [],
   });
 
@@ -52,10 +55,10 @@ function PostVersion() {
         setEntryId(response.data.entry_id);
   
         setFormState({
-          editor: response.data.editor,
-          content: response.data.content,
-          maps: response.data.maps,
-          attachments: response.data.attachments,
+          editor: response.data.editor || "",
+          content: response.data.content || "",
+          originalMaps: response.data.maps || [],
+          attachments: response.data.attachments || [],
         });
       } catch (err) {
         setError("Error al cargar los datos.");
@@ -70,9 +73,11 @@ function PostVersion() {
 
   const handleMapInputChange = (e, index) => {
     const { name, value } = e.target;
-    const updatedMaps = [...formState.maps];
-    updatedMaps[index][name] = value;
-    setFormState((prev) => ({ ...prev, maps: updatedMaps }));
+    const updatedMaps = [...(formState.maps || [])];
+    if (updatedMaps[index]) {
+      updatedMaps[index][name] = value;
+      setFormState((prev) => ({ ...prev, maps: updatedMaps }));
+    }
   };
 
   const handleInputChange = (e) => {
@@ -87,7 +92,7 @@ function PostVersion() {
     }, 300);
     setFormState((prev) => ({
       ...prev,
-      maps: [...prev.maps, { latitude: "", longitude: "", mapdescription: "" }]
+      maps: [...(prev.maps || []), { latitude: "", longitude: "", mapdescription: "" }]
     }));
   };
 
@@ -98,19 +103,24 @@ function PostVersion() {
 
   const handleCreateVersion = async (e) => {
     e.preventDefault();
+  
+    let maps = [...(formState.maps || [])].map((map) => ({
+      location: {
+        latitude: parseFloat(map.latitude),
+        longitude: parseFloat(map.longitude),
+      },
+      description: map.mapdescription,
+    }));
+
+    let combinedMaps = [...(maps || []), ...(formState.originalMaps || [])];
 
     const updatedVersion = {
-      ...formState,
+      content: formState.content,
+      editor: formState.editor,
       editDate: new Date().toISOString(),
-      attachments: [],
+      attachments: formState.attachments,
       links: [],
-      maps: formState.maps.map((map) => ({
-        location: {
-          latitude: parseFloat(map.latitude),
-          longitude: parseFloat(map.longitude),
-        },
-        description: map.mapdescription,
-      })),
+      maps: combinedMaps,
       attachments: formState.attachments.map((attachment) => ({
         type: attachment.type,
         url: attachment.url,
@@ -120,13 +130,20 @@ function PostVersion() {
       entry_id: entryId,
     };
 
+    console.log(updatedVersion);
+
     try {
       const response = await axios.post(
-        `http://localhost:8000/entries/${entryId}/versions`, updatedVersion, {
+        `${apiEndPoints.api}/entries/${entryId}/versions`, updatedVersion, {
         headers: { "Content-Type": "application/json" },
       });
       setSubmitSuccess(true);
       setSubmitError(null);
+      setFormState((prevState) => ({
+        ...prevState,
+        originalMaps: combinedMaps,
+        maps: [],
+      }));
     } catch (err) {
       setSubmitSuccess(false);
       setSubmitError("Ocurrió un error al crear la versión.");
@@ -156,10 +173,10 @@ function PostVersion() {
                 </div>
 
                 <span className="font-bold" >Mapas</span>
-                <MapsViewer maps={formState.maps} />
+                <MapsViewer maps={formState.originalMaps} setFormState={setFormState}/>
 
                 <span className="font-bold" >Archivos</span>
-                <FilesViewer attachments={formState.attachments} />
+                <FilesViewer attachments={formState.attachments} setFormState={setFormState}/>
 
                 <div className="flex flex-col items-left mb-4">
                   <div>
@@ -172,7 +189,7 @@ function PostVersion() {
                     </button>
                   </div>
 
-                  {formState.maps.map((map, index) => (
+                  {(formState.maps || []).map((map, index) => (
                     <div key={index} className="mb-4 border p-4 rounded">
                       <button type="button" onClick={() => removeMap(index)}>
                         <CancelLocationIcon fontSize="large" className="cursor-pointer" />

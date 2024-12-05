@@ -7,7 +7,7 @@ function FormTextArea({name,label,value,onChange,required = False, className}){
             value={value}
             onChange = {onChange}
             required = {required}
-            className = {className}
+            className = {`${className} rounded`}
             wrap="soft"
             rows="10"
             /> 

@@ -8,7 +8,7 @@ function FormInput({name,label,value,onChange,required = False, className}){
             value={value}
             onChange = {onChange}
             required = {required}
-            className = {className}
+            className = {`${className} rounded`}
             /> 
         </>
     );
