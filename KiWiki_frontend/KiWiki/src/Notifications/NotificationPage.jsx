@@ -153,6 +153,7 @@ function NotificationPage() {
                                 user={notification.user}
                                 notifDate={notification.notifDate}
                                 notifType={notification.notifType}
+                                approved={notification.approved}
                                 read={notification.read}
                                 onUpdate={handleUpdateNotification}
                             />
