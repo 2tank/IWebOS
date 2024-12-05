@@ -89,11 +89,11 @@ async def update_notification(id: str, req: NotificationSchema = Body(...)):
         raise HTTPException(status_code=500, detail="Could not update given notification: " + str(e))
 
 
-@router.patch("/approve")
-async def approve_notification(id: str = Query(...)):
+@router.patch("/approve/{id}")
+async def approve_notification(id: str):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.patch(f"{notification_url}/approve", params={"id": id})
+            response = await client.patch(f"{notification_url}/approve/{id}")
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
@@ -101,11 +101,11 @@ async def approve_notification(id: str = Query(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Could not approve the notification: " + str(e))
 
-@router.patch("/deny")
-async def deny_notification(id: str = Query(...)):
+@router.patch("/deny/{id}")
+async def deny_notification(id: str):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.patch(f"{notification_url}/deny", params={"id": id})
+            response = await client.patch(f"{notification_url}/deny/{id}")
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
