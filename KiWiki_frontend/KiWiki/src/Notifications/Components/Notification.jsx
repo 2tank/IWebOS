@@ -1,4 +1,5 @@
 import axios from "axios";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 function Notification({ id, title, user, notifDate, notifType, read, onUpdate, approved }) {
     const handleAccept = async (id) => {
@@ -19,9 +20,18 @@ function Notification({ id, title, user, notifDate, notifType, read, onUpdate, a
         }
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8000/notification/${id}`);
+            onUpdate(id, null); // Notifica al componente padre para eliminar la notificación
+        } catch (error) {
+            console.error("Error al eliminar la notificación:", error);
+        }
+    };
+
     return (
         <div
-            className={`p-4 m-2 rounded shadow-md w-full max-w-xl ${
+            className={`p-4 m-2 rounded shadow-md w-full max-w-xl relative ${
                 read ? "bg-gray-300" : "bg-white"
             }`}
         >
@@ -60,6 +70,15 @@ function Notification({ id, title, user, notifDate, notifType, read, onUpdate, a
                     </button>
                 </div>
             ) : null}
+
+            {(approved === true || approved === false) && (
+                <div
+                    className="absolute bottom-2 right-2 bg-red-500 text-white p-3 rounded-full cursor-pointer hover:bg-red-700"
+                    onClick={() => handleDelete(id)}
+                >
+                    <DeleteForeverIcon fontSize="large" />
+                </div>
+            )}
         </div>
     );
 }
