@@ -5,6 +5,8 @@ import DOMPurify from "dompurify";
 import { formatDate } from "../Common/CommonOperations";
 import './CSS/html.css'
 
+import MapComponent from "../Common/MapComponent";
+
 function SingleVersionSection({entryVersionID,entryID}){
 
     const navigate = useNavigate();
@@ -16,6 +18,12 @@ function SingleVersionSection({entryVersionID,entryID}){
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const coordinates = [
+        { latitude: 40.7128, longitude: -74.0060, description: 'Nueva York' },
+        { latitude: 34.0522, longitude: -118.2437, description: 'Los Ángeles' },
+        { latitude: 41.8781, longitude: -87.6298, description: 'Chicago' },
+    ];
 
     const clickEditVersion = () => {
 
@@ -55,7 +63,14 @@ function SingleVersionSection({entryVersionID,entryID}){
                 <span className="text-xs">Editor: {data.editor}</span>
             </div>
             <div className="htmlcontent-container mt-2" dangerouslySetInnerHTML={{ __html: sanitizedHtmlContent }} />
+            <div className="flex justify-center mt-4">
+                <MapComponent coordinates={data.maps} />
+            </div>
+            <div>
+                final
+            </div>
         </div>
+
     );
 }
 
