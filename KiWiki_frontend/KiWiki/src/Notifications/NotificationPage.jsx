@@ -4,6 +4,7 @@ import Notification from "./Components/Notification";
 import Navbar from "../../src/Common/NavBar";
 import { useState, useEffect } from "react";
 import React from 'react';
+import { useNotification } from "../../src/Common/NotificationContext";
 
 function NotificationPage() {
     const [error, setError] = useState(null);
@@ -76,27 +77,15 @@ function NotificationPage() {
         setCurrentPage(1);
     };
 
-    const markAllAsRead = async () => {
-        try {
-            await axios.patch("http://localhost:8000/notification/read/");
-            setData((prevData) =>
-                prevData.map((notification) => ({
-                    ...notification,
-                    read: true,
-                }))
-            );
-        } catch (err) {
-            console.error("Error en la solicitud:", err); // Inspecciona el error aquí
-            setError("Error al marcar todas las notificaciones como leídas");
-        }
-    };    
-    
-    
+    const { markAllAsRead } = useNotification();   // Traer la función del NotificationContext
 
     // Funciones de aceptación y denegación de notificación
     const handleAccept = async (id) => {
         try {
-            await axios.patch(`http://localhost:8000/notification/approve/${id}`);
+            console.log("Id de mierdda", id);
+            await axios.patch("http://localhost:8000/notification/approve", null, {
+                params: { notification_id: id }
+            });            
             // Actualizar la lista de notificaciones para reflejar el cambio
             const updatedNotifications = data.map(notification =>
                 notification.id === id ? { ...notification, approved: true } : notification
@@ -109,7 +98,7 @@ function NotificationPage() {
 
     const handleDeny = async (id) => {
         try {
-            await axios.patch(`http://localhost:8000/notification/deny/${id}`);
+            await axios.patch("http://localhost:8000/notification/deny", { params: { id }} );
             // Actualizar la lista de notificaciones para reflejar el cambio
             const updatedNotifications = data.map(notification =>
                 notification.id === id ? { ...notification, approved: false } : notification

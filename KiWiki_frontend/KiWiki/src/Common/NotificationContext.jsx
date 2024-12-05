@@ -11,25 +11,35 @@ export const NotificationProvider = ({ children }) => {
     const [unreadCount, setUnreadCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
 
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get("http://localhost:8000/notification/?read=false");
-                setUnreadCount(response.data.length);
-                setNotifications(response.data); // Guardar todas las notificaciones
-            } catch (err) {
-                console.error("Error fetching unread notifications:", err);
-            }
-        };
+    const fetchNotifications = async () => {
+        try {
+            const response = await axios.get("http://localhost:8000/notification/?read=false");
+            setUnreadCount(response.data.length);
+            setNotifications(response.data);
+        } catch (err) {
+            console.error("Error fetching unread notifications:", err);
+        }
+    };
 
+    useEffect(() => {
         fetchNotifications();
     }, []);
 
+    const markAllAsRead = async () => {
+        try {
+            await axios.patch("http://localhost:8000/notification/read/");
+            await fetchNotifications(); // Volver a cargar las notificaciones
+        } catch (err) {
+            console.error("Error marking all notifications as read:", err);
+        }
+    };
+
     return (
-        <NotificationContext.Provider value={{ unreadCount, notifications }}>
+        <NotificationContext.Provider value={{ unreadCount, notifications, markAllAsRead }}>
             {children}
         </NotificationContext.Provider>
     );
 };
+
 
 export default NotificationProvider;
