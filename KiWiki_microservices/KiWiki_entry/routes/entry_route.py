@@ -86,6 +86,7 @@ async def delete_entry(id: str):
         print(f"Failed to delete entry: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to delete entry")
 
+
 @router.put("/{id}")
 async def update_entry(id: str, req: entrySchema = Body(...)):
     try:
@@ -94,6 +95,7 @@ async def update_entry(id: str, req: entrySchema = Body(...)):
     except Exception as e:
         print(f"Failed to update entry: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update entry")
+
 
 @router.post("/{id}/versions/")
 async def create_entry_version(id: str,version: versionSchema = Body(...)): #Lo suyo es usar versionSchema

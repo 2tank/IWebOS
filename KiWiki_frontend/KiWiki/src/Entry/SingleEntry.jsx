@@ -13,15 +13,15 @@ function SingleEntry({item,wiki_id,setData}){
     const { nameWiki } = useParams();
 
     const clickEntry = () => {
-        navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item._id}` , {
-            state: { "id": item._id },
+        navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item.title.split(" ").slice(0, 2).join("")}` , {
+            state: { "id": item._id }, 
           });
     }
     
     const modifyHandler = (event) =>{
       event.stopPropagation()
-      navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item._id}` + '/modify' , {
-        state: { "id": item._id },
+      navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${item.title.split(" ").slice(0, 2).join("")}` + '/modify' , {
+        state: { "entry_id": item._id},
       });
     }
     

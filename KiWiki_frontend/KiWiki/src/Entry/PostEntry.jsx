@@ -1,6 +1,7 @@
 import {useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import GetInfoEntry from './GetInfoEntry.js';
 import apiEndpoint from '../assets/apiEndpoints.json'
 import axios from "axios";
 import Navbar from "../Common/NavBar";
@@ -11,13 +12,20 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function PostEntry() {
 
+
   const { wiki_id } = useParams();
+
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
   const navigate = useNavigate();
+
+  const location = useLocation()
+
+  const {entry_id} = location.state || {}
+
   const handleBack = () => {
     navigate(-1);
   };
@@ -34,23 +42,43 @@ function PostEntry() {
       tags: [],
       });
 
+  const [noModifyData, setNoModifyData] = useState(null)
+
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  const [modify, setModify] = useState(false)
+
   // Cargamos los tags de las Entradas nada más cargar la página
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiEndpoint.api + "/entries/?getTags=True");
-        setData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+
+    if(entry_id != null){
+        console.log
+        setModify(true)
+            const fetchData1 = async () => {
+                try {
+                    const newDataConvert = await GetInfoEntry(entry_id)
+                    setFormState(newDataConvert)
+                    } catch (error) {
+                    console.error('Error fetching wiki info:', error);
+                }
+            };
+            fetchData1()
+    }
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(apiEndpoint.api + "/entries/?getTags=True");
+          setData(response.data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    
+   
+  }, [entry_id || wiki_id]);
 
   // Manejo del cambio en los campos del formulario
   const handleInputChange = (e) => {
@@ -72,13 +100,39 @@ function PostEntry() {
   const handleCreateEntry = async (e) => {
     e.preventDefault();
 
-    // Actualiza creationDate con la fecha y hora actual
-    const updatedEntry = {
+    if(modify){
+      try {
+ 
+        if(Object.keys(formState).length > 0){
+          await axios.put(apiEndpoint.api+ '/entries/' + entry_id, formState)
+          .then((response) => {
+              console.log(response)
+          })
+          .catch((error) => {
+              console.log(error)
+          });
+
+      }
+
+      } catch (err) {
+        setSubmitSuccess(false); // Marca fallo
+        if (err.response?.status === 422) {
+          setSubmitError("La entrada tiene un formato inválido. Por favor, revisa los datos." + err);
+        } else if (err.response?.status === 500) {
+          setSubmitError("Hubo un error en el servidor. Intenta nuevamente más tarde.");
+        } else {
+          setSubmitError("Ocurrió un error desconocido.");
+        }
+      }
+    }
+    else{
+        // Actualiza creationDate con la fecha y hora actual
+      const updatedEntry = {
         ...formState,
         wiki: "",
         actual_version: "",
         creationDate: new Date().toISOString(),
-    };
+      };
 
     try {
       const response = await axios.post(apiEndpoint.api + "/entries", updatedEntry, {
@@ -103,6 +157,7 @@ function PostEntry() {
         setSubmitError("Ocurrió un error desconocido.");
       }
     }
+  }  
   };
 
   if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;

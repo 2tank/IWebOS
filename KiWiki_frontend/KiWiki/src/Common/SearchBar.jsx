@@ -45,8 +45,8 @@ function SearchBar(){
     }
 
     return (
-            <form onSubmit={search} className='h-10 flex flex-col gap-3 justify-center space-x-1'>
-                <section className='row'>
+            <form onSubmit={search} className='h-10 flex flex-col gap-3 justify-center'>
+                <section className='row space-x-2'>
                     <select className='text-black h-full'
                     id='selectOption'
                     value={selectedOption}

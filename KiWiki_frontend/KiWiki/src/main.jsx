@@ -15,10 +15,11 @@ createRoot(document.getElementById('root')).render(
   <Router>
       <Routes>
         <Route path="/" element={<HomePage/>} />
-        <Route path="/wikis/:nameWiki/entries/:entry_id" element={<DetailedEntry/>} />
+        <Route path="/wikis/:nameWiki/entries/:nameEntry" element={<DetailedEntry/>} />
         <Route path="/wikis/:nameWiki/entries/:entry_id/versionedit" element={<PostVersion/>}/> 
         <Route path='/wikis/:nameWiki/entries' element={<ListEntries/>}></Route>
         <Route path='/wikis/:wiki_id/create' element={<PostEntry/>}></Route>
+        <Route path='/wikis/:nameWiki/entries/:entry_id/modify' element={<PostEntry/>}></Route>
         <Route path='/wikis/:selectedOption/:query/:dateOption' element={<Wiki/>}></Route>
         <Route path='/wikis/:selectedOption/:query' element={<Wiki/>}></Route>
         <Route path='/wikis/create' element={<CreateWiki/>}></Route>

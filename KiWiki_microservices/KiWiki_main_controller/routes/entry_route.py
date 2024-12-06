@@ -159,7 +159,7 @@ async def update_entry(id: str, req: Dict = Body(...)):
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.put(f"{entry_url}/{id}", json=req.model_dump())
+            response = await client.put(f"{entry_url}/{id}", json=req)
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
