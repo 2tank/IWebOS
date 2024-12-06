@@ -164,9 +164,9 @@ function PostEntry() {
   if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 text-black">
+    <div className="min-h-screen bg-gray-100 text-black">
       <Navbar/>
-      <form onSubmit={handleCreateEntry} className="flex-grow p-5 w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
+      <form onSubmit={handleCreateEntry} className="p-5 w-full sm:w-5/6 md:w-5/6 lg:w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
         <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
         <div className="p-4 my-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
           <h2 className="text-lg mb-4 font-bold">Crear Nueva Entrada</h2>

@@ -66,9 +66,6 @@ function SingleVersionSection({entryVersionID,entryID}){
             <div className="flex justify-center mt-4">
                 <MapComponent coordinates={data.maps} />
             </div>
-            <div>
-                final
-            </div>
         </div>
 
     );

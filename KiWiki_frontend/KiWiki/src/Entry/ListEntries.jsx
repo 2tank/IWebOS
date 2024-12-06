@@ -77,10 +77,10 @@ function ListEntries(){
     };
 
     return(
-        <>
+        <div className="min-h-screen bg-gray-100 text-black">
             <Navbar/>
 
-            <div className='flex-grow w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
+            <div className='w-full sm:w-5/6 md:w-5/6 lg:w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
             <section className='flex flex-grow flex-col p-8 gap-3'>
                 <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
                 <EntryFilter formState={formState} setFormState={setFormState} handleFilterEntry={handleFilterEntry} />
@@ -96,7 +96,7 @@ function ListEntries(){
                 </Link>
             </section>
             </div>
-        </>
+        </div>
 
     );
 
