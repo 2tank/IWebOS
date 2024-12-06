@@ -14,7 +14,7 @@ router = APIRouter()
 async def add_notification(notification: NotificationSchema = Body(...)):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(f"{notification_url}/", json=notification.dict())
+            response = await client.post(f"{notification_url}/", json=notification.model_dump())
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
