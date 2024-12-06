@@ -21,6 +21,11 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
+    useEffect(() => {
+        fetchNotifications(); // Ejecutar una vez al montar
+    }, []);
+    
+
     // Polling para actualizar las notificaciones cada 5 segundos
     // useEffect(() => {
     //     fetchNotifications();

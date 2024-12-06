@@ -10,11 +10,11 @@ import ListEntries from './Entry/ListEntries.jsx';
 import PostVersion from './Version/PostVersion.jsx';
 import CreateWiki from './Wiki/CreateWiki.jsx';
 import PostEntry from './Entry/PostEntry.jsx';
-import NotificationContext from './Common/NotificationContext.jsx'
+import NotificationProvider from './Common/NotificationContext.jsx';
 import NotificationPage from './Notifications/NotificationPage.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <NotificationContext>
+  <NotificationProvider>
     <Router>
           <Routes>
             <Route path="/" element={<HomePage/>} />
@@ -32,6 +32,6 @@ createRoot(document.getElementById('root')).render(
             <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
           </Routes>
     </Router>
-  </NotificationContext>
+  </NotificationProvider>
   
 )
