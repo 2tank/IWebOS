@@ -9,7 +9,7 @@ crud = VersionCRUD()
 async def get_versions(filter):
 
     if(len(filter) > 0):
-        versions = await crud.get_by_filter(filter)
+        versions = await crud.get_by_filter(filter).sort("editDate", -1)
     else:
         versions = await crud.get_collection()
 

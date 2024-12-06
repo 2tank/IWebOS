@@ -3,9 +3,7 @@ import item_logic.version as version_logic
 from typing import Optional
 from datetime import datetime
 
-
 router = APIRouter()
-
 
 @router.get("/")
 async def get_versions(
@@ -42,8 +40,6 @@ async def get_versions(
 
         if entry_id:
             filter["entry_id"] = entry_id
-
-        filter["$orderby"] = {"editDate": -1}
 
         versions = await version_logic.get_versions(filter)
         return versions

@@ -52,7 +52,7 @@ async def get_versions(
 
     except Exception as e:
         print(f"Error: {e}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve versions")
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve versions")
 
 # check
 
