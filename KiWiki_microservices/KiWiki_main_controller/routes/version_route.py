@@ -37,37 +37,13 @@ async def get_versions(
             "year": year,
             "month": month,
             "day": day,
-            "content_word": content_words,
+            "content_words": content_words,
             "editor" : editor,
             "entry_id": entry_id,
         }
 
         # Eliminamos del diccionario aquellos valores que sean None
         filter_params = {k: v for k, v in filter_params.items() if v is not None}
-        # Construimos el rango de fechas
-        if year:
-            if month and day:
-                start_date = datetime(year, month, day)
-                end_date = datetime(year, month, day, 23, 59, 59)
-            elif month:
-                start_date = datetime(year, month, 1)
-                end_date = datetime(year + 1, 1, 1) if month == 12 else datetime(year, month + 1, 1)
-            else:
-                start_date = datetime(year, 1, 1)
-                end_date = datetime(year + 1, 1, 1)
-            filter_params["editDate"] = {"$gte": start_date, "$lte": end_date}
-
-        if editor:
-            filter_params["editor"] = {"$regex": ".*{}.*".format(editor), "$options" : "i"}
-
-        if entry_id:
-            filter_params["entry_id"] = entry_id
-
-        # Filtrado por palabras clave en contenido
-        if content_words:
-            filter_params["content"] = {"$regex": f".*{content_words}.*", "$options": "i"}
-
-        filter_params["$orderby"] = {"editDate": -1}
 
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{version_url}/", params=filter_params)
