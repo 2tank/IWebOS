@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useLocation, Link, useParams } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import apiEndpoint from '../assets/apiEndpoints.json'
 import SingleEntry from './SingleEntry'
 import Navbar from '../Common/NavBar'
 import EntryFilter from "./EntryFilter";
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import axios from "axios";
 
@@ -13,6 +14,11 @@ function ListEntries(){
 
     const location = useLocation()
     const {id, name} = location.state || {}
+
+    const navigate = useNavigate();
+    const handleBack = () => {
+        navigate(-1);
+    }
 
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -76,6 +82,7 @@ function ListEntries(){
 
             <div className='flex-grow w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
             <section className='flex flex-grow flex-col p-8 gap-3'>
+                <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
                 <EntryFilter formState={formState} setFormState={setFormState} handleFilterEntry={handleFilterEntry} />
                 <h1 className='w-full text-center text-2xl font-bold border-b border-gray-600 mb-4'>Listado de entradas de {name} </h1>
                 {

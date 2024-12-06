@@ -12,8 +12,8 @@ function EntryFilter({formState, setFormState,handleFilterEntry}){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const checkBoxClassName = "flex w-fit pr-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-amber-950 " +
-    "dark:border-amber-600 dark:text-white break-words whitespace-normal";
+    const checkBoxClassName = "flex flex-wrap w-1/2 max-h-24 p-2 overflow-y-auto gap-2 border border-gray-300 " +
+  "rounded-lg shadow-sm dark:bg-amber-950 dark:border-amber-600 dark:text-white";
 
     // Cargamos los tags de las Entradas nada más cargar la página
     useEffect(() => {

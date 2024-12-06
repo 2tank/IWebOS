@@ -1,10 +1,13 @@
 import {useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import apiEndpoint from '../assets/apiEndpoints.json'
 import axios from "axios";
 import Navbar from "../Common/NavBar";
 import FormTextInput from "../Common/FormTextInput";
 import FormCheckBox from "../Common/FormCheckBox";
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function PostEntry() {
 
@@ -14,9 +17,14 @@ function PostEntry() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
-  const checkBoxClassName = "flex w-fit pr-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-amber-950 " +
-    "dark:border-amber-600 dark:text-white my-2";
+  const checkBoxClassName = "flex flex-wrap w-1/2 max-h-24 p-2 overflow-y-auto gap-2 border border-gray-300 " +
+  "rounded-lg shadow-sm dark:bg-amber-950 dark:border-amber-600 dark:text-white";
 
   // Inicializamos datos formulario
   const [formState, setFormState] = useState({
@@ -104,25 +112,28 @@ function PostEntry() {
     <div className="min-h-screen flex flex-col bg-gray-100 text-black">
       <Navbar/>
       <form onSubmit={handleCreateEntry} className="flex-grow p-5 w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
-        <h2 className="text-lg mb-4">Crear Nueva Entrada</h2>
-        <div className="mb-2">
-            <FormTextInput name={"title"} value={formState.title} label={"Título"}
-            onChange={handleInputChange} required={true} className={formInputClassName}/>
+        <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
+        <div className="p-4 my-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
+          <h2 className="text-lg mb-4 font-bold">Crear Nueva Entrada</h2>
+          <div className="mb-2">
+              <FormTextInput name={"title"} value={formState.title} label={"Título"}
+              onChange={handleInputChange} required={true} className={formInputClassName}/>
+          </div>
+          <div className="mb-2">
+            <FormTextInput name={"creator"} value={formState.creator} label={"Creador"}
+              onChange={handleInputChange} required={true} className={formInputClassName}/>
+          </div>
+          <div className="mb-2">
+            <FormTextInput name={"description"} value={formState.description} label={"Descripción"}
+              onChange={handleInputChange} required={true} className={formInputClassName}/>
+          </div>
+          <FormCheckBox name={"tags"} className={checkBoxClassName} data={data} onChange={handleInputChange} selectedElems={formState.tags} label={"Tags: "}/>
+          {submitError && <p className="text-red-500">{submitError}</p>}
+          {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
+          <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 mt-8 font-bold py-1 px-4 rounded-full text-white">
+            Crear Entrada
+          </button>
         </div>
-        <div className="mb-2">
-          <FormTextInput name={"creator"} value={formState.creator} label={"Creador"}
-            onChange={handleInputChange} required={true} className={formInputClassName}/>
-        </div>
-        <div className="mb-2">
-          <FormTextInput name={"description"} value={formState.description} label={"Descripción"}
-            onChange={handleInputChange} required={true} className={formInputClassName}/>
-        </div>
-        <FormCheckBox name={"tags"} className={checkBoxClassName} data={data} onChange={handleInputChange} selectedElems={formState.tags} label={"Tags: "}/>
-        {submitError && <p className="text-red-500">{submitError}</p>}
-        {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
-        <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
-          Crear Entrada
-        </button>
       </form>
     </div>
   );
