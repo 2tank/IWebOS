@@ -137,7 +137,7 @@ function VersionHistory({ entryID, onVersionChange }) {
                                         className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors"
                                         disabled={isUpdating} // Deshabilitar mientras se está actualizando
                                     >
-                                        {isUpdating ? "Revirtiendo..." : "Revertir a esta versión"}
+                                        {isUpdating ? "Revirtiendo..." : "Revertir esta versión"}
                                     </button>
                                 </div>
                             </>
