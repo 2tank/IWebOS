@@ -62,7 +62,6 @@ const UploadFile = ({setFormState}) => {
         className="border p-2 mb-4"
       />
       <br/>
-      {"URL generada: " + uploadedUrl}
 
       {file && !loading && (
         <div className="mt-4">

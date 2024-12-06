@@ -54,6 +54,8 @@ async def get_entries(
         - day (int, opcional): Día específico de creación.
         - description (str, opcional): Descripción parcial.
         - tags (List[entryType], opcional): Lista de etiquetas.
+        - getTags (bool, opcional): si es verdadero, devuelve la lista completa de tags.
+        - wiki (str, opcional): id de la wiki a la que pertenece la entrada.
 
     Retorno:
         - List[dict]: Lista de entradas filtradas.

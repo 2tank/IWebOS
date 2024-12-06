@@ -2,10 +2,35 @@ from pydantic import BaseModel, Field, field_serializer, field_validator
 from datetime import datetime, timezone, timedelta
 from typing import List, Literal
 
-#No tengo claro si dejar los tags como literales internos o pasarlo a una tabla de la bbdd
-#por ahora lo dejo aqui por simplicidad y tambien pienso que será algo predefinido
-#y que se editará con muy poca frecuencia por lo que no lo veo mal aquí.
-entryType = Literal['POLITICS', 'SPORTS', 'CINEMA']  # A expandir...
+entryType = Literal[
+    'POLÍTICA', 
+    'DEPORTES', 
+    'CINE', 
+    'TECNOLOGÍA', 
+    'CIENCIA', 
+    'HISTORIA', 
+    'ARTE', 
+    'LITERATURA', 
+    'MÚSICA', 
+    'SALUD', 
+    'EDUCACIÓN', 
+    'GEOGRAFÍA', 
+    'FILOSOFÍA', 
+    'RELIGIÓN', 
+    'NEGOCIOS', 
+    'GASTRONOMÍA', 
+    'VIAJES', 
+    'NATURALEZA', 
+    'IDIOMAS', 
+    'VIDEOJUEGOS', 
+    'MODA', 
+    'CULTURA', 
+    'MITOLOGÍA', 
+    'MEDIO AMBIENTE', 
+    'PSICOLOGÍA', 
+    'DERECHO', 
+    'ECONOMÍA'
+]
 
 class entrySchema(BaseModel):
     title: str = Field(..., max_length=100, description="Titulo de la Entrada")
@@ -24,7 +49,7 @@ class entrySchema(BaseModel):
                 "creator": "Creador Prueba",
                 "description": "Descripcion Prueba",
                 "tags": [
-                    "POLITICS"
+                    "POLÍTICA"
                 ],
                 "wiki": "",
                 "actual_version": ""
@@ -41,4 +66,4 @@ class entrySchema(BaseModel):
         """
         Serializa el campo tags a una lista de cadenas
         """
-        return [tag for tag in value]  # Convierte cada tag a su valor en cadena
+        return [tag for tag in value] 

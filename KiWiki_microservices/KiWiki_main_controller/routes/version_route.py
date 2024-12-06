@@ -14,7 +14,7 @@ async def get_versions(
     year: Optional[int] = Query(None),
     month: Optional[int] = Query(None),
     day: Optional[int] = Query(None),
-    content_word: Optional[str] = Query(None),
+    content_words: Optional[str] = Query(None),
     editor: Optional[str] = Query(None),
     entry_id: Optional[str] = Query(None),
 ):
@@ -25,7 +25,9 @@ async def get_versions(
     - year (int, opcional): Año de la versión.
     - month (int, opcional): Mes de la versión.
     - day (int, opcional): Día específico de la versión.
-    - content_word (str, opcional): Palabra clave en el contenido.
+    - content_words (str, opcional): Palabras clave en el contenido.
+    - editor (str, opcional): Editor del contenido.
+    - entry_id (str, opcional): id de la entrada a la que pertenede.
 
     Retorno:
     - List[dict]: Lista de versiones filtradas.
@@ -35,7 +37,7 @@ async def get_versions(
             "year": year,
             "month": month,
             "day": day,
-            "content_word": content_word,
+            "content_word": content_words,
             "editor" : editor,
             "entry_id": entry_id,
         }
@@ -55,9 +57,17 @@ async def get_versions(
                 end_date = datetime(year + 1, 1, 1)
             filter_params["editDate"] = {"$gte": start_date, "$lte": end_date}
 
-        # Filtrado por palabra clave en contenido
-        if content_word:
-            filter_params["content"] = {"$regex": f".*{content_word}.*", "$options": "i"}
+        if editor:
+            filter_params["editor"] = {"$regex": ".*{}.*".format(editor), "$options" : "i"}
+
+        if entry_id:
+            filter_params["entry_id"] = entry_id
+
+        # Filtrado por palabras clave en contenido
+        if content_words:
+            filter_params["content"] = {"$regex": f".*{content_words}.*", "$options": "i"}
+
+        filter_params["$orderby"] = {"editDate": -1}
 
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{version_url}/", params=filter_params)
