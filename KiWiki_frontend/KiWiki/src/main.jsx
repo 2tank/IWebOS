@@ -10,22 +10,28 @@ import ListEntries from './Entry/ListEntries.jsx';
 import PostVersion from './Version/PostVersion.jsx';
 import CreateWiki from './Wiki/CreateWiki.jsx';
 import PostEntry from './Entry/PostEntry.jsx';
+import NotificationContext from './Common/NotificationContext.jsx'
+import NotificationPage from './Notifications/NotificationPage.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <Router>
-      <Routes>
-        <Route path="/" element={<HomePage/>} />
-        <Route path="/wikis/:nameWiki/entries/:nameEntry" element={<DetailedEntry/>} />
-        <Route path="/wikis/:nameWiki/entries/:entry_id/versionedit" element={<PostVersion/>}/> 
-        <Route path='/wikis/:nameWiki/entries' element={<ListEntries/>}></Route>
-        <Route path='/wikis/:wiki_id/create' element={<PostEntry/>}></Route>
-        <Route path='/wikis/:nameWiki/entries/:entry_id/modify' element={<PostEntry/>}></Route>
-        <Route path='/wikis/:selectedOption/:query/:dateOption' element={<Wiki/>}></Route>
-        <Route path='/wikis/:selectedOption/:query' element={<Wiki/>}></Route>
-        <Route path='/wikis/create' element={<CreateWiki/>}></Route>
-        <Route path='/wikis/:nameWiki/modify' element={<CreateWiki/>}></Route>
-        {/* <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
-      </Routes>
+  <NotificationContext>
+    <Router>
+          <Routes>
+            <Route path="/" element={<HomePage/>} />
+            <Route path="/wikis/:nameWiki/entries/:nameEntry" element={<DetailedEntry/>} />
+            <Route path="/wikis/:nameWiki/entries/:entry_id/versionedit" element={<PostVersion/>}/> 
+            <Route path='/wikis/:nameWiki/entries' element={<ListEntries/>}></Route>
+            <Route path='/wikis/:wiki_id/create' element={<PostEntry/>}></Route>
+            <Route path='/wikis/:nameWiki/entries/:entry_id/modify' element={<PostEntry/>}></Route>
+            <Route path='/wikis/:selectedOption/:query/:dateOption' element={<Wiki/>}></Route>
+            <Route path='/wikis/:selectedOption/:query' element={<Wiki/>}></Route>
+            <Route path='/wikis/create' element={<CreateWiki/>}></Route>
+            <Route path='/wikis/:nameWiki/modify' element={<CreateWiki/>}></Route>
+            <Route path="/notifications" element={<NotificationPage/>} />
+            {/* <Route path="/about" element={<About />} />
+            <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
+          </Routes>
     </Router>
+  </NotificationContext>
+  
 )
