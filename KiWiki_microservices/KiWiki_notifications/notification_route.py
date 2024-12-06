@@ -76,7 +76,7 @@ async def update_notification(id: str, req: NotificationSchema = Body(...)):
 
 # --- ADDITIONAL OPERATIONS FOR NOTIFICATION ------------------------------
 
-@router.patch("/approve")
+@router.patch("/approve/{id}")
 async def approve_notification(id: str):
     try:
         updated_notification = await notification_logic.approve_notification(id)
@@ -84,7 +84,7 @@ async def approve_notification(id: str):
     except:
         raise HTTPException(status_code=500, detail="Could not approve given notification")
 
-@router.patch("/deny")
+@router.patch("/deny/{id}")
 async def deny_notification(id: str):
     try:
         updated_notification = await notification_logic.deny_notification(id)
