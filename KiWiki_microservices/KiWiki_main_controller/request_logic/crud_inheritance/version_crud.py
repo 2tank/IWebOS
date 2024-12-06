@@ -19,3 +19,12 @@ class VersionCRUD(MONGOCRUD):
             versions.append(jsonable_encoder(document))
 
         return versions
+    
+    async def get_by_filter(self, filter):
+        cursor = self.collection.find(filter).sort({"editDate" : -1})
+        results = []
+        async for document in cursor:
+            document['_id'] = str(document['_id'])  # Convertir ObjectId a string
+            results.append(document)
+        
+        return results
