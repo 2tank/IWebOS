@@ -19,7 +19,7 @@ const Navbar = () => {
     <nav className="w-full flex flex-col sm:flex-row items-center justify-between p-4 bg-amber-950 text-white">
       <div className="flex items-center">
         <Link to="/" className="hover:opacity-80">
-          <Avatar className="w-20 h-20 sm:w-16 sm:h-16" src='/assets/logo_wiki_blanco.png' />
+            <Avatar sx={{ width: 80, height: 80 }} src='/assets/logo_wiki_blanco.png'/>
         </Link>
       </div>
 
