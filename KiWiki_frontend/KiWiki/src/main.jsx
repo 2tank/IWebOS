@@ -17,8 +17,8 @@ import NotificationPage from './Notifications/NotificationPage.jsx'
 
 createRoot(document.getElementById('root')).render(
   <Auth0Provider
-    domain="dev-othpjtkbmz853lr2.us.auth0.com"
-    clientId="n6g8BGEoNRD8Zxc0HI2s0BtUGFGatA9M"
+    domain=""
+    clientId=""
     authorizationParams={{
       redirect_uri: window.location.origin,
     }}
