@@ -46,7 +46,7 @@ function SearchBar(){
 
     return (
             <form onSubmit={search} className='flex-1 flex flex-col gap-3 justify-center items-center'>
-                    <select className='text-black w-1/2 md:w-2/12'
+                    <select className='text-black w-2/3 xl:w-1/3'
                     id='selectOption'
                     value={selectedOption}
                     onChange={selectChange}
