@@ -15,16 +15,14 @@ function HomePage(){
     return(
     <div id='homeScreen' className='h-screen xl flex flex-col justify-center items-center'>
       <Navbar/>
-      <div className='flex flex-1 flex-col justify-end'>
+      <div className='flex flex-1'>
         <img src={logoWiki} className='ml-7 w-80 h-80'></img>
       </div>
-      <div className='flex flex-col gap-y-7'>
+      <div className='flex flex-1 flex-col gap-y-7'>
         <h1 id='kiwiki' className='text-center text-6xl font-sans font-bold italic tracking-wide'>KIWIKI</h1>
         <footer className='text-center text-2xl max-w-2xl mx-auto font-medium'>Bienvenido a KiWiki. Busca lo que quieras, encuentra lo que necesitas. ¡Todo lo que necesitas saber está aquí!</footer>
       </div>
-      <div className='flex-1 mt-12 justify-start items-center flex-col'>
-        <SearchBar></SearchBar>
-      </div>
+      <SearchBar></SearchBar>
     </div>
     );
 
