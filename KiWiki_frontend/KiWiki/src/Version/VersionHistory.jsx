@@ -121,7 +121,48 @@ function VersionHistory({ entryID, onVersionChange }) {
                     <li key={version._id} className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
                         <p className="text-lg font-semibold">Editor: <span className="font-normal">{version.editor}</span></p>
                         <p className="text-lg font-semibold">Fecha de Edición: <span className="font-normal">{formatDate(version.editDate)}</span></p>
+
+                        <p className="text-lg font-semibold">Imágenes:</p>
+
+                        {version.attachments && version.attachments.length > 0 && (
+                        <img
+                            src={version.attachments[0].url}
+                            alt={version.attachments[0].file_name}
+                            className="mt-2 mb-2 rounded-lg max-w-sm h-auto"
+                        />
+                        )}
+
+                        <p className="text-lg font-semibold">Links:</p>
+                        {version.links && version.links.length > 0 && (
+                            <div>
+
+                                <ul className="space-y-2">
+                                {version.links.map((map, index) => (
+                                    <li key={index} className="p-3 bg-gray-300 rounded-lg mt-2 text-sm w-1/4">
+                                        {map.url}
+                                    </li>
+                                ))}
+                                </ul>
+                            </div>
+                        )}
+
+
+                        {version.maps && version.maps.length > 0 && (
+                            <div>
+                                <p className="text-lg font-semibold">Mapas:</p>
+
+                                <ul className="space-y-2">
+                                {version.maps.map((map, index) => (
+                                    <li key={index} className="p-3 bg-gray-300 rounded-lg mt-2 text-sm w-1/4">
+                                        {map.description}
+                                    </li>
+                                ))}
+                                </ul>
+                            </div>
+                        )}
                         <p className="text-lg font-semibold">Contenido:</p>
+
+                        {console.log(version)}
                         <p className="p-3 bg-gray-300 rounded-lg mt-2 text-sm">{version.content}</p>
                         {currentVersion && version._id === currentVersion._id ? (
                             <>

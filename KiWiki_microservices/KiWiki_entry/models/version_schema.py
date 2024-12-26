@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from typing import List, Optional
 
 class Attachment(BaseModel):
-    type: str = Field(...,description="Tipo de archivo 'image', 'file'...") 
+    type: str = Field(...,description="Tipo de archivo 'image', 'file'...")
     url: str = Field(..., description="Url adjunto al archivo")
     file_name: str = Field(None, description="Nombre del archivo")
 
