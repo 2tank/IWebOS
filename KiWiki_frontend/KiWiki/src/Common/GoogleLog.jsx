@@ -8,7 +8,7 @@ const cookies = new Cookies();
 
 function GoogleLog() {
 
-    const { funLogin, funLogout } = useSession();
+    const { isLoggedIn, sessionProfile, funLogin, funLogout } = useSession();
 
     
     const [user, setUser] = useState(null);
@@ -31,9 +31,12 @@ function GoogleLog() {
                     })
                     .then((res) => {
                         setProfile(res.data);
-                        funLogin(res.data.email);
+                        funLogin(res.data);
                     })
                     .catch((err) => console.log(err));
+            }
+            else if (isLoggedIn) {
+                setProfile(sessionProfile);
             }
         },
         [ user,login ]

@@ -4,18 +4,21 @@ const SessionContext = createContext();
 
 export const SessionProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [ sessionProfile, setSessionProfile ] = useState(null);
 
 
-  const funLogin = () => {
+  const funLogin = (profile) => {
     setIsLoggedIn(true); 
+    setSessionProfile(profile);
   };
 
   const funLogout = () => {
     setIsLoggedIn(false); 
+    setSessionProfile(null);
   };
 
   return (
-    <SessionContext.Provider value={{ isLoggedIn, funLogin, funLogout }}>
+    <SessionContext.Provider value={{ isLoggedIn, sessionProfile, funLogin, funLogout }}>
       {children}
     </SessionContext.Provider>
   );
