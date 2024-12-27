@@ -16,6 +16,12 @@ import HideSourceIcon from '@mui/icons-material/HideSource';
 
 import apiEndPoints from '../assets/apiEndpoints.json'
 
+import { v4 as uuidv4 } from 'uuid';
+
+const azureTranslateKey = "89eRbsY6P8evCNoIoGbA9SBwrIGkwWWCg0Z7voA9ukagrzaLesM6JQQJ99ALACmepeSXJ3w3AAAbACOGkF3T";
+const azureEndpoint = "https://api.cognitive.microsofttranslator.com";
+const azureLocation = "uksouth";
+
 function PostVersion() {
   const location = useLocation();
   const { id } = location.state || {};
@@ -48,7 +54,6 @@ function PostVersion() {
     attachments: [],
   });
 
-  FormState
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,6 +76,54 @@ function PostVersion() {
     if (id) fetchData();
   }, [id]);
 
+  const translateText = async (text, targetLang = 'en') => {
+    try {
+      const response = await axios({
+        baseURL: azureEndpoint,
+        url: '/translate',
+        method: 'post',
+        headers: {
+          'Ocp-Apim-Subscription-Key': azureTranslateKey,
+          'Ocp-Apim-Subscription-Region': azureLocation,
+          'Content-Type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString()
+        },
+        params: {
+          'api-version': '3.0',
+          'from': 'es',  
+          'to': targetLang
+        },
+        data: [{ 'text': text }],
+        responseType: 'json'
+      });
+      
+      return response.data[0].translations[0].text;
+    } catch (error) {
+      console.error('Error al traducir el texto:', error);
+      return text;  
+    }
+  };
+
+  const translateMapDescriptions = async (maps) => {
+    return Promise.all(
+      maps.map(async (map) => {
+        const translatedDescription = await translateText(map.description, 'en');
+        return { ...map, description: translatedDescription };
+      })
+    );
+  };
+
+  const handleTranslate = async () => {
+    const translatedContent = await translateText(formState.content, 'en');
+    const translatedMaps = formState.maps ? await translateMapDescriptions(formState.maps) : [];
+    const translatedOriginalMaps = formState.originalMaps ? await translateMapDescriptions(formState.originalMaps) : [];
+    setFormState({
+      ...formState,
+      content: translatedContent,
+      maps: translatedMaps,
+      originalMaps: translatedOriginalMaps,
+    });
+  };
 
   const handleMapInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -264,8 +317,10 @@ function PostVersion() {
                     </div>
                   )}
 
+                  <button type="button" onClick={handleTranslate}>Traducir</button>
+
                   {submitError && <p className="text-red-500">{submitError}</p>}
-                  {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
+                  {submitSuccess && <p className="text-green-500">Versión creada con éxito.</p>}
                 </div>
                 <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
                   Crear Versión

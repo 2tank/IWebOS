@@ -3,17 +3,9 @@ import SearchBar from './SearchBar';
 import Avatar from '@mui/material/Avatar';
 import Notification from '../Common/Notification';
 import { useNotification } from './NotificationContext';
-import { useAuth0 } from '@auth0/auth0-react';
-import LoginButton from '../Login/LoginButton';
-import LogoutButton from '../Login/LogoutButton';
 import GoogleLog from './GoogleLog';
-import GoogleTranslate from './GoogleTranslate';
 
 const Navbar = () => {
-
-  {/*
-  const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
-  */}
 
   const location = useLocation();
   const shouldShowSearchBar = location.pathname !== "/";
@@ -41,9 +33,6 @@ const Navbar = () => {
           <GoogleLog />
         </div>
 
-        <div className="flex items-center space-x-2">
-          <GoogleTranslate />
-        </div>
       </div>
     </nav>
   );
