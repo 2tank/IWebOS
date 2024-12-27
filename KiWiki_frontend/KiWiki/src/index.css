@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+  
+  /* Ocultar los textos originales al hacer hover */
+  .goog-te-gadget-simple .goog-te-menu-value span:first-child {
+    display: none !important;
+  }
+  
+  .goog-te-gadget-simple .goog-te-menu-value span:last-child {
+    display: inline !important;
+  }
