@@ -1,0 +1,17 @@
+/* Ocultar la barra superior del traductor de Google */
+.goog-te-banner-frame {
+    display: none !important;
+  }
+  
+  body {
+    top: 0 !important;
+  }
+  
+  /* Ocultar el texto original al hacer hover sobre texto traducido */
+  .goog-te-gadget-simple .goog-te-menu-value span:first-child {
+    display: none !important;
+  }
+  
+  .goog-te-gadget-simple .goog-te-menu-value span:last-child {
+    display: inline !important;
+  }
