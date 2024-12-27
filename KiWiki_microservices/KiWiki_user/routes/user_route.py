@@ -52,3 +52,12 @@ async def update_user(email: str, req: userSchema = Body(...)):
     except Exception as e:
         print(f"Failed to update user: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update user")
+
+@router.patch("/{email}")
+async def update_user_preferences(email:str, preference: bool):
+    try:
+        updated_user = await user_logic.update_user_preferences(email, preference)
+        return updated_user
+    except Exception as e:
+        print(f"Failed to update perferences of user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update perferences of user")
