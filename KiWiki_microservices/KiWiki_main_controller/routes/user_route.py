@@ -84,3 +84,21 @@ async def update_user(email: str, req: userSchema = Body(...)):
     except Exception as e:
         print(f"Se produjo un error: {e}")
         raise HTTPException(status_code=500, detail="Failed to update user")
+
+@router.patch("/{email}")
+async def update_user_preferences(email: str, preference: bool):
+    try:
+        # Lógica para actualizar preferencias (simulada con un PATCH a un endpoint de preferencias)
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(
+                f"{user_url}/{email}/preferences", json={"preference": preference}
+            )
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        print(f"Error HTTP: {http_err}")
+        raise HTTPException(status_code=500, detail="Failed to update user preferences")
+
+    except Exception as e:
+        print(f"Failed to update preferences of user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update user preferences")
