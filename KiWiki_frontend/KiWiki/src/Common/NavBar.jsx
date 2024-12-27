@@ -7,6 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from '../Login/LoginButton';
 import LogoutButton from '../Login/LogoutButton';
 import GoogleLog from './GoogleLog';
+import TranslateComponent from './GoogleTranslate';
 
 const Navbar = () => {
 
@@ -38,6 +39,10 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-2">
           <GoogleLog />
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <TranslateComponent />
         </div>
       </div>
     </nav>
