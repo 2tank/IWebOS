@@ -16,7 +16,7 @@ class userSchema(BaseModel):
         "json_schema_extra" : {
             "example" :
             {
-                "rol": "LECTOR",
+                "rol": "REDACTOR",
                 "email" : "test@gmail.com",
             }
         }
