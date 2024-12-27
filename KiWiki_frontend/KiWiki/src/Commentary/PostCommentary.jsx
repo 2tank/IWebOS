@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
-  const [user, setUser] = useState('');
+  //const [user, setUser] = useState('');
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(0);
   const textareaRef = useRef(null);
@@ -10,6 +12,8 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const user = cookies.get('email');
 
     const payload = {
         content: content,
@@ -31,7 +35,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
       console.error("Error posting data:", error);
       //setResponseMessage('An error occurred.');
     } finally {
-      setUser('');
+      //setUser('');
       setContent('');
       setRating(0);
       textareaRef.current.style.height = 'auto';
@@ -41,7 +45,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
 
   const cancel = (e) => {
     e.preventDefault();  // Prevenir que el botón de cancelar haga un submit
-    setUser('');
+    //setUser('');
     setContent('');
     setRating(0);
   };
@@ -57,6 +61,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
       <div className='border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
         <h1 className='font-bold mb-2 underline'>Comenta sobre la entrada:</h1>
         <form onSubmit={handleSubmit} className='space-y-2'>
+            {/* 
             <div className='flex flex-row flex-wrap'>
                 <label>Usuario:</label>
                 <input
@@ -68,6 +73,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
                     h-fit w-auto ml-2 flex-row flex-shrink flex-grow-0'
                 />
             </div>
+            */}
             <div className='flex flex-row flex-wrap'>
                 <label>Contenido:</label>
                 <textarea

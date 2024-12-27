@@ -1,14 +1,18 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function PostCommentary({entryID, entryVersionID, commentaryInReply, parentCommentaryPostReaction, hideReplyForm}) {
-  const [user, setUser] = useState('');
+  //const [user, setUser] = useState('');
   const [content, setContent] = useState('');
   const textareaRef = useRef(null);
 //  const [responseMessage, setResponseMessage] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const user = cookies.get('email');
 
     const payload = {
         content: content,
@@ -41,6 +45,7 @@ function PostCommentary({entryID, entryVersionID, commentaryInReply, parentComme
     <div>
       <div className='border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
         <form onSubmit={handleSubmit} className='space-y-2'>
+            {/*
             <div className='flex flex-row flex-wrap'>
                 <label>Usuario:</label>
                 <input
@@ -52,6 +57,7 @@ function PostCommentary({entryID, entryVersionID, commentaryInReply, parentComme
                     h-fit w-auto ml-2 flex-row flex-shrink flex-grow-0'
                 />
             </div>
+            */}
             <div className='flex flex-row flex-wrap'>
                 <label>Contenido:</label>
                 <textarea
