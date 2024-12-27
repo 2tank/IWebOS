@@ -5,10 +5,15 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PostCommentaryReply from "./PostCommentaryReply"
 import {formatDateTime} from "../Common/CommonOperations"
+import { useSession } from '../Common/SessionProvider';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteCommentarySection, childDelete}) {
 
     const urlCommentaryID = "http://localhost:8000/commentaries/" + id;
+
+    const { isLoggedIn } = useSession();
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -20,6 +25,8 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
     const [commentaryReplyDependantStyling, setCommentaryReplyDependantStyling] = useState(null);
     const [replyFormActive, setReplyFormActive] = useState(false);
     const [tokenReloadCommentary, setTokenReloadCommentary] = useState(false);
+
+    const [deletePermission, setDeletePermission] = useState(false);
 
     const childDeleteFather = (id) => {
         setResponses(data.replies.filter((replyCommentaryID) => replyCommentaryID !== id));
@@ -69,7 +76,7 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
 
     useEffect(() => {
         const fetchData = async() => {
-            try {
+            try {  
                 setStyling();
                 const response = await axios.get(urlCommentaryID);
                 setData(response.data);
@@ -95,6 +102,19 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
         };
         fetchData();
     }, [tokenReloadCommentary]);
+
+    useEffect(() => {
+        if (isLoggedIn && !loading) {
+            const user = cookies.get('email');
+            if (data.user === user) {
+                setDeletePermission(true);
+            } else {
+                setDeletePermission(false);
+            }
+        } else {
+            setDeletePermission(false);
+        }
+    }, [isLoggedIn]);
 
     const deleteCommentary = async() => {
         try {
@@ -159,16 +179,18 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
         }
         </div>
     );
-    if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div>
             <div className='container'>
                 <div className={`flex flex-row flex-wrap w-full bg-white text-black justify-start space-x-4 px-4 mx-auto ${commentaryReplyDependantStyling}`}>
+                    {/* 
                     <div className='flex flex-col'>
                         <img src={defaultPicture} className='h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-grey'/>
                     </div>
-                    <div className="flex flex-col flex-wrap">
+                    */}
+                    <div className="flex flex-col flex-wrap ml-12 sm:ml-14">
                         <div className="inline-flex flex-wrap items-center">
                             <p className="mr-2 sm:mr-4 text-sm sm:text-base font-bold">{data.user}</p>
                             {grade > -1 ?
@@ -177,7 +199,7 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
                                 null
                             }
                             <p className="text-sm sm:text-base text-gray-700">{data.date}</p>
-                            {adminMode ? 
+                            {adminMode || deletePermission ? 
                             <button onClick={deleteCommentary} className="bg-red-300 rounded-full px-2 py-1 ml-2 sm:ml-4">Borrar comentario</button>
                             :
                             null
@@ -189,6 +211,7 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
                     </div>
                 </div>
                 <div className="bg-white text-black space-x-4 ml-14 sm:ml-16">
+                    { isLoggedIn && (
                     <div>
                         {!replyFormActive ? 
                             (
@@ -206,7 +229,7 @@ function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteComment
                             </div>
                             )
                         }
-                    </div>
+                    </div>)}
                     {hasResponses ? 
                         showResponses ?
                             <div>

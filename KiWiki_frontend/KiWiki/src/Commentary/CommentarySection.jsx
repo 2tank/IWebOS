@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import SingleCommentary from "./SingleCommentary"
+import { useSession } from '../Common/SessionProvider';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sort_by_oldest = false, username = null}) {
+
+    const urlVersion = `http://localhost:8000/versions/${entryVersionID}`;
+    const { isLoggedIn } = useSession();
 
     const [urlCommentaries, setUrlCommentaries] = useState("");
     const [extraParam, setExtraParam] = useState("");
@@ -11,6 +17,9 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
     const [error, setError] = useState(null);
     const [commentaries, setCommentaries] = useState([]);
     const [adminMode, setAdminMode] = useState(false);
+
+    const [versionData, setVersionData] = useState(null);
+    const [deletePermission, setDeletePermission] = useState(false);
 
     const handleDeleteCommentarySection = (id) => {
         setData(data.filter((commentary) => commentary._id !== id));
@@ -68,7 +77,34 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
             const repliesComponented = data.map((commentary) => <SingleCommentary key={commentary._id} id={commentary._id} reply={0} adminMode={adminMode} handleDeleteCommentarySection={handleDeleteCommentarySection}/>);
             setCommentaries(repliesComponented);
         }
-    }, [data, adminMode]);
+    }, [data, adminMode, deletePermission]);
+
+    useEffect(() => {
+        const fetchData = async() => {
+            try {
+                if(urlVersion) {
+                    const response = await axios.get(urlVersion);
+                    setVersionData(response.data);
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                //setLoading(false);
+            }
+        };
+        fetchData();
+    }, [entryVersionID]);
+
+    useEffect(() => {
+        if(isLoggedIn && versionData) {
+            const user = cookies.get('email');
+            if(versionData.editor === user) {
+                setDeletePermission(true);
+            }
+        } else {
+            setDeletePermission(false);
+        }
+    }, [versionData, isLoggedIn])
 
     useEffect(() => {
         setFilters();
@@ -80,14 +116,15 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
     return (
         <div>
             <div className="container">
+                {deletePermission && (
                 <div className="flex flex-row flex-wrap items-center space-x-2 mt-2">
                     { adminMode ?
                         <button onClick={handleAdminMode} className="bg-red-400 rounded-full p-2 font-bold">Admin mode: ON</button>
                     :
                         <button onClick={handleAdminMode} className="bg-gray-300 rounded-full p-2 font-semibold">Admin mode: OFF</button>
                     }
-                    <p>(este modo desaparecerá una vez se designen permisos a los usuarios)</p>
-                </div>
+                    <p>(este modo se te da porque puedes moderar esta version de la entrada)</p>
+                </div>)}
                 {commentaries}
             </div>
         </div>

@@ -35,9 +35,10 @@ function PostVersion() {
   const [buttonClass, setButtonClass] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [entryId, setEntryId] = useState(null); // Estado para guardar entry_id
+  const [entryId, setEntryId] = useState(null);
 
   const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
+  const formTextAreaClassName = "block w-full p-2 text-black bg-gray-300 resize-none h-auto";
 
   const [formState, setFormState] = useState({
     editor: "",
@@ -119,7 +120,6 @@ function PostVersion() {
       editor: formState.editor,
       editDate: new Date().toISOString(),
       attachments: formState.attachments,
-      links: [],
       maps: combinedMaps,
       attachments: formState.attachments.map((attachment) => ({
         type: attachment.type,
@@ -150,7 +150,54 @@ function PostVersion() {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      const { selectionStart, selectionEnd } = event.target;
+  
+      if (event.shiftKey) {
+        const contentBeforeCursor = formState.content.substring(0, selectionStart);
+        const contentAfterCursor = formState.content.substring(selectionEnd);
+  
+        //Si había un tabulador lo elimina
+        if (contentBeforeCursor.endsWith("\t")) {
+          const updatedContent =
+            contentBeforeCursor.slice(0, -1) + contentAfterCursor;
+  
+          setFormState((prevState) => ({
+            ...prevState,
+            content: updatedContent,
+          }));
+  
+          // Ajusta la posición del cursor después de eliminar el tab
+          requestAnimationFrame(() => {
+            event.target.selectionStart = event.target.selectionEnd = selectionStart - 1;
+          });
+        }
+      } else {
+    
+        // Inserta un tab en la posición actual
+        const updatedContent =
+          formState.content.substring(0, selectionStart) +
+          "\t" +
+          formState.content.substring(selectionEnd);
+    
+        setFormState((prevState) => ({
+          ...prevState,
+          content: updatedContent,
+        }));
+    
+        // Ajusta la posición del cursor después del tab
+        requestAnimationFrame(() => {
+          event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
+        }, 0);
 
+      }
+    }
+  };
+  
+
+ 
   return (
     <>
       {loading ? (
@@ -169,7 +216,7 @@ function PostVersion() {
                 </div>
                 <div className="mb-2">
                   <FormTextArea name={"content"} value={formState.content} label={"Contenido"}
-                    onChange={handleInputChange} required={true} className={formInputClassName} />
+                    onChange={handleInputChange} required={true} className={formTextAreaClassName} onKeyDown={handleKeyDown} />
                 </div>
 
                 <span className="font-bold" >Mapas</span>

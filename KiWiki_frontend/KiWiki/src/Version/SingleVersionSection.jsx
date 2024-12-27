@@ -19,12 +19,6 @@ function SingleVersionSection({entryVersionID,entryID}){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const coordinates = [
-        { latitude: 40.7128, longitude: -74.0060, description: 'Nueva York' },
-        { latitude: 34.0522, longitude: -118.2437, description: 'Los Ángeles' },
-        { latitude: 41.8781, longitude: -87.6298, description: 'Chicago' },
-    ];
-
     const clickEditVersion = () => {
 
         navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${entry_id}` + '/versionedit' , {

@@ -113,7 +113,7 @@ function VersionHistory({ entryID, onVersionChange }) {
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
     return (
-        <div className="p-6 rounded-lg shadow-lg">
+        <div className="p-6">
             <VersionFilter handleFilterVersion={handleFilterVersion} formState={formState} setFormState={setFormState}/>
             <h2 className="text-2xl font-bold mb-4 text-center border-b border-gray-600 pb-2">Historial de Versiones</h2>
             <ul className="space-y-6">
@@ -121,7 +121,33 @@ function VersionHistory({ entryID, onVersionChange }) {
                     <li key={version._id} className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
                         <p className="text-lg font-semibold">Editor: <span className="font-normal">{version.editor}</span></p>
                         <p className="text-lg font-semibold">Fecha de Edición: <span className="font-normal">{formatDate(version.editDate)}</span></p>
+
+                        {version.attachments && version.attachments.length > 0 && (
+                            <>
+                                <p className="text-lg font-semibold">Imágenes:</p>
+                                <img
+                                src={version.attachments[0].url}
+                                alt={version.attachments[0].file_name}
+                                className="mt-2 mb-2 rounded-lg max-w-sm h-auto"
+                                />
+                            </>
+                        )}
+
+                        {version.maps && version.maps.length > 0 && (
+                            <>
+                                <p className="text-lg font-semibold">Mapas:</p>
+
+                                <ul className="space-y-2">
+                                {version.maps.map((map, index) => (
+                                    <li key={index} className="p-3 bg-gray-300 rounded-lg mt-2 text-sm w-1/4">
+                                        {map.description}
+                                    </li>
+                                ))}
+                                </ul>
+                            </>
+                        )}
                         <p className="text-lg font-semibold">Contenido:</p>
+
                         <p className="p-3 bg-gray-300 rounded-lg mt-2 text-sm">{version.content}</p>
                         {currentVersion && version._id === currentVersion._id ? (
                             <>

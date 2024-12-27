@@ -6,10 +6,13 @@ import { useNotification } from './NotificationContext';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from '../Login/LoginButton';
 import LogoutButton from '../Login/LogoutButton';
-
+import GoogleLog from './GoogleLog';
 
 const Navbar = () => {
+
+  {/*
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  */}
 
   const location = useLocation();
   const shouldShowSearchBar = location.pathname !== "/";
@@ -29,19 +32,12 @@ const Navbar = () => {
       </div>
 
       <div className="mt-2 sm:mt-0 flex flex-row items-center space-x-4">
+        <Link className="row" to="/notifications">
+          <Notification unreadCount={unreadCount} />
+        </Link>
 
         <div className="flex items-center space-x-2">
-        {!isAuthenticated ? (
-            <LoginButton />
-        ) : (
-            <>
-            <Link className="row" to="/notifications">
-              <Notification unreadCount={unreadCount} />
-            </Link>
-            <Avatar src={user?.picture} alt={user?.name} />
-            <LogoutButton />
-            </>
-        )}
+          <GoogleLog />
         </div>
       </div>
     </nav>

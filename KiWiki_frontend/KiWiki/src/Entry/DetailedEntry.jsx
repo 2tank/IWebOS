@@ -27,11 +27,11 @@ function DetailedEntry() {
     navigate(-1);
   };
 
-  // Fetch data for the entry
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/entries/" + id);
+        let url = "http://localhost:8000/entries/" + id;
+        const response = await axios.get(url);
         setData(response.data);
       } catch (err) {
         setError(err.message);
@@ -49,11 +49,22 @@ function DetailedEntry() {
     }));
   };
 
+  const handleAnchorClick = (event) => {
+    if (event.target.tagName === 'A') {
+      event.preventDefault();
+      const targetId = event.target.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
   if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
   return (
-      <div className="min-h-screen bg-gray-100 text-black">
+      <div onClick={handleAnchorClick} className="min-h-screen bg-gray-100 text-black">
         <Navbar/>
         <div className="p-5 w-full sm:w-5/6 md:w-5/6 lg:w-4/6 mx-auto rounded-lg shadow-2xl bg-white">
             <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
