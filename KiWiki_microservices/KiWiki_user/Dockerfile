@@ -11,7 +11,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expón el puerto en el que FastAPI estará corriendo
-EXPOSE 8002
+EXPOSE 8006
 
 # Ejecuta el servidor FastAPI usando Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8006"]
