@@ -16,8 +16,8 @@ async def get_users_back(filter):
         users = await crud.get_collection()
     return users
 
-async def get_user_back(id):
-    user = await crud.get_id(id)
+async def get_user_back(email):
+    user = await crud.get_id(email)
     return user
 
 async def delete_user_by_email(email):
@@ -28,6 +28,3 @@ async def update_user_by_email(email,req):
     updated_data = {k: v for k, v in req.model_dump().items() if v is not None}
     updated_user = await crud.update_item_email({"email": email}, updated_data)
     return updated_user
-
-
-
