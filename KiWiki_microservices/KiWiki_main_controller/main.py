@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import wiki_route,entry_route,version_route, commentary_route, notification_route
+from routes import wiki_route,entry_route,version_route, commentary_route, notification_route,user_route
 
 app = FastAPI()
 
@@ -18,3 +18,4 @@ app.include_router(wiki_route.router, prefix="/wikis")
 app.include_router(version_route.router,prefix="/versions")
 app.include_router(commentary_route.router,prefix="/commentaries")
 app.include_router(notification_route.router,prefix="/notification")
+app.include_router(user_route.router, prefix="/users")

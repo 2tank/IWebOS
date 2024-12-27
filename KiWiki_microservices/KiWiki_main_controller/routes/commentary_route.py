@@ -1,8 +1,6 @@
-from typing import List, Dict, Optional
+from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Body, Query
-# from models.wiki_schema import WikiSchema, WikiSchemaPartial
 import httpx
-from datetime import datetime
 
 from models.commentary_schema import commentary, commentaryUpdate
 from urls import config

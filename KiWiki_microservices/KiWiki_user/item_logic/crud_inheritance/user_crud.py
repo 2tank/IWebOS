@@ -15,6 +15,12 @@ class USERCRUD(MONGOCRUD):
     def __init__(self):
         super().__init__('User')
 
+    async def get_id(self, email: str):
+        result = await self.collection.find_one({"email": email})
+        if result and "_id" in result:
+            result["_id"] = str(result["_id"])
+        return result
+
     async def delete_item_email(self, filter: dict):
             result = await self.collection.delete_one(filter)
             return result.deleted_count > 0
