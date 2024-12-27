@@ -73,15 +73,14 @@ async def delete_user(email: str):
 @router.put("/{email}")
 async def update_user(email: str, req: userSchema = Body(...)):
     try:
-        req.email = None 
         async with httpx.AsyncClient() as client:
             response = await client.put(f"{user_url}/{email}", json=req.model_dump())
             response.raise_for_status()
             return response.json()
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve users")
+        raise HTTPException(status_code=500, detail="Failed to update user")
 
     except Exception as e:
         print(f"Se produjo un error: {e}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve users")
+        raise HTTPException(status_code=500, detail="Failed to update user")
