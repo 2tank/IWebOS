@@ -97,7 +97,7 @@ async def update_user_preferences(email: str, preference: bool):
             return response.json()
     except httpx.HTTPStatusError as http_err:
         print(f"Error HTTP: {http_err}")
-        raise HTTPException(status_code=500, detail=f"Failed to update user preferences {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update user preferences {str(http_err)}")
 
     except Exception as e:
         print(f"Failed to update preferences of user: {str(e)}")
