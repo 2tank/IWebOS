@@ -91,7 +91,7 @@ async def update_user_preferences(email: str, preference: bool):
         # Lógica para actualizar preferencias (simulada con un PATCH a un endpoint de preferencias)
         async with httpx.AsyncClient() as client:
             response = await client.patch(
-                f"{user_url}/{email}/preferences", json={"preference": preference}
+                f"{user_url}/{email}", json={"preference": preference}
             )
             response.raise_for_status()
             return response.json()
