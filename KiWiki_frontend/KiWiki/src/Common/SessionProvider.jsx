@@ -46,6 +46,7 @@ export const SessionProvider = ({ children }) => {
           }
       } catch (err) {
           console.log(err.message);
+          return false;
       } finally {
         console.log(targetUser);
         if(targetUser !== null) {
@@ -59,15 +60,18 @@ export const SessionProvider = ({ children }) => {
             const result = await axios.put(url, payload); // Enviar el payload en la solicitud
             //setResponse(result.data); // Manejar la respuesta
             console.log(result);
+            return true;
           } catch (error) {
             console.error("Error al actualizar:", error.response || error.message);
+            return false;
           }
         } else {
           console.log("No se puede ejecutar setRol porque no hay usuario objetivo")
+          return false;
         }
       }
     };
-    processData(targetMailUrl);
+    return processData(targetMailUrl);
   };
 
   const toggleMyMailPreference = async () => {

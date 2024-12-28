@@ -15,6 +15,7 @@ import PostEntry from './Entry/PostEntry.jsx';
 import NotificationProvider from './Common/NotificationContext.jsx';
 import NotificationPage from './Notifications/NotificationPage.jsx'
 import { SessionProvider } from './Common/SessionProvider.jsx';
+import SetRolePage from './Common/SetRolePage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId='340827873659-snpqv9je3o790pgchph26jkl1csmmeju.apps.googleusercontent.com'>
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')).render(
                 <Route path='/wikis/create' element={<CreateWiki/>}></Route>
                 <Route path='/wikis/:nameWiki/modify' element={<CreateWiki/>}></Route>
                 <Route path="/notifications" element={<NotificationPage/>} />
+                <Route path="/setRole" element={<SetRolePage/>} />
                 {/* <Route path="/about" element={<About />} />
                 <Route path="*" element={<NotFound />} /> {/* Ruta para 404 */}
               </Routes>

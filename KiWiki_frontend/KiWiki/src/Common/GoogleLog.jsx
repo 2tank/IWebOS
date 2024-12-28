@@ -5,27 +5,29 @@ import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import { useSession } from './SessionProvider'; // Usamos el contexto
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
+import { useNavigate } from 'react-router-dom'
 
 function GoogleLog() {
 
-    const { isLoggedIn, sessionProfile, funLogin, funLogout } = useSession();
+    const { isLoggedIn, sessionProfile, user, funLogin, funLogout } = useSession();
+    const navigate = useNavigate();
 
     
-    const [user, setUser] = useState(null);
+    const [localUser, setLocalUser] = useState(null);
     const [ profile, setProfile ] = useState(null);
 
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => { setUser(codeResponse); seslogin(); },
+        onSuccess: (codeResponse) => { setLocalUser(codeResponse); seslogin(); },
         onError: (error) => console.log('Login Failed:', error)
     });
 
     useEffect(
         () => {
-            if (user) {
+            if (localUser) {
                 axios
-                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${localUser.access_token}`, {
                         headers: {
-                            Authorization: `Bearer ${user.access_token}`,
+                            Authorization: `Bearer ${localUser.access_token}`,
                             Accept: 'application/json'
                         }
                     })
@@ -37,15 +39,16 @@ function GoogleLog() {
             }
             else if (isLoggedIn) {
                 setProfile(sessionProfile);
+                //console.log(sessionProfile);
             }
         },
-        [ user,login ]
+        [ localUser,login ]
     );
     
     useEffect (
         () => {
             if (profile) {
-                console.log(profile);
+                //console.log(profile);
                 cookies.set('email', profile.email, { path: '/' });
             }
         },
@@ -55,10 +58,14 @@ function GoogleLog() {
     const logOut = () => {
         googleLogout();
         setProfile(null);
-        setUser(null);
+        setLocalUser(null);
         cookies.remove('email', { path: '/' });
         funLogout();
     };
+
+    const openRolSet = () => {
+        navigate("/setRole");
+    }
 
     return (
         <div>
@@ -71,6 +78,13 @@ function GoogleLog() {
                         <p>Nombre: {profile.name}</p>
                         <p>Email: {profile.email}</p>
                     </div>
+                    {user !== null && user.rol === 'ADMIN' && (
+                        <div className='flex justify-center'>
+                        <button onClick={openRolSet} 
+                            className='px-1 hover:shadow-md rounded-md hover:bg-green-100 focus:outline-none transition duration-300'
+                        >Moderar permisos</button>
+                    </div>
+                    )}
                     <div className='flex justify-center'>
                         <button onClick={logOut} 
                             className='px-1 hover:shadow-md rounded-md hover:bg-gray-100 focus:outline-none transition duration-300'
