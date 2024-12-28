@@ -8,10 +8,7 @@ rolType = Literal[
 ]
 
 class userSchema(BaseModel):
-    rol : rolType = Field(..., max_length=20if(urlUser) {
-                const response = await axios.get(urlUser);
-                setData(response.data);
-            }, description="Rol asignado al usuario")
+    rol : rolType = Field(..., max_length=20, description="Rol asignado al usuario")
     email: str = Field(..., max_length=100, description="User Email")
     #TODO Notifications preferences
     send_email : bool = Field(False, description="Preferencia de notificaciones por email")
