@@ -101,4 +101,4 @@ async def update_user_preferences(email: str, preference: bool):
 
     except Exception as e:
         print(f"Failed to update preferences of user: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to update user preferences")
+        raise HTTPException(status_code=500, detail=f"Failed to update user preferences {str(e)}")
