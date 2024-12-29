@@ -1,8 +1,9 @@
 from typing import List, Dict
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, Depends
 from models.wiki_schema import WikiSchema, WikiSchemaPartial
 import httpx
 from urls import config
+from token_manager import verify_token
 
 wiki_url = config["wiki_url"]
 router = APIRouter()
@@ -27,7 +28,7 @@ async def get_wikis():
 
 
 @router.post("/")
-async def post_wiki(entry: WikiSchema = Body(...)):
+async def post_wiki(entry: WikiSchema = Body(...), username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(f"{wiki_url}/", json=entry.model_dump())
@@ -81,7 +82,7 @@ async def get_wiki_id(id_wiki: str):
 
 
 @router.patch("/{id_wiki}/add_entry/{id_entry}")
-async def add_entries(id_wiki: str, id_entry: str):
+async def add_entries(id_wiki: str, id_entry: str, username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.patch(f"{wiki_url}/{id_wiki}/add_entry/{id_entry}")
@@ -99,7 +100,7 @@ async def add_entries(id_wiki: str, id_entry: str):
 
 
 @router.delete("/{wiki_id}/")
-async def delete_wiki(wiki_id: str) -> bool:
+async def delete_wiki(wiki_id: str, username: str = Depends(verify_token)) -> bool:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.delete(f"{wiki_url}/{wiki_id}/")
@@ -135,7 +136,7 @@ async def get_wikis_date(request: Dict = Body(...)) -> List[dict]:
 
 
 @router.patch("/{id_wiki}/modify_wiki")
-async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...)) -> dict:
+async def modify_wiki(id_wiki: str, wiki_data: WikiSchemaPartial = Body(...), username: str = Depends(verify_token)) -> dict:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.patch(f"{wiki_url}/{id_wiki}/modify_wiki", json=wiki_data.model_dump(exclude_unset=True))
@@ -170,7 +171,7 @@ async def get_wikis_author(name_author: str) -> List[dict]:
 
 
 @router.delete("/{id_wiki}/delete_entry/{id_entry}")
-async def delete_entries(id_wiki: str, id_entry: str) -> dict:
+async def delete_entries(id_wiki: str, id_entry: str, username: str = Depends(verify_token)) -> dict:
     """
     Remove an entry from a wiki by ID.
 
