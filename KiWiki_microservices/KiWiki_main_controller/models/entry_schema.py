@@ -34,7 +34,7 @@ entryType = Literal[
 
 class entrySchema(BaseModel):
     title: str = Field(..., max_length=100, description="Titulo de la Entrada")
-    creator : str = Field(..., max_length=20, description="Creador de la Entrada")
+    creator : str = Field(..., max_length=100, description="Creador de la Entrada")
     creationDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))) ,description="Fecha creación de la Entrada")
     description: str = Field(...,max_length=500, description="Descripción de la entrada")
     tags: List[entryType] = Field(default_factory=list,description="Tags asociados a la entrada")

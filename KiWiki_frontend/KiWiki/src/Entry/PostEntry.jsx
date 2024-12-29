@@ -7,6 +7,7 @@ import axios from "axios";
 import Navbar from "../Common/NavBar";
 import FormTextInput from "../Common/FormTextInput";
 import FormCheckBox from "../Common/FormCheckBox";
+import { useSession } from '../Common/SessionProvider';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -16,7 +17,7 @@ function PostEntry() {
 
 
   const { wiki_id } = useParams();
-
+  const { user } = useSession();
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ function PostEntry() {
   // Inicializamos datos formulario
   const [formState, setFormState] = useState({
       title: "",
-      creator: "",
+      creator: user.email,
       description: "",
       tags: [],
       });
@@ -55,7 +56,6 @@ function PostEntry() {
   useEffect(() => {
 
     if(entry_id != null){
-        console.log
         setModify(true)
             const fetchData1 = async () => {
                 try {
@@ -128,13 +128,14 @@ function PostEntry() {
       }
     }
     else{
-        // Actualiza creationDate con la fecha y hora actual
-      const updatedEntry = {
-        ...formState,
-        wiki: "",
-        actual_version: "",
-        creationDate: new Date().toISOString(),
-      };
+    // Actualiza creationDate con la fecha y hora actual
+    const updatedEntry = {
+      ...formState,
+      wiki: "",
+      actual_version: "",
+      creationDate: new Date().toISOString(),
+    };
+    console.log(updatedEntry);
 
     try {
       const response = await axios.post(url.active_urlBase + "/entries", updatedEntry, {
@@ -178,7 +179,7 @@ function PostEntry() {
           </div>
           <div className="mb-2">
             <FormTextInput name={"creator"} value={formState.creator} label={"Creador"}
-              onChange={handleInputChange} required={true} className={formInputClassName}/>
+              onChange={handleInputChange} required={true} className={formInputClassName} readOnly={true}/>
           </div>
           <div className="mb-2">
             <FormTextInput name={"description"} value={formState.description} label={"Descripción"}
