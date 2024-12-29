@@ -189,7 +189,7 @@ function PostEntry() {
           {submitError && <p className="text-red-500">{submitError}</p>}
           {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
           <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 mt-8 font-bold py-1 px-4 rounded-full text-white">
-            Crear Entrada
+            Guardar Cambios
           </button>
         </div>
       </form>
