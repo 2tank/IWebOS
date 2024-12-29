@@ -7,6 +7,7 @@ import UploadFile from "../Common/UploadFile";
 import MapsViewer from './Mapsviewer';
 import FilesViewer from "./FilesViewer";
 import Navbar from "../Common/NavBar";
+import LanguageSelector from "../Common/LanguageSelector";
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddLocationIcon from '@mui/icons-material/AddLocationAlt';
@@ -48,6 +49,7 @@ function PostVersion() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [entryId, setEntryId] = useState(null);
+  const [targetLanguage, setTargetLanguage] = useState("en");
 
   const formInputClassName = "block w-full resize-y p-2 text-black break-words bg-gray-300";
   const formTextAreaClassName = "block w-full p-2 text-black bg-gray-300 resize-none h-auto";
@@ -88,8 +90,42 @@ function PostVersion() {
     if (id) fetchData();
   }, [id]);
 
-  const translateText = async (text, targetLang = 'en') => {
+  const detectLanguage = async (text) => {
     try {
+      const response = await axios({
+        baseURL: azureEndpoint,
+        url: '/detect',
+        method: 'post',
+        headers: {
+          'Ocp-Apim-Subscription-Key': azureTranslateKey,
+          'Ocp-Apim-Subscription-Region': azureLocation,
+          'Content-Type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString(),
+        },
+        params: {
+          'api-version': '3.0',
+        },
+        data: [{ 'text': text }],
+        responseType: 'json',
+      });
+
+      return response.data[0].language;
+    } catch (error) {
+      console.error('Error al detectar el idioma:', error);
+      return null;
+    }
+  };
+
+  const translateText = async (text) => {
+    try {
+      const detectedLang = await detectLanguage(text);
+
+      if (!detectedLang) {
+        console.warn('No se pudo detectar el idioma, usando "es" como predeterminado.');
+      }
+      console.log("IDIOMA DETECTADO" + detectedLang);
+      console.log("TO " + targetLanguage);
+
       const response = await axios({
         baseURL: azureEndpoint,
         url: '/translate',
@@ -102,8 +138,8 @@ function PostVersion() {
         },
         params: {
           'api-version': '3.0',
-          'from': 'es',
-          'to': targetLang
+          'from': detectedLang || 'es',
+          'to': targetLanguage
         },
         data: [{ 'text': text }],
         responseType: 'json'
@@ -119,14 +155,14 @@ function PostVersion() {
   const translateMapDescriptions = async (maps) => {
     return Promise.all(
       maps.map(async (map) => {
-        const translatedDescription = await translateText(map.description, 'en');
+        const translatedDescription = await translateText(map.description, targetLanguage);
         return { ...map, description: translatedDescription };
       })
     );
   };
 
   const handleTranslate = async () => {
-    const translatedContent = await translateText(formState.content, 'en');
+    const translatedContent = await translateText(formState.content);
     const translatedMaps = formState.maps ? await translateMapDescriptions(formState.maps) : [];
     const translatedOriginalMaps = formState.originalMaps ? await translateMapDescriptions(formState.originalMaps) : [];
     setFormState({
@@ -329,7 +365,11 @@ function PostVersion() {
                     </div>
                   )}
 
-                  <button type="button" onClick={handleTranslate}>Traducir</button>
+                  <div className="bg-gray-300 w-1/2 my-4 p-4 rounded">
+                    <LanguageSelector setTargetLanguage={setTargetLanguage} />
+                    <button type="button" className="block bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white"
+                     onClick={handleTranslate}>Traducir</button>
+                  </div>
 
                   {submitError && <p className="text-red-500">{submitError}</p>}
                   {submitSuccess && <p className="text-green-500">Versión creada con éxito.</p>}
