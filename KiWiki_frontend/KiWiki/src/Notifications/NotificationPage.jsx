@@ -5,7 +5,8 @@ import Navbar from "../../src/Common/NavBar";
 import { useState, useEffect } from "react";
 import React from 'react';
 import { useNotification } from "../../src/Common/NotificationContext";
-import { useSession } from '../Common/SessionProvider'
+import { useSession } from '../Common/SessionProvider';
+import NotificationPopup from "./Components/NotificationPopup";
 
 import url from '../url.json';
 
@@ -13,15 +14,18 @@ function NotificationPage() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    const { user,isLoggedIn } = useSession();
+    const { user, isLoggedIn } = useSession();
 
+    // Estado para controlar el popup
+    const [showPopup, setShowPopup] = useState(true);
+    const [minimizedPopup, setMinimizedPopup] = useState(false);
 
     // Cargar las notificaciones desde el servidor
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let urlnueva = `${url.active_urlBase}/notification/`;
-                if(isLoggedIn){
+                if (isLoggedIn) {
                     urlnueva = `${url.active_urlBase}/notification/?user=${user.email}`;
                 }
                 const response = await axios.get(urlnueva);
@@ -41,20 +45,17 @@ function NotificationPage() {
 
     // Estados para filtros
     const [filterType, setFilterType] = useState("");
-    const [filterStatus, setFilterStatus] = useState("OTHER"); // Estado para el filtro por aprobado/denegado
+    const [filterRead, setFilterRead] = useState(""); // Estado para el filtro por leídas
 
-    // Filtrar notificaciones por tipo y estado
+    // Filtrar notificaciones por tipo y estado de lectura
     const filteredData = data.filter((notification) => {
         const matchesType = filterType ? notification.notifType === filterType : true;
-        const matchesStatus =
-            filterStatus === "ACCEPTED"
-                ? notification.approved === true
-                : filterStatus === "DENIED"
-                ? notification.approved === false
-                : filterStatus === "OTHER"
-                ? notification.approved === null
-                : true;
-        return matchesType && matchesStatus;
+        const matchesRead = filterRead
+            ? filterRead === "READ"
+                ? notification.read === true
+                : notification.read === false
+            : true;
+        return matchesType && matchesRead;
     });
 
     // Calcular índices para paginación
@@ -81,9 +82,9 @@ function NotificationPage() {
         setCurrentPage(1);
     };
 
-    // Función para manejar el cambio de filtro de estado
-    const handleStatusChange = (event) => {
-        setFilterStatus(event.target.value);
+    // Función para manejar el cambio de filtro de estado de lectura
+    const handleReadChange = (event) => {
+        setFilterRead(event.target.value);
         setCurrentPage(1);
     };
 
@@ -98,6 +99,9 @@ function NotificationPage() {
         );
     };
 
+    const handleClosePopup = () => {
+        setMinimizedPopup(true); // Minimizar al hacer clic en la "X"
+    };
 
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
@@ -105,6 +109,12 @@ function NotificationPage() {
     return (
         <>
             <Navbar />
+            <NotificationPopup
+                minimized={minimizedPopup}
+                onExpand={() => setMinimizedPopup(false)}
+                onClose={handleClosePopup}
+            />;
+
             <main
                 style={{ background: colors.brown[100] }}
                 className="min-h-screen w-full flex items-center justify-center p-4 sm:p-10"
@@ -116,32 +126,30 @@ function NotificationPage() {
                         </h1>
 
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <div className="flex flex-col gap-4">
-                                {/* Filtro por tipo */}
-                                <select
-                                    value={filterType}
-                                    onChange={handleFilterChange}
-                                    className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-                                >
-                                    <option value="">Filtrar por tipo</option>
-                                    <option value="WIKI_REMOVAL">Borrado de Wiki</option>
-                                    <option value="ENTRY_ROLLBACK">Reversión de Entrada</option>
-                                    <option value="ENTRY_CREATION">Creación de Entrada</option>
-                                    <option value="ENTRY_REMOVAL">Borrado de Entrada</option>
-                                    <option value="ENTRY_UPDATE">Actualización de Entrada</option>
-                                </select>
+                            {/* Filtro por tipo */}
+                            <select
+                                value={filterType}
+                                onChange={handleFilterChange}
+                                className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+                            >
+                                <option value="">Filtrar por tipo</option>
+                                <option value="WIKI_REMOVAL">Borrado de Wiki</option>
+                                <option value="ENTRY_ROLLBACK">Reversión de Entrada</option>
+                                <option value="ENTRY_CREATION">Creación de Entrada</option>
+                                <option value="ENTRY_REMOVAL">Borrado de Entrada</option>
+                                <option value="ENTRY_UPDATE">Actualización de Entrada</option>
+                                <option value="COMMENT">Commentarios</option>
+                            </select>
 
-                                {/* Filtro por estado */}
-                                <select
-                                    value={filterStatus}
-                                    onChange={handleStatusChange}
-                                    className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
-                                >
-                                    <option value="OTHER">Sin responder</option>
-                                    <option value="ACCEPTED">Aceptadas</option>
-                                    <option value="DENIED">Denegadas</option>
-                                </select>
-                            </div>
+                            {/* Filtro por leídas */}
+                            <select
+                                value={filterRead}
+                                onChange={handleReadChange}
+                                className="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
+                            >
+                                <option value="UNREAD">No leídas</option>
+                                <option value="READ">Leídas</option>
+                            </select>
                         </div>
                         <button
                             onClick={markAllAsRead} // Conecta la función
@@ -163,7 +171,6 @@ function NotificationPage() {
                                 user={notification.user}
                                 notifDate={notification.notifDate}
                                 notifType={notification.notifType}
-                                approved={notification.approved}
                                 read={notification.read}
                                 onUpdate={handleUpdateNotification}
                             />
