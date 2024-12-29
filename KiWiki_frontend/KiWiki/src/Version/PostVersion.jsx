@@ -231,7 +231,7 @@ function PostVersion() {
     try {
 
       const payload = {
-        approved: null,
+        approved: true,
         notifDate: new Date().toISOString(),
         notifType: "ENTRY_CREATION",
         read: false,
