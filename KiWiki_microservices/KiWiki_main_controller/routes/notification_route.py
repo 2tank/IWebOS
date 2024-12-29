@@ -125,3 +125,15 @@ async def mark_all_notifications_as_read(username: str = Depends(verify_token)):
         raise HTTPException(status_code=500, detail="Error marking notifications as read: " + str(http_err))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Could not mark notifications as read: " + str(e))
+
+@router.post("/send-email")
+async def send_email(email:str, subject: str, body: str):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(f"{notification_url}/send-email", json={"email": email, "subject": subject, "body": body})
+            response.raise_for_status()
+            return response.json()
+    except httpx.HTTPStatusError as http_err:
+        raise HTTPException(status_code=500, detail="Error reaching microservice: " + str(http_err))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error sending email: " + str(e))

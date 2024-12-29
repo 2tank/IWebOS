@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Body, Query, BackgroundTasks
 
 import notification as notification_logic
 from notification_schema import NotificationSchema, NotificationType
-
+from send_mail import send_email_func
 
 router = APIRouter()
 
@@ -105,7 +105,7 @@ async def mark_all_notifications_as_read():
 @router.post("/send-email")
 async def send_email(email:str, subject: str, body: str):
     try:
-        await notification_logic.mark_all_notifications_as_read()
+        await send_email_func(email, subject, body)
         return {"success": True, "message": "E-mail sent"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Could not mark notifications as read: {e}")
+        raise HTTPException(status_code=500, detail=f"Could not send notification through email: {e}")

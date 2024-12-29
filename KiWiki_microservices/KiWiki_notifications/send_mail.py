@@ -3,7 +3,7 @@ import smtplib
 from email.message import EmailMessage
 import ssl
 
-async def send_email(email:str, subjectP: str, bodyP: str):
+async def send_email_func(email:str, subjectP: str, bodyP: str):
     email_sender = 'wikikiwi350@gmail.com'
     password = 'uscz twin jpsz fvam'
     email_reciver = email
