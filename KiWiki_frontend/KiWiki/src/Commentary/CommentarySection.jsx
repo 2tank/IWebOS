@@ -8,7 +8,7 @@ const cookies = new Cookies();
 function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sort_by_oldest = false, username = null}) {
 
     const urlVersion = `http://localhost:8000/versions/${entryVersionID}`;
-    const { isLoggedIn } = useSession();
+    const { isLoggedIn, user } = useSession();
 
     const [urlCommentaries, setUrlCommentaries] = useState("");
     const [extraParam, setExtraParam] = useState("");
@@ -97,8 +97,9 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
 
     useEffect(() => {
         if(isLoggedIn && versionData) {
-            const user = cookies.get('email');
-            if(versionData.editor === user) {
+            const localUser = cookies.get('email');
+            console.log
+            if(versionData.editor === localUser || user.rol === 'ADMIN') {
                 setDeletePermission(true);
             }
         } else {
@@ -119,11 +120,11 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
                 {deletePermission && (
                 <div className="flex flex-row flex-wrap items-center space-x-2 mt-2">
                     { adminMode ?
-                        <button onClick={handleAdminMode} className="bg-red-400 rounded-full p-2 font-bold">Admin mode: ON</button>
+                        <button onClick={handleAdminMode} className="bg-red-400 rounded-full p-2 font-bold">Delete mode: ON</button>
                     :
-                        <button onClick={handleAdminMode} className="bg-gray-300 rounded-full p-2 font-semibold">Admin mode: OFF</button>
+                        <button onClick={handleAdminMode} className="bg-gray-300 rounded-full p-2 font-semibold">Delete mode: OFF</button>
                     }
-                    <p>(este modo se te da porque puedes moderar esta version de la entrada)</p>
+                    <p>(este modo se te da porque puedes moderar esta version de la entrada en cierto nivel)</p>
                 </div>)}
                 {commentaries}
             </div>
