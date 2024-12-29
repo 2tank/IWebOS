@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional
+
+from token_manager import verify_token
 from urls import config
 from datetime import datetime
 import httpx
@@ -103,7 +105,7 @@ async def get_version_by_id(id: str):
 
 
 @router.put("/{id}")
-async def rollback_version_by_id(id: str):
+async def rollback_version_by_id(id: str, username: str = Depends(verify_token)):
     """
     Revierte una versión específica por ID.
 
@@ -124,7 +126,7 @@ async def rollback_version_by_id(id: str):
 
 
 @router.delete("/{id}")
-async def delete_version_by_id(id: str):
+async def delete_version_by_id(id: str, username: str = Depends(verify_token)):
     """
     Elimina una versión específica por ID.
 

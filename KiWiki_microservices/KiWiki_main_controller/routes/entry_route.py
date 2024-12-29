@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException, Body, Query
+from fastapi import APIRouter, HTTPException, Body, Query, Depends
 import httpx
+
+from token_manager import verify_token
 from urls import config
 from models.entry_schema import entrySchema, entryType
 from models.version_schema import versionSchema
@@ -9,7 +11,7 @@ entry_url = config["entry_url"]
 router = APIRouter()
 
 @router.post("/")
-async def add_entry(entry: entrySchema = Body(...)):
+async def add_entry(entry: entrySchema = Body(...), username: str = Depends(verify_token)):
     """
     Crea una nueva entrada.
 
@@ -114,7 +116,7 @@ async def get_entry(id: str):
         raise HTTPException(status_code=500, detail="No entry found")
 
 @router.delete("/{id}")
-async def delete_entry(id: str):
+async def delete_entry(id: str, username: str = Depends(verify_token)):
     """
     Elimina una entrada específica por ID.
 
@@ -143,7 +145,7 @@ async def delete_entry(id: str):
 # este tengo que tocarlo
 
 @router.put("/{id}")
-async def update_entry(id: str, req: Dict = Body(...)):
+async def update_entry(id: str, req: Dict = Body(...), username: str = Depends(verify_token)):
     """
     Actualiza una entrada específica por ID.
 
@@ -172,7 +174,7 @@ async def update_entry(id: str, req: Dict = Body(...)):
 
 
 @router.post("/{id}/versions/")
-async def create_entry_version(id: str, version: versionSchema = Body(...)):
+async def create_entry_version(id: str, version: versionSchema = Body(...), username: str = Depends(verify_token)):
     """
     Crea una nueva versión para una entrada específica.
 
@@ -251,7 +253,7 @@ async def get_actual_version_by_entry_id(id: str):
         raise HTTPException(status_code=500, detail="Failed to find actual version")
 
 @router.put("/{entry_id}/versions/{version_id}")
-async def update_version_by_id(entry_id: str, version_id: str):
+async def update_version_by_id(entry_id: str, version_id: str, username: str = Depends(verify_token)):
     """
     Actualiza la versión actual de una entrada específica.
 
@@ -279,7 +281,7 @@ async def update_version_by_id(entry_id: str, version_id: str):
 
 
 @router.put("/{entry_id}/wiki/{wiki_id}")
-async def add_wiki_to_entry(entry_id: str, wiki_id: str):
+async def add_wiki_to_entry(entry_id: str, wiki_id: str, username: str = Depends(verify_token)):
     """
     Añade el id de la wiki asociada a una entrada existente.
     """
