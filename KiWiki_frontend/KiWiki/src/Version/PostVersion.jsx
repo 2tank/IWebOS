@@ -18,6 +18,7 @@ import HideSourceIcon from '@mui/icons-material/HideSource';
 import apiEndPoints from '../assets/apiEndpoints.json'
 
 import { useSession } from '../Common/SessionProvider'
+import url from '../url.json';
 
 
 import { v4 as uuidv4 } from 'uuid';
@@ -41,6 +42,8 @@ function PostVersion() {
   const urlVersion = apiEndPoints.api +  "/versions/";
 
   const finalUrl = `${urlVersion}${id}`;
+
+  const[nombreAnterior,setNombreAnterior] = useState("");
 
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -80,6 +83,9 @@ function PostVersion() {
           originalMaps: response.data.maps || [],
           attachments: response.data.attachments || [],
         });
+
+        setNombreAnterior(response.data.editor);
+
       } catch (err) {
         setError("Error al cargar los datos.");
       } finally {
@@ -232,6 +238,24 @@ function PostVersion() {
     console.log(updatedVersion);
 
     try {
+
+      const payload = {
+        approved: true,
+        notifDate: "2024-11-02T15:23:52.461000",
+        notifType: "ENTRY_CREATION",
+        read: false,
+        title: "Notificación de creación de entrada de la Wiki Guerra",
+        user: nombreAnterior,
+      };
+
+      const responseNotis = await axios.post(`${url.active_urlBase}/notification/`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log(responseNotis)
+
       const response = await axios.post(
         `${apiEndPoints.api}/entries/${entryId}/versions`, updatedVersion, {
         headers: { "Content-Type": "application/json" },
