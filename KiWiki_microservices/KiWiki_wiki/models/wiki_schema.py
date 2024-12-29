@@ -17,8 +17,8 @@ class WikiSchema(BaseModel):
     """
 
     name: str = Field(..., max_length=20, description="Nombre de la wiki")
-    creator: str = Field(..., max_length=20, description="Nombre del creador de la wiki")
-    description: str = Field(..., max_length=50, description="Descripción de la wiki")
+    creator: str = Field(..., max_length=100, description="Nombre del creador de la wiki")
+    description: str = Field(..., max_length=200, description="Descripción de la wiki")
     date: datetime = Field(..., description="Fecha de creación de la wiki")
     entries: List[str] = Field(default_factory=list, description="Lista de entradas asociadas")
 

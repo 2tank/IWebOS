@@ -87,7 +87,7 @@ function DetailedEntry() {
                 </div>
                 <span className="block text-base text-gray-700">{data.description}</span>
                 <hr className="w-1/4 h-1 mx-auto my-4 bg-gray-900 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
-                <SingleVersionSection entryVersionID={data.actual_version} entryID={data._id} />
+                <SingleVersionSection entryVersionID={data.actual_version} redactor={data.creator}/>
                 <CommentaryComponent entryID={data._id} entryVersionID={data.actual_version} />
               </div>
             )}

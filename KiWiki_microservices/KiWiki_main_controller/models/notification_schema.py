@@ -8,6 +8,7 @@ class NotificationType(str, Enum):
     ENTRY_CREATION = "ENTRY_CREATION"
     ENTRY_REMOVAL = "ENTRY_REMOVAL"
     ENTRY_UPDATE = "ENTRY_UPDATE"
+    COMMENT = "COMMENT"
 
 class NotificationSchema(BaseModel):
     title: str = Field(...)

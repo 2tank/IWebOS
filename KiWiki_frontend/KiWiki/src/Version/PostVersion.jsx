@@ -18,7 +18,7 @@ import HideSourceIcon from '@mui/icons-material/HideSource';
 import apiEndPoints from '../assets/apiEndpoints.json'
 
 import { useSession } from '../Common/SessionProvider'
-
+import url from '../url.json';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,7 +28,7 @@ const azureLocation = "uksouth";
 
 function PostVersion() {
   const location = useLocation();
-  const { id } = location.state || {};
+  const { id, redactor } = location.state || {};
 
   const navigate = useNavigate();
   const handleBack = () => {
@@ -55,11 +55,7 @@ function PostVersion() {
   const formTextAreaClassName = "block w-full p-2 text-black bg-gray-300 resize-none h-auto";
 
   const [formState, setFormState] = useState({
-    editor: "",
-    content: "",
     maps: [],
-    originalMaps: [],
-    attachments: [],
   });
 
   useEffect(() => {
@@ -75,11 +71,12 @@ function PostVersion() {
         setEntryId(response.data.entry_id);
 
         setFormState({
-          editor: response.data.editor || "",
+          editor: user.email,
           content: response.data.content || "",
           originalMaps: response.data.maps || [],
           attachments: response.data.attachments || [],
         });
+
       } catch (err) {
         setError("Error al cargar los datos.");
       } finally {
@@ -216,7 +213,7 @@ function PostVersion() {
 
     const updatedVersion = {
       content: formState.content,
-      editor: formState.editor,
+      editor: user.email,
       editDate: new Date().toISOString(),
       attachments: formState.attachments,
       maps: combinedMaps,
@@ -232,6 +229,24 @@ function PostVersion() {
     console.log(updatedVersion);
 
     try {
+
+      const payload = {
+        approved: true,
+        notifDate: new Date().toISOString(),
+        notifType: "ENTRY_CREATION",
+        read: false,
+        title: "Notificación de creación de entrada de la Wiki Guerra",
+        user: redactor,
+      };
+
+      const responseNotis = await axios.post(`${url.active_urlBase}/notification/`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log(responseNotis)
+
       const response = await axios.post(
         `${apiEndPoints.api}/entries/${entryId}/versions`, updatedVersion, {
         headers: { "Content-Type": "application/json" },
@@ -245,7 +260,7 @@ function PostVersion() {
       }));
     } catch (err) {
       setSubmitSuccess(false);
-      setSubmitError("Ocurrió un error al crear la versión.");
+      setSubmitError("Ocurrió un error al crear la versión." + err);
     }
   };
 
@@ -311,7 +326,7 @@ function PostVersion() {
                 <h2 className="text-xl font-bold mb-4">Crear Nueva Versión</h2>
                 <div className="mb-2">
                   <FormTextInput name={"editor"} value={formState.editor} label={"Editor"}
-                    onChange={handleInputChange} required={true} className={formInputClassName} />
+                    onChange={handleInputChange} required={true} className={formInputClassName} readOnly={true}/>
                 </div>
                 <div className="mb-2">
                   <FormTextArea name={"content"} value={formState.content} label={"Contenido"}
@@ -374,7 +389,7 @@ function PostVersion() {
                 </div>
                 {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN') && (
                 <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
-                  Crear Versión
+                  Guardar Cambios
                 </button>
                 )}
               </div>

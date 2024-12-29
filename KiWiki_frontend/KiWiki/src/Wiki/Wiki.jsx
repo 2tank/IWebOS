@@ -23,7 +23,12 @@ function Wiki(){
 
     useEffect(() =>{
         if(dateOption == undefined){
-            urlApi = apiEndpoint.api + '/wikis/' + `${selectedOption}/${query}`;
+            if(query == "all"){
+                urlApi = apiEndpoint.api + '/wikis/' + `${selectedOption}/` + 'all';
+            }else{
+                urlApi = apiEndpoint.api + '/wikis/' + `${selectedOption}/${query}`;
+            }
+            
         }else{
             urlApi = apiEndpoint.api + '/wikis/get_by_date/';
         }
