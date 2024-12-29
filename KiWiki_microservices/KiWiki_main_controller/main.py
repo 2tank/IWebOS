@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+import token_manager
 from routes import wiki_route,entry_route,version_route, commentary_route, notification_route,user_route
 
 app = FastAPI()
@@ -19,3 +21,4 @@ app.include_router(version_route.router,prefix="/versions")
 app.include_router(commentary_route.router,prefix="/commentaries")
 app.include_router(notification_route.router,prefix="/notification")
 app.include_router(user_route.router, prefix="/users")
+app.include_router(token_manager.router, prefix="/token")
