@@ -127,9 +127,10 @@ async def send_email(request: EmailRequest):
 
     try:
         # Generar mensaje
-        message_template = NOTIFICATION_TEMPLATES.get(request.notification_type, request.email, request.entry_name)
+        message_template = NOTIFICATION_TEMPLATES.get(request.notification_type)
         if not message_template:
             raise ValueError("Tipo de notificación no soportado")
+        message_template.format(entry_name=request.entry_name, user_name=request.user_name)
 
         send_email_logic(message_template, str(request.email), request.notification_type)
 

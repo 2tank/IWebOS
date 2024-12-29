@@ -1,7 +1,27 @@
 import React from "react";
 import MailIcon from '@mui/icons-material/Mail';
+import axios from 'axios';
 
-function NotificationPopup({ minimized, onExpand, onAccept, onReject }) {
+function NotificationPopup({ minimized, onExpand, userEmail }) {
+    const handleUpdatePreferences = async (preference) => {
+        try {
+            const response = await axios.patch(`http://localhost:8000/users/${userEmail}`, {
+                preference,
+            });
+            console.log("Preferencias actualizadas:", response.data);
+        } catch (error) {
+            console.error("Error actualizando preferencias:", error);
+        }
+    };
+
+    const handleAccept = () => {
+        handleUpdatePreferences(true);
+    };
+
+    const handleReject = () => {
+        handleUpdatePreferences(false);
+    };
+
     return (
         <>
             {/* Este div solo se muestra cuando no está minimizado */}
@@ -14,13 +34,13 @@ function NotificationPopup({ minimized, onExpand, onAccept, onReject }) {
                     </h2>
                     <div className="flex justify-between mb-3">
                         <button
-                            onClick={onAccept}
+                            onClick={handleAccept}
                             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                         >
                             Sí, quiero recibir notificaciones por mi correo.
                         </button>
                         <button
-                            onClick={onReject}
+                            onClick={handleReject}
                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                         >
                             No, prefiero gestionar las notificaciones desde la página

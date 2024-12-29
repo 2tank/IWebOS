@@ -33,8 +33,8 @@ SCOPES = ['https://mail.google.com/']
 
 service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
-def send_email(message:str, receipient:str, subject:str):
-    emailMsg = message
+def send_email(messageText:str, receipient:str, subject:str):
+    emailMsg = messageText
     mimeMessage = MIMEMultipart()
     mimeMessage['to'] = receipient
     mimeMessage['subject'] = subject

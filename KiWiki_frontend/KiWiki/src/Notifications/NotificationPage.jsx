@@ -133,6 +133,7 @@ function NotificationPage() {
                                     <option value="ENTRY_CREATION">Creación de Entrada</option>
                                     <option value="ENTRY_REMOVAL">Borrado de Entrada</option>
                                     <option value="ENTRY_UPDATE">Actualización de Entrada</option>
+                                    <option value="COMMENT">Commentarios</option>
                                 </select>
 
                                 <select

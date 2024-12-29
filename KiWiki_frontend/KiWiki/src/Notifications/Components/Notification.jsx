@@ -54,7 +54,7 @@ function Notification({ id, title, user, notifDate, notifType, read, onUpdate, a
             <p className="text-gray-700">Tipo: {notifType}</p>
 
             {/* Botones de Aceptar/Denegar */}
-            {!approved && approved !== false ? (
+            {!approved && approved !== false && notifType !== "COMMENT"? (
                 <div className="flex justify-end mt-4">
                     <button
                         className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-700"
