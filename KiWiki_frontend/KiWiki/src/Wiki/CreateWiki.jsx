@@ -5,14 +5,17 @@ import Navbar from '../Common/NavBar.jsx';
 import apiEndpoint from '../assets/apiEndpoints.json'
 import GetInfoWiki from './GetInfoWiki.js';
 import { format, parse } from "@formkit/tempo"
+import { useSession } from '../Common/SessionProvider'
+
 
 
 function CreateWiki(){
 
+    const { user } = useSession()
 
     const [formData, setFormData] = useState({
         nombre:"",
-        creador:"",
+        creador: user.email,
         descripcion:""
     });
 
@@ -128,7 +131,7 @@ function CreateWiki(){
                         id="creador" 
                         name="creador"
                         value={formData.creador}
-                        onChange={handleChange}
+                        readOnly
                         required
                         className="mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-yellow-900 focus:outline-none"
                     />
