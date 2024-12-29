@@ -48,5 +48,5 @@ class WikiSchemaPartial(BaseModel):
         description (str): Descripción de la wiki, con un máximo de 50 caracteres.
     """
     name: Optional[str] = Field(None, max_length=20, description="Nombre de la wiki")
-    description: Optional[str] = Field(None, max_length=50, description="Descripción de la wiki")
+    description: Optional[str] = Field(None, max_length=200, description="Descripción de la wiki")
 
