@@ -1,11 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer
 
 import token_manager
 from routes import wiki_route,entry_route,version_route, commentary_route, notification_route,user_route
 
-app = FastAPI()
+# Definir el esquema de seguridad para Bearer Token
+bearer_scheme = HTTPBearer()
 
+app = FastAPI(
+    # Agregar el esquema de seguridad al Swagger UI
+    security=[bearer_scheme]
+)
 # Configuración de CORS
 app.add_middleware(
     CORSMiddleware,

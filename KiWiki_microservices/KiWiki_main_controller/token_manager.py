@@ -1,17 +1,17 @@
 from fastapi import FastAPI, Depends, HTTPException, Request, APIRouter
-from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
+from fastapi.security import HTTPBearer
 
 router = APIRouter()
 
 # Configuración del token
-SECRET_KEY = "supersecretkey"  # Cambia esto por algo más seguro en producción
+SECRET_KEY = "clavealeatoria1"  # Cambia esto por algo más seguro si es necesario
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 # Esquema para autenticar el token
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+bearer_scheme = HTTPBearer()
 
 # Función para crear un token
 def create_access_token(data: dict, expires_delta: timedelta = None):
@@ -32,9 +32,10 @@ async def get_token(username: str):
     return {"access_token": token, "token_type": "bearer"}
 
 # Middleware o función para verificar el token en solicitudes protegidas
-async def verify_token(token: str = Depends(oauth2_scheme)):
+async def verify_token(token: str = Depends(bearer_scheme)):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        # Decode el token usando el esquema de seguridad
+        payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Invalid token")

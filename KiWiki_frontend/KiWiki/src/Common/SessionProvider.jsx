@@ -12,15 +12,24 @@ export const SessionProvider = ({ children }) => {
   const [done, setDone] = useState(false);
   const [user, setUser] = useState(null);
 
+  // Función para obtener el token del servidor y almacenarlo
+  const funLogin = async (profile) => {
+    try {
+      // Hacer la solicitud al endpoint `/token` para obtener el token
+      const response = await axios.get('http://localhost:8000/token', {
+        params: { username: profile.email }
+      });
+      const token = response.data.access_token;
+      
+      // Guardar el token en localStorage
+      localStorage.setItem('access_token', token);
 
-  const funLogin = (profile) => {
-    setIsLoggedIn(true); 
-    setSessionProfile(profile);
-
-
-    setUrlUser(`http://localhost:8000/users/${profile.email}`);
-
-
+      setIsLoggedIn(true);
+      setSessionProfile(profile);
+      setUrlUser(`http://localhost:8000/users/${profile.email}`);
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
 
   const funLogout = () => {
@@ -30,7 +39,22 @@ export const SessionProvider = ({ children }) => {
     setData(null);
     setDone(false);
     setUser(null);
+
+    localStorage.removeItem('access_token');
   };
+
+  const setupAxios = () => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers['Authorization'];
+    }
+  };
+
+  useEffect(() => {
+    setupAxios();
+  }, [isLoggedIn]);
 
   const setRol = async(targetEmail, newRol) => {
 

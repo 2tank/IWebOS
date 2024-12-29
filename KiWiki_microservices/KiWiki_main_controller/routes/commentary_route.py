@@ -1,16 +1,17 @@
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Body, Query
+from fastapi import APIRouter, HTTPException, Body, Query, Depends
 import httpx
 
 from models.commentary_schema import commentary, commentaryUpdate
 from urls import config
+from token_manager import verify_token
 
 commentary_url = config["commentary_url"]
 router = APIRouter()
 
 
 @router.post("/")
-async def post_commetary(commentary: commentary = Body(...)):
+async def post_commetary(commentary: commentary = Body(...), username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(f"{commentary_url}/", json=commentary.model_dump())
@@ -77,7 +78,7 @@ async def get_commentary_by_id(id_commentary: str):
         raise HTTPException(status_code=400, detail="No commentary for this id")
 
 @router.delete("/{id_commentary}")
-async def delete_commentary(id_commentary: str) -> bool:
+async def delete_commentary(id_commentary: str, username: str = Depends(verify_token)) -> bool:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.delete(f"{commentary_url}/{id_commentary}")
@@ -94,7 +95,7 @@ async def delete_commentary(id_commentary: str) -> bool:
 
 
 @router.patch("/{id_commentary}")
-async def patch_commentary(id_commentary: str, commentaryUpdate: commentaryUpdate = Body(...)):
+async def patch_commentary(id_commentary: str, commentaryUpdate: commentaryUpdate = Body(...), username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.patch(f"{commentary_url}/{id_commentary}", json=commentaryUpdate.model_dump())
