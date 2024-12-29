@@ -18,7 +18,7 @@ export const SessionProvider = ({ children }) => {
   const funLogin = async (profile) => {
     try {
       // Hacer la solicitud al endpoint `/token` para obtener el token
-      const response = await axios.get(`${url.active_urlBase}/token`, {
+      const response = await axios.get(`${url.active_urlBase}/token/`, {
         params: { username: profile.email }
       });
       const token = response.data.access_token;

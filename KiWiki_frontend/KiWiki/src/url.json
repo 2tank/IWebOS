@@ -1,5 +1,5 @@
 {
-    "active_urlBase": "http://localhost:8000",
+    "active_urlBase": "https://mckiwiki-production.up.railway.app",
     "local_urlBase": "http://localhost:8000",
-    "deploy_urlBase": "url de la base"
+    "deploy_urlBase": "https://mckiwiki-production.up.railway.app"
 }
