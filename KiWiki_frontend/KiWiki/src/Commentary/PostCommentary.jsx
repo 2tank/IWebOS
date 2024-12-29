@@ -3,6 +3,8 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
+import url from '../url.json';
+
 function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
   //const [user, setUser] = useState('');
   const [content, setContent] = useState('');
@@ -24,7 +26,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/commentaries/', payload, {
+      const response = await axios.post(`${url.active_urlBase}/commentaries/`, payload, {
         headers: {
           'Content-Type': 'application/json',
         },

@@ -9,9 +9,11 @@ import { useSession } from '../Common/SessionProvider';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
+import url from '../url.json';
+
 function SingleCommentary({id, reply = 0, adminMode = false, handleDeleteCommentarySection, childDelete}) {
 
-    const urlCommentaryID = "http://localhost:8000/commentaries/" + id;
+    const urlCommentaryID = `${url.active_urlBase}/commentaries/` + id;
 
     const { isLoggedIn } = useSession();
 

@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios'
 
+import url from '../url.json';
+
 const SessionContext = createContext();
 
 export const SessionProvider = ({ children }) => {
@@ -16,7 +18,7 @@ export const SessionProvider = ({ children }) => {
   const funLogin = async (profile) => {
     try {
       // Hacer la solicitud al endpoint `/token` para obtener el token
-      const response = await axios.get('http://localhost:8000/token', {
+      const response = await axios.get(`${url.active_urlBase}/token`, {
         params: { username: profile.email }
       });
       const token = response.data.access_token;
@@ -26,7 +28,7 @@ export const SessionProvider = ({ children }) => {
 
       setIsLoggedIn(true);
       setSessionProfile(profile);
-      setUrlUser(`http://localhost:8000/users/${profile.email}`);
+      setUrlUser(`${url.active_urlBase}/users/${profile.email}`);
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -58,7 +60,7 @@ export const SessionProvider = ({ children }) => {
 
   const setRol = async(targetEmail, newRol) => {
 
-    const targetMailUrl = `http://localhost:8000/users/${targetEmail}`
+    const targetMailUrl = `${url.active_urlBase}/users/${targetEmail}`
     let targetUser = null;
 
     const processData = async(url) => {
@@ -101,7 +103,7 @@ export const SessionProvider = ({ children }) => {
   const toggleMyMailPreference = async () => {
     if(user !== null) {
       console.log(user);
-      const targetMailUrl = `http://localhost:8000/users/${user.email}`
+      const targetMailUrl = `${url.active_urlBase}/users/${user.email}`
 
       try {
         const payload = {
@@ -158,7 +160,7 @@ export const SessionProvider = ({ children }) => {
         };
     
         try {
-          const response = await axios.post('http://localhost:8000/users/', payload, {
+          const response = await axios.post(`${url.active_urlBase}/users/`, payload, {
             headers: {
               'Content-Type': 'application/json',
             },

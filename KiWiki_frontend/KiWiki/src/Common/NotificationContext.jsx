@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+import url from '../url.json';
+
 const NotificationContext = createContext();
 
 export const useNotification = () => {
@@ -13,7 +15,7 @@ export const NotificationProvider = ({ children }) => {
 
     const fetchNotifications = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/notification/?read=false');
+            const response = await axios.get(`${url.active_urlBase}/notification/?read=false`);
             setUnreadCount(response.data.length);
             setNotifications(response.data);
         } catch (err) {
@@ -39,7 +41,7 @@ export const NotificationProvider = ({ children }) => {
 
     const markAllAsRead = async () => {
         try {
-            await axios.patch('http://localhost:8000/notification/read/');
+            await axios.patch(`${url.active_urlBase}/notification/read/`);
             await fetchNotifications(); // Recargar notificaciones después de marcarlas como leídas
         } catch (err) {
             console.error('Error marking all notifications as read:', err);

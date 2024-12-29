@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import apiEndpoint from '../assets/apiEndpoints.json'
+//import apiEndpoint from '../assets/apiEndpoints.json'
 import SingleEntry from './SingleEntry'
 import Navbar from '../Common/NavBar'
 import EntryFilter from "./EntryFilter";
@@ -10,6 +10,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import axios from "axios";
 import { useSession } from '../Common/SessionProvider'
+
+import url from '../url.json';
 
 function ListEntries(){
 
@@ -41,7 +43,7 @@ function ListEntries(){
     },[id])
 
     const getData = async() => {
-        urlApi = apiEndpoint.api + '/wikis/' + `${id}` + '/entries';
+        urlApi = url.active_urlBase + '/wikis/' + `${id}` + '/entries';
         console.log(urlApi)
         try{
             const response = await axios.get(urlApi)
@@ -58,7 +60,7 @@ function ListEntries(){
     const handleFilterEntry = async(e) => {
         e.preventDefault();
 
-        let filterURL = apiEndpoint.api + `/entries/?wiki=${id}`;
+        let filterURL = url.active_urlBase + `/entries/?wiki=${id}`;
 
         if (formState.year) filterURL += `&year=${formState.year}`;
         if (formState.month) filterURL += `&month=${formState.month}`;
