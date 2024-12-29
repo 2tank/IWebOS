@@ -37,11 +37,15 @@ class MONGOCRUD:
     async def get_name(self, name: str, search_field: str) -> List:
         items = await self.get_collection()
         obtained = []
-        for item in items:
-            if name.lower() in item["name"].lower():
-                item["_id"] = str(item["_id"])
-                obtained.append(item)
-        
+
+        if name.lower() == "all":
+            obtained = [item for item in items]
+        else:
+            for item in items:
+                if name.lower() in item["name"].lower():  
+                    item["_id"] = str(item["_id"])
+                    obtained.append(item)
+
         return obtained
 
         

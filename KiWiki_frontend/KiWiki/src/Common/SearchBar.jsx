@@ -15,12 +15,16 @@ function SearchBar(){
     const navigate = useNavigate()
 
     const search = async(event) => {
-        if(query.trim() === "") return;
 
         event.preventDefault();
 
         if(dateInput == false){
-            navigate('/wikis/'+`${selectedOption}/${query}`)
+            if(query.trim() === ""){
+                navigate('/wikis/'+`${selectedOption}`+'/all')
+            }else{
+                navigate('/wikis/'+`${selectedOption}/${query}`)
+            }
+            
         }else{
             navigate('/wikis/'+`${selectedOption}/${query}/${dateOption}`)
         }

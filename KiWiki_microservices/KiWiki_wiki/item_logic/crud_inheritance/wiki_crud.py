@@ -173,9 +173,16 @@ class WIKICRUD(MONGOCRUD):
 
     async def get_wikis_author(self, wiki_author: str):
         items = []
-        async for item in self.collection.find({"creator": {"$regex": f"{wiki_author}", "$options": "i"}}):
-            item["_id"] = str(item["_id"])
-            items.append(item)
+        
+        if wiki_author.lower() == "all":
+            async for item in self.collection.find():
+                item["_id"] = str(item["_id"])
+                items.append(item)
+        else:
+            async for item in self.collection.find({"creator": {"$regex": f"{wiki_author}", "$options": "i"}}):
+                item["_id"] = str(item["_id"])
+                items.append(item)
+
         return items
 
 
