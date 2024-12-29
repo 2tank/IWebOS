@@ -367,7 +367,7 @@ function PostVersion() {
 
                   <div className="bg-gray-300 w-1/2 my-4 p-4 rounded">
                     <LanguageSelector setTargetLanguage={setTargetLanguage} />
-                    <button type="button" className="block bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white"
+                    <button type="button" className="block bg-green-500 hover:bg-green-700 font-bold mt-2 py-1 px-4 rounded-full text-white"
                      onClick={handleTranslate}>Traducir</button>
                   </div>
 

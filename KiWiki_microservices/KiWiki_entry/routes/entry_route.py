@@ -51,7 +51,6 @@ async def get_entries(
 
                 filter["creationDate"] = {"$gte": start_date, "$lte": end_date}
 
-            #Filtramos con expresión regular y la opción case-insensitive
             if description:
                 filter["description"] = {"$regex": ".*{}.*".format(description), "$options": "i"}
 
