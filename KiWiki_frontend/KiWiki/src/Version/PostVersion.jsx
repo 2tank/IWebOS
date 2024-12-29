@@ -236,7 +236,7 @@ function PostVersion() {
 
       const payload = {
         approved: true,
-        notifDate: "2024-11-02T15:23:52.461000",
+        notifDate: new Date().toISOString(),
         notifType: "ENTRY_CREATION",
         read: false,
         title: "Notificación de creación de entrada de la Wiki Guerra",

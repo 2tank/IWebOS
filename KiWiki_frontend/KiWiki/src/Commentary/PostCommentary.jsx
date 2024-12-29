@@ -15,6 +15,29 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+
+    let localUrl = `${url.active_urlBase}/versions/` + entryVersionID;
+    const respuestaPreNotificacion = await axios.get(localUrl);
+
+    console.log("get ok")
+
+    const payloadNofificacion = {
+      approved: true,
+      notifDate: new Date().toISOString(),
+      notifType: "COMMENT",
+      read: false,
+      title: "Notificación de creación de entrada de la Wiki Guerra",
+      user: respuestaPreNotificacion.data.editor,
+    };
+
+    const responseNotis = await axios.post(`${url.active_urlBase}/notification/`, payloadNofificacion, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(responseNotis)
+
     const user = cookies.get('email');
 
     const payload = {
@@ -63,7 +86,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
       <div className='border-2 border-gray-200 rounded-xl pl-5 pr-2 pb-2 pt-5 hover:shadow-sm text-sm sm:text-base'>
         <h1 className='font-bold mb-2 underline'>Comenta sobre la entrada:</h1>
         <form onSubmit={handleSubmit} className='space-y-2'>
-            {/* 
+            {/*
             <div className='flex flex-row flex-wrap'>
                 <label>Usuario:</label>
                 <input
