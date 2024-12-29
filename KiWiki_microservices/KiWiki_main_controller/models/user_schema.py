@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Literal
 
 rolType = Literal[
+    'LECTOR',
     'EDITOR',
     'REDACTOR',
     'ADMIN',
@@ -17,7 +18,7 @@ class userSchema(BaseModel):
         "json_schema_extra" : {
             "example" :
             {
-                "rol": "REDACTOR",
+                "rol": "LECTOR",
                 "email" : "test@gmail.com",
                 "send_email" : True
             }

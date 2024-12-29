@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { formatDate } from "../Common/CommonOperations";
 import VersionFilter from "./VersionFilter";
+import { useSession } from '../Common/SessionProvider'
+
 
 function VersionHistory({ entryID, onVersionChange }) {
     const [data, setData] = useState(null);
@@ -12,6 +14,15 @@ function VersionHistory({ entryID, onVersionChange }) {
 
     const urlEntrada = `http://localhost:8000/entries/${entryID}/versions/`;
     const urlGetActual = `http://localhost:8000/entries/${entryID}/currentVersion/`;
+
+    const { isLoggedIn, setRol, user } = useSession();
+
+
+    // useEffect(() => {
+    //     if (!isLoggedIn) {
+    //       navigate("/");
+    //     }
+    // }, [isLoggedIn]);
 
     const [formState,setFormState] = useState({
         year: "",
@@ -158,6 +169,7 @@ function VersionHistory({ entryID, onVersionChange }) {
                                     >
                                         ACTUAL
                                     </button>
+                                    {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN') && (
                                     <button
                                         onClick={() => rollbackVersion(version._id)}
                                         className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700 transition-colors"
@@ -165,10 +177,12 @@ function VersionHistory({ entryID, onVersionChange }) {
                                     >
                                         {isUpdating ? "Revirtiendo..." : "Revertir esta versión"}
                                     </button>
+                                    )}
                                 </div>
                             </>
                         ) : (
                             <>
+                                {(user?.rol === 'ADMIN') && (
                                 <button
                                     onClick={() => updateVersion(version._id)}
                                     className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
@@ -176,6 +190,7 @@ function VersionHistory({ entryID, onVersionChange }) {
                                 >
                                     {isUpdating ? "Actualizando..." : "Elegir como actual"}
                                 </button>
+                                )}
                             </>
                         )}
                     </li>

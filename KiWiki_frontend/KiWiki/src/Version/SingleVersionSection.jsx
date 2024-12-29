@@ -6,12 +6,17 @@ import { formatDate } from "../Common/CommonOperations";
 import './CSS/html.css'
 
 import MapComponent from "../Common/MapComponent";
+import { useSession } from '../Common/SessionProvider'
+
 
 function SingleVersionSection({entryVersionID,entryID}){
 
     const navigate = useNavigate();
 
     const { nameWiki,entry_id } = useParams();
+
+    const { user } = useSession();
+
 
     const urlVersion = "http://localhost:8000/versions/" + entryVersionID;
 
@@ -48,9 +53,11 @@ function SingleVersionSection({entryVersionID,entryID}){
     return (
         <div>
             <div className="flex justify-end">
+                {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN') && (
                 <button className="bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white" onClick={clickEditVersion}>
                 Editar Version
                 </button>
+                )}
             </div>
             <div className="flex gap-3 text-black">
                 <span className="text-xs">Editado: {formatDate(data.editDate)}</span>

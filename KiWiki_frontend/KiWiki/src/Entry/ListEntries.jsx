@@ -9,11 +9,13 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import axios from "axios";
+import { useSession } from '../Common/SessionProvider'
 
 function ListEntries(){
 
     const location = useLocation()
     const {id, name} = location.state || {}
+    const { user } = useSession();
 
     const navigate = useNavigate();
     const handleBack = () => {
@@ -90,10 +92,11 @@ function ListEntries(){
                         <SingleEntry key={item._id} item={item} wiki_id={id} setData={setData}></SingleEntry>
                     ))
                 }
-                
+                {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR') || (user?.rol === 'REDACTOR'))&& (
                 <Link className='w-16 h-16 m-16 fixed bottom-0 right-0' to={`/wikis/${id}/create`}>
                     <AddCircleIcon style={{width:'100%', height:'100%'}} fontSize="large" color='success'></AddCircleIcon>
                 </Link>
+                )}
             </section>
             </div>
         </div>

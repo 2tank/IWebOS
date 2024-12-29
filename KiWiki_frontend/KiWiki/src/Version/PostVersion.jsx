@@ -16,6 +16,9 @@ import HideSourceIcon from '@mui/icons-material/HideSource';
 
 import apiEndPoints from '../assets/apiEndpoints.json'
 
+import { useSession } from '../Common/SessionProvider'
+
+
 import { v4 as uuidv4 } from 'uuid';
 
 const azureTranslateKey = "89eRbsY6P8evCNoIoGbA9SBwrIGkwWWCg0Z7voA9ukagrzaLesM6JQQJ99ALACmepeSXJ3w3AAAbACOGkF3T";
@@ -30,6 +33,9 @@ function PostVersion() {
   const handleBack = () => {
       navigate(-1);
   };
+
+  const { user,isLoggedIn } = useSession();
+
 
   const urlVersion = apiEndPoints.api +  "/versions/";
 
@@ -55,11 +61,17 @@ function PostVersion() {
   });
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(finalUrl);
         setEntryId(response.data.entry_id);
-  
+
         setFormState({
           editor: response.data.editor || "",
           content: response.data.content || "",
@@ -90,17 +102,17 @@ function PostVersion() {
         },
         params: {
           'api-version': '3.0',
-          'from': 'es',  
+          'from': 'es',
           'to': targetLang
         },
         data: [{ 'text': text }],
         responseType: 'json'
       });
-      
+
       return response.data[0].translations[0].text;
     } catch (error) {
       console.error('Error al traducir el texto:', error);
-      return text;  
+      return text;
     }
   };
 
@@ -157,7 +169,7 @@ function PostVersion() {
 
   const handleCreateVersion = async (e) => {
     e.preventDefault();
-  
+
     let maps = [...(formState.maps || [])].map((map) => ({
       location: {
         latitude: parseFloat(map.latitude),
@@ -207,39 +219,39 @@ function PostVersion() {
     if (event.key === "Tab") {
       event.preventDefault();
       const { selectionStart, selectionEnd } = event.target;
-  
+
       if (event.shiftKey) {
         const contentBeforeCursor = formState.content.substring(0, selectionStart);
         const contentAfterCursor = formState.content.substring(selectionEnd);
-  
+
         //Si había un tabulador lo elimina
         if (contentBeforeCursor.endsWith("\t")) {
           const updatedContent =
             contentBeforeCursor.slice(0, -1) + contentAfterCursor;
-  
+
           setFormState((prevState) => ({
             ...prevState,
             content: updatedContent,
           }));
-  
+
           // Ajusta la posición del cursor después de eliminar el tab
           requestAnimationFrame(() => {
             event.target.selectionStart = event.target.selectionEnd = selectionStart - 1;
           });
         }
       } else {
-    
+
         // Inserta un tab en la posición actual
         const updatedContent =
           formState.content.substring(0, selectionStart) +
           "\t" +
           formState.content.substring(selectionEnd);
-    
+
         setFormState((prevState) => ({
           ...prevState,
           content: updatedContent,
         }));
-    
+
         // Ajusta la posición del cursor después del tab
         requestAnimationFrame(() => {
           event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
@@ -248,9 +260,9 @@ function PostVersion() {
       }
     }
   };
-  
 
- 
+
+
   return (
     <>
       {loading ? (
@@ -322,9 +334,11 @@ function PostVersion() {
                   {submitError && <p className="text-red-500">{submitError}</p>}
                   {submitSuccess && <p className="text-green-500">Versión creada con éxito.</p>}
                 </div>
+                {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN') && (
                 <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
                   Crear Versión
                 </button>
+                )}
               </div>
             </form>
           </div>

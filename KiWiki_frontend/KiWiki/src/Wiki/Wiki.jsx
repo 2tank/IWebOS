@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from 'axios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { format, parse } from "@formkit/tempo"
+import { useSession } from '../Common/SessionProvider'
 
 
 import SingleWiki from './SingleWiki.jsx';
@@ -10,6 +11,10 @@ import apiEndpoint from '../assets/apiEndpoints.json';
 import Navbar from '../Common/NavBar.jsx';
 
 function Wiki(){
+
+    const { user } = useSession();
+
+
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,19 +37,19 @@ function Wiki(){
                 const response = await axios.get(urlApi)
                 setData(response.data);
             }else{
-               
+
                 const dataDate = {
                     content: format(query, 'DD/MM/YYYY'),
-                    condition: dateOption 
+                    condition: dateOption
                 }
                 const response = await axios.post(urlApi, dataDate)
                 setData(response.data)
-                
+
             }
         }catch(err){
             setError(err.message);
         }finally{
-    
+
             setLoading(false);
         }
     };
@@ -64,12 +69,11 @@ function Wiki(){
                     }
                 </section>
 
+                {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR') || (user?.rol === 'REDACTOR') )&& (
                 <Link className='w-16 h-16 m-16 fixed bottom-0 right-0' to='/wikis/create'>
-
                     <AddCircleIcon style={{width:'100%', height:'100%'}}fontSize="large" color='success'></AddCircleIcon>
-
                 </Link>
-
+                )}
 
             </section>
             </>
