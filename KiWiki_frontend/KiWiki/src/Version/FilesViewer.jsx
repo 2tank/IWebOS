@@ -16,10 +16,10 @@ function FilesViewer({attachments, setFormState}){
                     <>
                     <div key={index} className="bg-gray-300 w-5/6 rounded my-4 p-4">
                         <div className='flex justify-between'>
-                            <div>
+                            <div className='w-5/6'>
                             <p><strong>Nombre:</strong> {attachment.file_name}</p>
                             <p><strong>Tipo:</strong> .{attachment.type}</p>
-                            <p><strong>url:</strong> {attachment.url}</p>
+                            <p className="break-words w-5/6"><strong>url:</strong> {attachment.url}</p>
                             </div>
                         <div onClick={() => handleDelete(index)}>
                             <DeleteIcon className='hover:cursor-pointer mt-10' color='error' fontSize='large'></DeleteIcon>  
