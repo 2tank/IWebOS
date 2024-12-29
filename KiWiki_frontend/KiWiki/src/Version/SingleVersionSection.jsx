@@ -8,6 +8,8 @@ import './CSS/html.css'
 import MapComponent from "../Common/MapComponent";
 import { useSession } from '../Common/SessionProvider'
 
+import url from '../url.json';
+
 
 function SingleVersionSection({entryVersionID,entryID}){
 
@@ -18,7 +20,7 @@ function SingleVersionSection({entryVersionID,entryID}){
     const { user } = useSession();
 
 
-    const urlVersion = "http://localhost:8000/versions/" + entryVersionID;
+    const urlVersion = `${url.active_urlBase}/versions/` + entryVersionID;
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);

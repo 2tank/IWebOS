@@ -6,6 +6,8 @@ import { useSession } from '../Common/SessionProvider'
 
 import FilesViewer from './FilesViewer'
 
+import url from '../url.json';
+
 
 function VersionHistory({ entryID, onVersionChange }) {
     const [data, setData] = useState(null);
@@ -14,8 +16,8 @@ function VersionHistory({ entryID, onVersionChange }) {
     const [currentVersion, setCurrentVersion] = useState(null); // Estado para la versión actual
     const [isUpdating, setIsUpdating] = useState(false); // Estado para saber si estamos actualizando una versión
 
-    const urlEntrada = `http://localhost:8000/entries/${entryID}/versions/`;
-    const urlGetActual = `http://localhost:8000/entries/${entryID}/currentVersion/`;
+    const urlEntrada = `${url.active_urlBase}/entries/${entryID}/versions/`;
+    const urlGetActual = `${url.active_urlBase}/entries/${entryID}/currentVersion/`;
 
     const { isLoggedIn, setRol, user } = useSession();
 
@@ -70,7 +72,7 @@ function VersionHistory({ entryID, onVersionChange }) {
         const day = e.target.day.value;
         const editor = e.target.editor.value;
 
-        let filterURL = `http://localhost:8000/versions/?entry_id=${entryID}`;
+        let filterURL = `${url.active_urlBase}/versions/?entry_id=${entryID}`;
 
         if(year){
             filterURL += `&year=${year}`;
@@ -93,7 +95,7 @@ function VersionHistory({ entryID, onVersionChange }) {
         try {
             let response = null;
             setIsUpdating(true);
-            response = await axios.put(`http://localhost:8000/versions/${versionID}`);
+            response = await axios.put(`${url.active_urlBase}/versions/${versionID}`);
 
             console.log(response)
 

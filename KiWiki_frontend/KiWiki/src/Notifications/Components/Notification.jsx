@@ -1,10 +1,12 @@
 import axios from "axios";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
+import url from '../url.json';
+
 function Notification({ id, title, user, notifDate, notifType, read, onUpdate, approved }) {
     const handleAccept = async (id) => {
         try {
-            await axios.patch(`http://localhost:8000/notification/approve/${id}`);
+            await axios.patch(`${url.active_urlBase}/notification/approve/${id}`);
             onUpdate(id, true); // Actualiza el estado como aprobado
         } catch (error) {
             console.error("Error al aceptar la notificación:", error);
@@ -13,7 +15,7 @@ function Notification({ id, title, user, notifDate, notifType, read, onUpdate, a
 
     const handleDeny = async (id) => {
         try {
-            await axios.patch(`http://localhost:8000/notification/deny/${id}`);
+            await axios.patch(`${url.active_urlBase}/notification/deny/${id}`);
             onUpdate(id, false); // Actualiza el estado como denegado
         } catch (error) {
             console.error("Error al denegar la notificación:", error);
@@ -22,7 +24,7 @@ function Notification({ id, title, user, notifDate, notifType, read, onUpdate, a
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8000/notification/${id}`);
+            await axios.delete(`${url.active_urlBase}/notification/${id}`);
             onUpdate(id, null); // Notifica al componente padre para eliminar la notificación
         } catch (error) {
             console.error("Error al eliminar la notificación:", error);

@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import React from 'react';
 import { useNotification } from "../../src/Common/NotificationContext";
 
+import url from '../url.json';
+
 function NotificationPage() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ function NotificationPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/notification/");
+                const response = await axios.get(`${url.active_urlBase}/notification/`);
                 setData(response.data);
             } catch (err) {
                 setError(err.message);
