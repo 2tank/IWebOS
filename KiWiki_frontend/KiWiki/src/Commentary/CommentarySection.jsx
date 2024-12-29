@@ -5,9 +5,11 @@ import { useSession } from '../Common/SessionProvider';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
+import url from '../url.json';
+
 function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sort_by_oldest = false, username = null}) {
 
-    const urlVersion = `http://localhost:8000/versions/${entryVersionID}`;
+    const urlVersion = `${url.active_urlBase}/versions/${entryVersionID}`;
     const { isLoggedIn, user } = useSession();
 
     const [urlCommentaries, setUrlCommentaries] = useState("");
@@ -51,7 +53,7 @@ function CommentarySection({entryID, entryVersionID, sort_by_newest = false, sor
     useEffect(() => {
         if (extraParam) {
           setUrlCommentaries(
-            `http://localhost:8000/commentaries/?entry_id=${entryID}&entry_version_id=${entryVersionID}&only_main_commentaries=true${extraParam}`
+            `${url.active_urlBase}/commentaries/?entry_id=${entryID}&entry_version_id=${entryVersionID}&only_main_commentaries=true${extraParam}`
           );
         }
     }, [extraParam, entryID, entryVersionID]);
