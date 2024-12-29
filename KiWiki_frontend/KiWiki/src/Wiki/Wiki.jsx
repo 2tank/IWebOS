@@ -69,7 +69,7 @@ function Wiki(){
                     }
                 </section>
 
-                {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR') || (user?.rol === 'REDACTOR') )&& (
+                {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR'))&& (
                 <Link className='w-16 h-16 m-16 fixed bottom-0 right-0' to='/wikis/create'>
                     <AddCircleIcon style={{width:'100%', height:'100%'}}fontSize="large" color='success'></AddCircleIcon>
                 </Link>

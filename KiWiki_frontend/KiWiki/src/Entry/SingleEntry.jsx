@@ -57,7 +57,7 @@ function SingleEntry({item,wiki_id,setData}){
           </button>
           )}
 
-          {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR') || (user?.rol === 'REDACTOR'))&& (
+          {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR'))&& (
           <button
             onClick={deleteHandler}
             className='m-3'

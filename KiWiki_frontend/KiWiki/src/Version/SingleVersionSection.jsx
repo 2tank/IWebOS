@@ -53,7 +53,7 @@ function SingleVersionSection({entryVersionID,entryID}){
     return (
         <div>
             <div className="flex justify-end">
-                {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN') && (
+                {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN' || user?.rol === 'REDACTOR') && (
                 <button className="bg-green-500 hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white" onClick={clickEditVersion}>
                 Editar Version
                 </button>
