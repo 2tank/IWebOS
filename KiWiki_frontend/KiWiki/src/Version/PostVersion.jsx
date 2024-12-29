@@ -28,7 +28,7 @@ const azureLocation = "uksouth";
 
 function PostVersion() {
   const location = useLocation();
-  const { id } = location.state || {};
+  const { id, redactor } = location.state || {};
 
   const navigate = useNavigate();
   const handleBack = () => {
@@ -41,8 +41,6 @@ function PostVersion() {
   const urlVersion = apiEndPoints.api +  "/versions/";
 
   const finalUrl = `${urlVersion}${id}`;
-
-  const[nombreAnterior,setNombreAnterior] = useState("");
 
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -78,8 +76,6 @@ function PostVersion() {
           originalMaps: response.data.maps || [],
           attachments: response.data.attachments || [],
         });
-
-        setNombreAnterior(response.data.editor);
 
       } catch (err) {
         setError("Error al cargar los datos.");
@@ -240,7 +236,7 @@ function PostVersion() {
         notifType: "ENTRY_CREATION",
         read: false,
         title: "Notificación de creación de entrada de la Wiki Guerra",
-        user: nombreAnterior,
+        user: redactor,
       };
 
       const responseNotis = await axios.post(`${url.active_urlBase}/notification/`, payload, {
@@ -264,7 +260,7 @@ function PostVersion() {
       }));
     } catch (err) {
       setSubmitSuccess(false);
-      setSubmitError("Ocurrió un error al crear la versión.");
+      setSubmitError("Ocurrió un error al crear la versión." + err);
     }
   };
 
