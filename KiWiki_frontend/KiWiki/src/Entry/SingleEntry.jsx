@@ -6,6 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from "axios";
 import apiEndpoint from '../assets/apiEndpoints.json'
 import { useSession } from '../Common/SessionProvider'
+import url from '../url.json';
+
 
 function SingleEntry({item,wiki_id,setData}){
 
@@ -29,8 +31,8 @@ function SingleEntry({item,wiki_id,setData}){
 
     const deleteHandler = async(event) =>{
       event.stopPropagation();
-      await axios.delete(apiEndpoint.api + '/entries/' + item._id);
-      await axios.delete(apiEndpoint.api + '/wikis/' + wiki_id + '/delete_entry/' +  item._id);
+      await axios.delete(url.active_urlBase + '/entries/' + item._id);
+      await axios.delete(url.active_urlBase + '/wikis/' + wiki_id + '/delete_entry/' +  item._id);
       setData((prevData) => prevData.filter((entry) => entry._id !== item._id));
     }
 

@@ -10,6 +10,7 @@ import CommentaryComponent from "../Commentary/CommentaryComponent";
 import "../Common/CSS/commonCSS.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import url from '../url.json';
 
 function DetailedEntry() {
 
@@ -30,8 +31,8 @@ function DetailedEntry() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let url = "http://localhost:8000/entries/" + id;
-        const response = await axios.get(url);
+        let localUrl = `${url.active_urlBase}/entries/` + id;
+        const response = await axios.get(localUrl);
         setData(response.data);
       } catch (err) {
         setError(err.message);

@@ -5,6 +5,8 @@ import FormTextInput from '../Common/FormTextInput';
 import FormCheckBox from '../Common/FormCheckBox'
 import TuneIcon from '@mui/icons-material/Tune';
 
+import url from '../url.json';
+
 function EntryFilter({formState, setFormState,handleFilterEntry}){
 
     const [showFilter,setShowFilter] = useState(false);
@@ -19,7 +21,7 @@ function EntryFilter({formState, setFormState,handleFilterEntry}){
     useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/entries/?getTags=True");
+        const response = await axios.get(`${url.active_urlBase}/entries/?getTags=True`);
         setData(response.data);
       } catch (err) {
         setError(err.message);

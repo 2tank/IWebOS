@@ -10,6 +10,8 @@ import FormCheckBox from "../Common/FormCheckBox";
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import url from '../url.json';
+
 function PostEntry() {
 
 
@@ -67,7 +69,7 @@ function PostEntry() {
     }
       const fetchData = async () => {
         try {
-          const response = await axios.get(apiEndpoint.api + "/entries/?getTags=True");
+          const response = await axios.get(url.active_urlBase + "/entries/?getTags=True");
           setData(response.data);
         } catch (err) {
           setError(err.message);
@@ -104,7 +106,7 @@ function PostEntry() {
       try {
  
         if(Object.keys(formState).length > 0){
-          await axios.put(apiEndpoint.api+ '/entries/' + entry_id, formState)
+          await axios.put(url.active_urlBase + '/entries/' + entry_id, formState)
           .then((response) => {
               console.log(response)
           })
@@ -135,10 +137,10 @@ function PostEntry() {
       };
 
     try {
-      const response = await axios.post(apiEndpoint.api + "/entries", updatedEntry, {
+      const response = await axios.post(url.active_urlBase + "/entries", updatedEntry, {
         headers: { "Content-Type": "application/json" },
       });
-      await axios.patch(apiEndpoint.api + "/wikis/" + wiki_id + "/add_entry/" + response.data._id)
+      await axios.patch(url.active_urlBase + "/wikis/" + wiki_id + "/add_entry/" + response.data._id)
       setSubmitSuccess(true); // Marca el éxito
       setSubmitError(null); // Limpia errores previos
       setFormState({
