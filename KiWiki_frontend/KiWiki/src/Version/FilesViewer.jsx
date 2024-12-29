@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function FilesViewer({attachments, setFormState}){
+function FilesViewer({attachments, setFormState = null}){
 
     const handleDelete = (indexToRemove) => {
         setFormState((prevState) => ({
@@ -21,9 +21,11 @@ function FilesViewer({attachments, setFormState}){
                             <p><strong>Tipo:</strong> .{attachment.type}</p>
                             <p className="break-words w-5/6"><strong>url:</strong> {attachment.url}</p>
                             </div>
+                        {setFormState && (
                         <div onClick={() => handleDelete(index)}>
                             <DeleteIcon className='hover:cursor-pointer mt-10' color='error' fontSize='large'></DeleteIcon>  
                         </div>
+                        )}
                         </div>  
                     </div>
                     </>
