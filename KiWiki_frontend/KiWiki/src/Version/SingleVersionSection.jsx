@@ -11,7 +11,7 @@ import { useSession } from '../Common/SessionProvider'
 import url from '../url.json';
 
 
-function SingleVersionSection({entryVersionID,entryID}){
+function SingleVersionSection({entryVersionID,redactor}){
 
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ function SingleVersionSection({entryVersionID,entryID}){
     const clickEditVersion = () => {
 
         navigate('/wikis/'+`${nameWiki}`+'/entries/' + `${entry_id}` + '/versionedit' , {
-            state: { id: entryVersionID },
+            state: { id: entryVersionID , redactor: redactor},
           });
     }
 
