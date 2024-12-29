@@ -2,14 +2,13 @@ import axios from "axios";
 import url from '../url.json';
 
 
-export const handleSendEmail = async (email, notification_type, nameRef, user_name) => {
-  const url = `${url.active_urlBase}/email/send-email`; // URL del endpoint
+export const handleSendEmail = async (email_reciver, subject, body) => {
+  const url = `${url.active_urlBase}/notification/send-email`; // URL del endpoint
 
   const payload = {
-    email,
-    notification_type,
-    nameRef, // Nombre de la Wiki o Entrada correspondiente
-    user_name,
+    email_reciver,
+    subject,
+    body
   };
 
   try {

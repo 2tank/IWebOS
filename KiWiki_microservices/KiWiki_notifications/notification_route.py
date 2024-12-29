@@ -102,3 +102,10 @@ async def mark_all_notifications_as_read():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Could not mark notifications as read: {e}")
 
+@router.post("/send-email")
+async def send_email(email:str, subject: str, body: str):
+    try:
+        await notification_logic.mark_all_notifications_as_read()
+        return {"success": True, "message": "E-mail sent"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Could not mark notifications as read: {e}")
