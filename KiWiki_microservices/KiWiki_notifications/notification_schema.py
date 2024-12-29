@@ -12,7 +12,7 @@ class NotificationType(str, Enum):
 
 class NotificationSchema(BaseModel):
     title: str = Field(...)
-    user: str = Field(...)
+    user: str = Field(...) # El que ha hecho la petición
     notifDate: datetime = Field(default_factory=lambda: datetime.now(timezone(timedelta(hours=2))))
     notifType: NotificationType = Field(...)
     approved: bool = Field(default=None)

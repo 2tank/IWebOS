@@ -17,6 +17,9 @@ import NotificationPage from './Notifications/NotificationPage.jsx'
 import { SessionProvider } from './Common/SessionProvider.jsx';
 import SetRolePage from './Common/SetRolePage.jsx';
 
+const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+const domain = import.meta.env.VITE_AUTH0_DOMAIN;
+
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId='340827873659-snpqv9je3o790pgchph26jkl1csmmeju.apps.googleusercontent.com'>
     <SessionProvider>
