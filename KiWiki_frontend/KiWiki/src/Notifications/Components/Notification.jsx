@@ -1,7 +1,7 @@
 import axios from "axios";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import url from '../url.json';
+import url from '../../url.json';
 
 function Notification({ id, title, user, notifDate, notifType, read, onUpdate, approved }) {
     const handleAccept = async (id) => {
