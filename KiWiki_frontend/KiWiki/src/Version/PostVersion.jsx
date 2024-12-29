@@ -19,7 +19,6 @@ import apiEndPoints from '../assets/apiEndpoints.json'
 
 import { useSession } from '../Common/SessionProvider'
 
-
 import { v4 as uuidv4 } from 'uuid';
 
 const azureTranslateKey = "89eRbsY6P8evCNoIoGbA9SBwrIGkwWWCg0Z7voA9ukagrzaLesM6JQQJ99ALACmepeSXJ3w3AAAbACOGkF3T";
@@ -55,11 +54,7 @@ function PostVersion() {
   const formTextAreaClassName = "block w-full p-2 text-black bg-gray-300 resize-none h-auto";
 
   const [formState, setFormState] = useState({
-    editor: "",
-    content: "",
     maps: [],
-    originalMaps: [],
-    attachments: [],
   });
 
   useEffect(() => {
@@ -75,7 +70,7 @@ function PostVersion() {
         setEntryId(response.data.entry_id);
 
         setFormState({
-          editor: response.data.editor || "",
+          editor: user.email,
           content: response.data.content || "",
           originalMaps: response.data.maps || [],
           attachments: response.data.attachments || [],
@@ -216,7 +211,7 @@ function PostVersion() {
 
     const updatedVersion = {
       content: formState.content,
-      editor: formState.editor,
+      editor: user.email,
       editDate: new Date().toISOString(),
       attachments: formState.attachments,
       maps: combinedMaps,
@@ -311,7 +306,7 @@ function PostVersion() {
                 <h2 className="text-xl font-bold mb-4">Crear Nueva Versión</h2>
                 <div className="mb-2">
                   <FormTextInput name={"editor"} value={formState.editor} label={"Editor"}
-                    onChange={handleInputChange} required={true} className={formInputClassName} />
+                    onChange={handleInputChange} required={true} className={formInputClassName} readOnly={true}/>
                 </div>
                 <div className="mb-2">
                   <FormTextArea name={"content"} value={formState.content} label={"Contenido"}
@@ -374,7 +369,7 @@ function PostVersion() {
                 </div>
                 {(user?.rol === 'EDITOR' || user?.rol === 'ADMIN') && (
                 <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 font-bold py-1 px-4 rounded-full text-white">
-                  Crear Versión
+                  Guardar Cambios
                 </button>
                 )}
               </div>
