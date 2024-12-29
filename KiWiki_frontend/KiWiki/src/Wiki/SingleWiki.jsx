@@ -49,7 +49,7 @@ function SingleWiki({ item }) {
           <p className="text-sm text-gray-500">Creado por: {item.creator}</p>
         </div>
         <div className='flex-1 flex flex-row justify-end'>
-          {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR') )&& (
+          {((user?.rol === 'ADMIN'))&& (
           <button
             onClick={modifyHandler}
             className='m-3'
@@ -59,7 +59,7 @@ function SingleWiki({ item }) {
           </button>
           )}
 
-          {((user?.rol === 'ADMIN') || (user?.rol === 'EDITOR') )&& (
+          {((user?.rol === 'ADMIN'))&& (
           <button
             onClick={deleteHandler}
             className='m-3'
