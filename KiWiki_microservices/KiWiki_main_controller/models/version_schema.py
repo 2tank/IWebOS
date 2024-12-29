@@ -24,7 +24,7 @@ class Map(BaseModel):
     description: str = Field(...,description="Descripción de la ubicación")
 
 class versionSchema(BaseModel):
-    editor : str = Field(..., description="Editor de esta versión")
+    editor : str = Field(...,max_length=100, description="Editor de esta versión")
     editDate: datetime = Field(default_factory=lambda:datetime.now(timezone(timedelta(hours=2))), description="Fecha de la edición")
     content: Optional[str] = Field(None, description="Contenido HTML de la entrada")
     attachments: List[Attachment] = Field(default_factory=list, description="Lista de archivos adjuntos")
