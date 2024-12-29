@@ -1,9 +1,10 @@
 from typing import Optional
 
 import httpx
-from fastapi import APIRouter, HTTPException, Body, Query
+from fastapi import APIRouter, HTTPException, Body, Query, Depends
 
 from models.notification_schema import NotificationSchema, NotificationType
+from token_manager import verify_token
 from urls import config
 
 notification_url = config["notification_url"]
@@ -11,7 +12,7 @@ router = APIRouter()
 
 # --- BASIC CRUD OPERATIONS -----------------------------------------------
 @router.post("/")
-async def add_notification(notification: NotificationSchema = Body(...)):
+async def add_notification(notification: NotificationSchema = Body(...), username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(f"{notification_url}/", json=notification.model_dump())
@@ -64,7 +65,7 @@ async def get_notification(id):
 
 
 @router.delete("/{id}")
-async def delete_notification(id: str):
+async def delete_notification(id: str, username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.delete(f"{notification_url}/{id}")
@@ -77,7 +78,7 @@ async def delete_notification(id: str):
 
 
 @router.put("/{id}")
-async def update_notification(id: str, req: NotificationSchema = Body(...)):
+async def update_notification(id: str, req: NotificationSchema = Body(...), username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.put(f"{notification_url}/{id}", json = req.model_dump())
@@ -90,7 +91,7 @@ async def update_notification(id: str, req: NotificationSchema = Body(...)):
 
 
 @router.patch("/approve/{id}")
-async def approve_notification(id: str):
+async def approve_notification(id: str, username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.patch(f"{notification_url}/approve/{id}")
@@ -102,7 +103,7 @@ async def approve_notification(id: str):
         raise HTTPException(status_code=500, detail="Could not approve the notification: " + str(e))
 
 @router.patch("/deny/{id}")
-async def deny_notification(id: str):
+async def deny_notification(id: str, username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.patch(f"{notification_url}/deny/{id}")
@@ -114,7 +115,7 @@ async def deny_notification(id: str):
         raise HTTPException(status_code=500, detail="Could not deny the notification: " + str(e))
 
 @router.patch("/read")
-async def mark_all_notifications_as_read():
+async def mark_all_notifications_as_read(username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.patch(f"{notification_url}/read")
