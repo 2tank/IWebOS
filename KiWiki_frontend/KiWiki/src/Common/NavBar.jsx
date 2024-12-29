@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import Notification from '../Common/Notification';
 import { useNotification } from './NotificationContext';
 import GoogleLog from './GoogleLog';
+import { useSession } from './SessionProvider';
 
 const Navbar = () => {
 
@@ -11,6 +12,7 @@ const Navbar = () => {
   const shouldShowSearchBar = location.pathname !== "/";
 
   const { unreadCount } = useNotification();
+  const { isLoggedIn } = useSession();
 
   return (
     <nav className="w-full flex flex-col sm:flex-row items-center justify-between p-4 bg-amber-950 text-white">
@@ -25,9 +27,11 @@ const Navbar = () => {
       </div>
 
       <div className="mt-2 sm:mt-0 flex flex-row items-center space-x-4">
-        <Link className="row" to="/notifications">
-          <Notification unreadCount={unreadCount} />
-        </Link>
+        {isLoggedIn && (
+          <Link className="row" to="/notifications">
+            <Notification unreadCount={unreadCount} />
+          </Link>
+        )}
 
         <div className="flex items-center space-x-2">
           <GoogleLog />
