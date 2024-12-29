@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from typing import Literal
 
 rolType = Literal[
-    'LECTOR',
     'EDITOR',
     'REDACTOR',
     'ADMIN',
