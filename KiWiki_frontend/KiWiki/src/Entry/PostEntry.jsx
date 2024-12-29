@@ -10,8 +10,14 @@ import FormCheckBox from "../Common/FormCheckBox";
 import { useSession } from '../Common/SessionProvider';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import {translateText} from "../Common/CommonOperations"
+import LanguageSelector from "../Common/LanguageSelector.jsx";
 
 import url from '../url.json';
+
+const azureTranslateKey = "89eRbsY6P8evCNoIoGbA9SBwrIGkwWWCg0Z7voA9ukagrzaLesM6JQQJ99ALACmepeSXJ3w3AAAbACOGkF3T";
+const azureEndpoint = "https://api.cognitive.microsofttranslator.com";
+const azureLocation = "uksouth";
 
 function PostEntry() {
 
@@ -22,6 +28,7 @@ function PostEntry() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [targetLanguage, setTargetLanguage] = useState("en");
 
   const navigate = useNavigate();
 
@@ -96,6 +103,16 @@ function PostEntry() {
     }else{
       setFormState((prev) => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleTranslate = async () => {
+    const translatedTitle = await translateText(formState.title,targetLanguage, 'plain');
+    const translatedDescription = await translateText(formState.description,targetLanguage, 'plain');
+    setFormState({
+      ...formState,
+      title: translatedTitle,
+      description: translatedDescription,
+    });
   };
 
   // Envío del formulario para crear una nueva entrada
@@ -186,6 +203,11 @@ function PostEntry() {
               onChange={handleInputChange} required={true} className={formInputClassName}/>
           </div>
           <FormCheckBox name={"tags"} className={checkBoxClassName} data={data} onChange={handleInputChange} selectedElems={formState.tags} label={"Tags: "}/>
+          <div className="bg-gray-300 w-1/2 my-4 p-4 rounded">
+            <LanguageSelector setTargetLanguage={setTargetLanguage} />
+            <button type="button" className="block bg-green-500 hover:bg-green-700 font-bold mt-2 py-1 px-4 rounded-full text-white"
+              onClick={handleTranslate}>Traducir</button>
+          </div>
           {submitError && <p className="text-red-500">{submitError}</p>}
           {submitSuccess && <p className="text-green-500">Entrada creada con éxito.</p>}
           <button type="submit" className="block bg-green-500 mx-auto hover:bg-green-700 mt-8 font-bold py-1 px-4 rounded-full text-white">

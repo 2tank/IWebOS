@@ -209,7 +209,8 @@ class WIKICRUD(MONGOCRUD):
             for entry_id in wiki["entries"]:
                 print(entry_id)
                 try:
-                    response = await client.get(f'http://entry:8002/entries/{entry_id}') 
+                    
+                    response = await client.get(f'https://microserviceswikientry-production.up.railway.app/entries/{entry_id}') 
                     
                     if response.status_code == 200:
                         entry_data = response.json() 

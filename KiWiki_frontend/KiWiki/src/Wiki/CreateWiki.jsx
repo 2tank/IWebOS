@@ -7,8 +7,6 @@ import GetInfoWiki from './GetInfoWiki.js';
 import { format, parse } from "@formkit/tempo"
 import { useSession } from '../Common/SessionProvider'
 
-
-
 function CreateWiki(){
 
     const { user } = useSession()
@@ -24,8 +22,6 @@ function CreateWiki(){
     const [modifyData, setModifyData] = useState([])
 
     const [date, setDate] = useState('')
-
-
 
     const location = useLocation()
 

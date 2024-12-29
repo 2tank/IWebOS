@@ -20,11 +20,7 @@ import apiEndPoints from '../assets/apiEndpoints.json'
 import { useSession } from '../Common/SessionProvider'
 import url from '../url.json';
 
-import { v4 as uuidv4 } from 'uuid';
-
-const azureTranslateKey = "89eRbsY6P8evCNoIoGbA9SBwrIGkwWWCg0Z7voA9ukagrzaLesM6JQQJ99ALACmepeSXJ3w3AAAbACOGkF3T";
-const azureEndpoint = "https://api.cognitive.microsofttranslator.com";
-const azureLocation = "uksouth";
+import {translateText} from "../Common/CommonOperations"
 
 function PostVersion() {
   const location = useLocation();
@@ -87,77 +83,17 @@ function PostVersion() {
     if (id) fetchData();
   }, [id]);
 
-  const detectLanguage = async (text) => {
-    try {
-      const response = await axios({
-        baseURL: azureEndpoint,
-        url: '/detect',
-        method: 'post',
-        headers: {
-          'Ocp-Apim-Subscription-Key': azureTranslateKey,
-          'Ocp-Apim-Subscription-Region': azureLocation,
-          'Content-Type': 'application/json',
-          'X-ClientTraceId': uuidv4().toString(),
-        },
-        params: {
-          'api-version': '3.0',
-        },
-        data: [{ 'text': text }],
-        responseType: 'json',
-      });
-
-      return response.data[0].language;
-    } catch (error) {
-      console.error('Error al detectar el idioma:', error);
-      return null;
-    }
-  };
-
-  const translateText = async (text) => {
-    try {
-      const detectedLang = await detectLanguage(text);
-
-      if (!detectedLang) {
-        console.warn('No se pudo detectar el idioma, usando "es" como predeterminado.');
-      }
-
-      const response = await axios({
-        baseURL: azureEndpoint,
-        url: '/translate',
-        method: 'post',
-        headers: {
-          'Ocp-Apim-Subscription-Key': azureTranslateKey,
-          'Ocp-Apim-Subscription-Region': azureLocation,
-          'Content-Type': 'application/json',
-          'X-ClientTraceId': uuidv4().toString()
-        },
-        params: {
-          'api-version': '3.0',
-          'from': detectedLang || 'es',
-          'to': targetLanguage
-        },
-        data: [{ 'text': text }],
-        responseType: 'json'
-      });
-
-      return response.data[0].translations[0].text;
-    } catch (error) {
-      console.error('Error al traducir el texto:', error);
-      return text;
-    }
-  };
-
   const translateMapDescriptions = async (maps) => {
     return Promise.all(
       maps.map(async (map) => {
-        const translatedDescription = await translateText(map.description, targetLanguage);
+        const translatedDescription = await translateText(map.description, targetLanguage, 'plain');
         return { ...map, description: translatedDescription };
       })
     );
   };
 
   const handleTranslate = async () => {
-    const translatedContent = await translateText(formState.content);
+    const translatedContent = await translateText(formState.content,targetLanguage, 'html');
     const translatedMaps = formState.maps ? await translateMapDescriptions(formState.maps) : [];
     const translatedOriginalMaps = formState.originalMaps ? await translateMapDescriptions(formState.originalMaps) : [];
     setFormState({
@@ -380,6 +316,10 @@ function PostVersion() {
 
                   <div className="bg-gray-300 w-1/2 my-4 p-4 rounded">
                     <LanguageSelector setTargetLanguage={setTargetLanguage} />
+                    <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+                      <p className="font-bold">Recordatorio:</p>
+                      <p>No se olvide de revisar la cabecera HTML especialmente el <code>html lang</code> tras traducir.</p>
+                    </div>
                     <button type="button" className="block bg-green-500 hover:bg-green-700 font-bold mt-2 py-1 px-4 rounded-full text-white"
                      onClick={handleTranslate}>Traducir</button>
                   </div>

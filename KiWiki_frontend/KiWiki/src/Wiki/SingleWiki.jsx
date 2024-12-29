@@ -46,7 +46,7 @@ function SingleWiki({ item }) {
 
         <div className="flex flex-1 flex-col">
           <h2 className="text-xl font-bold text-gray-800">{item.name}</h2>
-          <p className="text-sm text-gray-500">Creado por: {item.creator}</p>
+          <p className="text-sm text-gray-500 w-4/6 break-words">Creado por: {item.creator}</p>
         </div>
         <div className='flex-1 flex flex-row justify-end'>
           {((user?.rol === 'ADMIN'))&& (
