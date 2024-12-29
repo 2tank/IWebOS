@@ -4,6 +4,8 @@ import { formatDate } from "../Common/CommonOperations";
 import VersionFilter from "./VersionFilter";
 import { useSession } from '../Common/SessionProvider'
 
+import FilesViewer from './FilesViewer'
+
 
 function VersionHistory({ entryID, onVersionChange }) {
     const [data, setData] = useState(null);
@@ -16,13 +18,6 @@ function VersionHistory({ entryID, onVersionChange }) {
     const urlGetActual = `http://localhost:8000/entries/${entryID}/currentVersion/`;
 
     const { isLoggedIn, setRol, user } = useSession();
-
-
-    // useEffect(() => {
-    //     if (!isLoggedIn) {
-    //       navigate("/");
-    //     }
-    // }, [isLoggedIn]);
 
     const [formState,setFormState] = useState({
         year: "",
@@ -135,12 +130,8 @@ function VersionHistory({ entryID, onVersionChange }) {
 
                         {version.attachments && version.attachments.length > 0 && (
                             <>
-                                <p className="text-lg font-semibold">Imágenes:</p>
-                                <img
-                                src={version.attachments[0].url}
-                                alt={version.attachments[0].file_name}
-                                className="mt-2 mb-2 rounded-lg max-w-sm h-auto"
-                                />
+                                <p className="text-lg font-semibold">Archivos:</p>
+                               < FilesViewer attachments={version.attachments}/>
                             </>
                         )}
 
