@@ -123,8 +123,6 @@ function PostVersion() {
       if (!detectedLang) {
         console.warn('No se pudo detectar el idioma, usando "es" como predeterminado.');
       }
-      console.log("IDIOMA DETECTADO" + detectedLang);
-      console.log("TO " + targetLanguage);
 
       const response = await axios({
         baseURL: azureEndpoint,
