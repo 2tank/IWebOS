@@ -5,6 +5,7 @@ import Navbar from "../../src/Common/NavBar";
 import { useState, useEffect } from "react";
 import React from 'react';
 import { useNotification } from "../../src/Common/NotificationContext";
+import { useSession } from '../Common/SessionProvider'
 
 import url from '../url.json';
 
@@ -12,12 +13,19 @@ function NotificationPage() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const { user,isLoggedIn } = useSession();
+
 
     // Cargar las notificaciones desde el servidor
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${url.active_urlBase}/notification/`);
+                let urlnueva = `${url.active_urlBase}/notification/`;
+                if(isLoggedIn){
+                    urlnueva = `${url.active_urlBase}/notification/?user=${user.email}`;
+                }
+                const response = await axios.get(urlnueva);
+
                 setData(response.data);
             } catch (err) {
                 setError(err.message);
@@ -89,7 +97,7 @@ function NotificationPage() {
             )
         );
     };
-    
+
 
     if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
     if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
