@@ -22,7 +22,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
     console.log("get ok")
 
     const payloadNofificacion = {
-      approved: true,
+      approved: null,
       notifDate: new Date().toISOString(),
       notifType: "COMMENT",
       read: false,
