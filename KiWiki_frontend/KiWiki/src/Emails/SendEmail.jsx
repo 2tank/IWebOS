@@ -1,7 +1,9 @@
 import axios from "axios";
+import url from '../url.json';
+
 
 export const handleSendEmail = async (email, notification_type, nameRef, user_name) => {
-  const url = "http://localhost:8000/email/send-email"; // URL del endpoint
+  const url = `${url.active_urlBase}/email/send-email`; // URL del endpoint
 
   const payload = {
     email,
