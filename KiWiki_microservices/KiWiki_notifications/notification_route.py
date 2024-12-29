@@ -1,11 +1,8 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Body, Query, BackgroundTasks
-from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
 import notification as notification_logic
 from notification_schema import NotificationSchema, NotificationType
-from emails.email_schema import EmailRequest, NOTIFICATION_TEMPLATES
-from emails.send_email import send_email as send_email_logic
 
 # Configuración de correo
 conf = ConnectionConfig(
