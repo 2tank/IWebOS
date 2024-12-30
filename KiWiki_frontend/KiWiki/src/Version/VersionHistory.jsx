@@ -91,26 +91,31 @@ function VersionHistory({ entryID, onVersionChange }) {
     };
 
     const rollbackVersion = async (versionID) => {
-
         try {
-            let response = null;
-            setIsUpdating(true);
-            response = await axios.put(`${url.active_urlBase}/versions/${versionID}`);
-
-            console.log(response)
-
-            await fetchCurrentVersion();
-
-
-            if (onVersionChange && response) {
-                onVersionChange(response.data);
+            setIsUpdating(true); // Iniciar estado de actualización
+            const response = await axios.put(`${url.active_urlBase}/versions/${versionID}`);
+            if (response.status === 200) {
+                console.log("Respuesta del backend:", response.data);
+    
+                // Actualizar la versión actual y la lista de versiones
+                await fetchCurrentVersion();
+                await fetchData(urlEntrada);
+    
+                // Notificar cambios si hay un callback
+                if (onVersionChange) {
+                    onVersionChange(response.data);
+                }
+            } else {
+                alert("Error inesperado al revertir la versión.");
             }
         } catch (err) {
-            alert("No se pudo revertir la versión." +err);
+            alert("No se pudo revertir la versión: " + err);
         } finally {
-            setIsUpdating(false);
+            setIsUpdating(false); // Finalizar estado de actualización
         }
     };
+    
+    
 
 
     useEffect(() => {
@@ -129,7 +134,7 @@ function VersionHistory({ entryID, onVersionChange }) {
                     <li key={version._id} className="p-4 rounded-lg border-gray-300 border-2 hover:shadow-xl transition-shadow">
                         <p className="text-lg font-semibold">Editor: <span className="font-normal">{version.editor}</span></p>
                         <p className="text-lg font-semibold">Fecha de Edición: <span className="font-normal">{formatDate(version.editDate)}</span></p>
-
+                        {version._id}
                         {version.attachments && version.attachments.length > 0 && (
                             <>
                                 <p className="text-lg font-semibold">Archivos:</p>

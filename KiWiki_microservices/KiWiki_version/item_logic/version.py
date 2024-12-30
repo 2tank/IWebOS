@@ -47,8 +47,12 @@ async def rollback_version_by_id(id):
         # Obtener todas las versiones de la entrada, incluyendo las revertidas
         versions = await crud.get_versions_by_entryid(entry_id, reverted=True)
 
-        # Filtrar las versiones para obtener la más reciente que no esté revertida
-        non_reverted_versions = [v for v in versions if not v["reverted"]]
+        # Filtrar las versiones para obtener la más reciente que no esté revertida y no sea la actual
+        non_reverted_versions = [
+            v for v in versions 
+            if not v["reverted"] and v["_id"] != actualVersionID
+        ]
+
         if non_reverted_versions:
             # Ordenar las versiones por fecha de edición en orden descendente
             non_reverted_versions.sort(key=lambda v: v["editDate"], reverse=True)
@@ -60,13 +64,13 @@ async def rollback_version_by_id(id):
             # Marcar la versión actual como revertida
             await crud.update_id(id, {"reverted": True})
             respuesta = new_version["_id"]
-
         else:
             raise Exception("No hay versiones no revertidas disponibles para hacer rollback.")
     else:
         raise Exception("La versión actual no coincide con la versión proporcionada para rollback.")
 
     return respuesta
+
 
 
 async def delete_version_by_id(id):
