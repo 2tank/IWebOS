@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
+import { handleSendEmail } from '../Emails/SendEmail';
 
 import url from '../url.json';
 
@@ -10,6 +11,8 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
   const [content, setContent] = useState('');
   const [rating, setRating] = useState(0);
   const textareaRef = useRef(null);
+  const [editorUser, setEditorUser] = useState(null);
+  const [tituloEntrada, setTituloEntrada] = useState(null);
 //  const [responseMessage, setResponseMessage] = useState('');
 
   const handleSubmit = async (event) => {
@@ -19,14 +22,20 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
     let localUrl = `${url.active_urlBase}/versions/` + entryVersionID;
     const respuestaPreNotificacion = await axios.get(localUrl);
 
-    console.log("get ok")
+    console.log(respuestaPreNotificacion.data);
+
+    let localEntryUrl = `${url.active_urlBase}/entries/` + entryID;
+    const respuestaEntryNoti = await axios.get(localEntryUrl);
+
+    console.log(respuestaEntryNoti.data);
+    setTituloEntrada(respuestaEntryNoti.data.title);
 
     const payloadNofificacion = {
       approved: true,
       notifDate: new Date().toISOString(),
       notifType: "COMMENT",
       read: false,
-      title: "Notificación de creación de entrada de la Wiki Guerra",
+      title: "Alguien a comentado en tu version de: " + respuestaEntryNoti.data.title,
       user: respuestaPreNotificacion.data.editor,
     };
 
@@ -37,6 +46,12 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
     });
 
     console.log(responseNotis)
+
+    let localUserUrl = `${url.active_urlBase}/users/` + respuestaPreNotificacion.data.editor;
+    const respuestaUserMail = await axios.get(localUserUrl);
+
+    console.log(respuestaUserMail.data);
+    setEditorUser(respuestaUserMail.data);
 
     const user = cookies.get('email');
 
@@ -67,6 +82,15 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
+
+  useEffect(() => {
+    if(editorUser) {
+      if(editorUser.send_email) {
+        let content = "Alguien a comentado en tu version de: " + tituloEntrada;
+        handleSendEmail(editorUser.email,"Alguien ha comentado en tu entrada", content);
+      }
+    }
+  },[editorUser])
 
   const cancel = (e) => {
     e.preventDefault();  // Prevenir que el botón de cancelar haga un submit

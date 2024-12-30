@@ -9,6 +9,7 @@ import { useSession } from '../Common/SessionProvider';
 import NotificationPopup from "./Components/NotificationPopup";
 
 import url from '../url.json';
+import { useNavigate } from "react-router-dom";
 
 function NotificationPage() {
     const [error, setError] = useState(null);
@@ -19,6 +20,8 @@ function NotificationPage() {
     // Estado para controlar el popup
     const [showPopup, setShowPopup] = useState(true);
     const [minimizedPopup, setMinimizedPopup] = useState(false);
+
+    const navigate = useNavigate();
 
     // Cargar las notificaciones desde el servidor
     useEffect(() => {
@@ -39,6 +42,12 @@ function NotificationPage() {
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if(!isLoggedIn) {
+            navigate("/");
+        }
+    }, [isLoggedIn])
 
     const [currentPage, setCurrentPage] = useState(1);
     const notificationsPerPage = 2;
@@ -109,11 +118,12 @@ function NotificationPage() {
     return (
         <>
             <Navbar />
-            <NotificationPopup
+            { isLoggedIn && (
+                <NotificationPopup
                 minimized={minimizedPopup}
                 onExpand={() => setMinimizedPopup(false)}
                 onClose={handleClosePopup}
-            />;
+            />)}
 
             <main
                 style={{ background: colors.brown[100] }}

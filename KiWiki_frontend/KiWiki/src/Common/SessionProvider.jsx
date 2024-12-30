@@ -109,7 +109,7 @@ export const SessionProvider = ({ children }) => {
         const payload = {
           rol: user.rol,
           email: user.email,
-          sendEmail: !(user.send_email),
+          send_email: !(user.send_email),
         };
   
         const result = await axios.put(targetMailUrl, payload); // Enviar el payload en la solicitud

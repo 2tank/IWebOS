@@ -6,6 +6,8 @@ import { useSession } from "../../Common/SessionProvider";
 function NotificationPopup({ minimized, onExpand, onClose }) {
   const { user, toggleMyMailPreference } = useSession();
 
+  console.log(user);
+
   const handleTogglePreference = () => {
     toggleMyMailPreference();
   };
@@ -28,19 +30,19 @@ function NotificationPopup({ minimized, onExpand, onClose }) {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600">
-              {user?.send_email
+              {user.send_email
                 ? "Actualmente estás recibiendo notificaciones por correo."
                 : "Actualmente no estás recibiendo notificaciones por correo."}
             </span>
             <button
               onClick={handleTogglePreference}
               className={`px-4 py-2 rounded text-white transition-colors duration-300 ${
-                user?.send_email
+                user.send_email
                   ? "bg-red-500 hover:bg-red-600"
                   : "bg-green-500 hover:bg-green-600"
               }`}
             >
-              {user?.send_email ? "Desactivar" : "Activar"}
+              {user.send_email ? "Desactivar" : "Activar"}
             </button>
           </div>
         </div>
