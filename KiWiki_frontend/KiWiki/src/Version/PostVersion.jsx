@@ -184,7 +184,7 @@ function PostVersion() {
       console.log(responseNotis)
 
       const response = await axios.post(
-        `${apiEndPoints.api}/entries/${entryId}/versions`, updatedVersion, {
+        `${apiEndPoints.api}/entries/${entryId}/versions/`, updatedVersion, {
         headers: { "Content-Type": "application/json" },
       });
       setSubmitSuccess(true);
