@@ -35,7 +35,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
       notifDate: new Date().toISOString(),
       notifType: "COMMENT",
       read: false,
-      title: "Alguien a comentado en tu version de: " + respuestaEntryNoti.data.title,
+      title: "Alguien ha comentado en tu version de: " + respuestaEntryNoti.data.title,
       user: respuestaPreNotificacion.data.editor,
     };
 
