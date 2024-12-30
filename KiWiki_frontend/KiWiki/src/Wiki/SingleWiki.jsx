@@ -5,9 +5,10 @@ import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useSession } from '../Common/SessionProvider'
+import { useState } from 'react';
 
 
-function SingleWiki({ item }) {
+function SingleWiki({ item, setreload}) {
 
     const { user } = useSession();
     const navigate = useNavigate()
@@ -29,7 +30,8 @@ function SingleWiki({ item }) {
 
     const deleteHandler = async(event) =>{
       event.stopPropagation()
-      await axios.delete(apiEndpoint.api + '/wikis/' + item._id)
+      await axios.delete(apiEndpoint.api + '/wikis/' + item._id + '/')
+      setreload(item._id);
 
     }
 
@@ -46,7 +48,7 @@ function SingleWiki({ item }) {
 
         <div className="flex flex-1 flex-col">
           <h2 className="text-xl font-bold text-gray-800">{item.name}</h2>
-          <p className="text-sm text-gray-500">Creado por: {item.creator}</p>
+          <p className="text-sm text-gray-500 w-4/6 break-words">Creado por: {item.creator}</p>
         </div>
         <div className='flex-1 flex flex-row justify-end'>
           {((user?.rol === 'ADMIN'))&& (

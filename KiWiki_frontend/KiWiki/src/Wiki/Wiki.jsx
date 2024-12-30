@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from "react-router-dom";
 import axios from 'axios';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { format, parse } from "@formkit/tempo"
+import { date, format, parse } from "@formkit/tempo"
 import { useSession } from '../Common/SessionProvider'
 
 
@@ -19,9 +19,26 @@ function Wiki(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const {selectedOption, query, dateOption} = useParams();
+    const [reload, setReload] = useState(null);
+
     let urlApi = ''
 
     useEffect(() =>{
+        
+        search(dateOption)
+        
+    },[query, dateOption])
+
+    useEffect(() =>{
+        
+        if(reload != null){
+            setData((prevData) => prevData.filter((item) => item._id !== reload));
+        }
+
+    },[reload])
+
+
+    const search = (dateOption) => {
         if(dateOption == undefined){
             if(query == "all"){
                 urlApi = apiEndpoint.api + '/wikis/' + `${selectedOption}/` + 'all';
@@ -33,8 +50,7 @@ function Wiki(){
             urlApi = apiEndpoint.api + '/wikis/get_by_date/';
         }
         getData()
-    },[query, dateOption])
-
+    }
 
     const getData = async() => {
         try{
@@ -69,7 +85,7 @@ function Wiki(){
                         <h1 className='w-full text-left text-2xl font-bold'>Listado de wikis:</h1>
                     {
                     data != null &&  data.map(item => (
-                                <SingleWiki key={item._id} item={item}></SingleWiki>
+                                <SingleWiki key={item._id} item={item} setreload={setReload}></SingleWiki>
                             ))
                     }
                 </section>

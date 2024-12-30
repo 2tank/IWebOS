@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import Navbar from '../Common/NavBar.jsx';
 import apiEndpoint from '../assets/apiEndpoints.json'
 import GetInfoWiki from './GetInfoWiki.js';
-import { format, parse } from "@formkit/tempo"
+import { format } from "@formkit/tempo"
 import { useSession } from '../Common/SessionProvider'
 
 function CreateWiki(){
 
-    const { user } = useSession()
+    const { user } = useSession();
 
     const [formData, setFormData] = useState({
         nombre:"",
@@ -17,26 +17,25 @@ function CreateWiki(){
         descripcion:""
     });
 
-    const [modify, setModify] = useState(false)
+    const [modify, setModify] = useState(false);
+    const [modifyData, setModifyData] = useState([]);
+    const [date, setDate] = useState('');
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
 
-    const [modifyData, setModifyData] = useState([])
-
-    const [date, setDate] = useState('')
-
-    const location = useLocation()
-
-    const {id} = location.state || {} 
+    const location = useLocation();
+    const {id} = location.state || {}; 
     
     useEffect(() => {
         if (id == null) {
             setDate(new Date()); 
         } else {
-            setModify(true)
+            setModify(true);
             const fetchData = async () => {
                 try {
-                    const {fecha, ...newDataConvert} = await GetInfoWiki(id)
-                    setModifyData([newDataConvert.nombre, newDataConvert.descripcion])
-                    setFormData(newDataConvert)
+                    const {fecha, ...newDataConvert} = await GetInfoWiki(id);
+                    setModifyData([newDataConvert.nombre, newDataConvert.descripcion]);
+                    setFormData(newDataConvert);
                     setDate(new Date(fecha));
                 } catch (error) {
                     console.error('Error fetching wiki info:', error);
@@ -48,7 +47,6 @@ function CreateWiki(){
     }, [id]);
     
     const handleChange = (event) => {
-        
         setFormData({
             ...formData,
             [event.target.name]: event.target.value
@@ -56,31 +54,37 @@ function CreateWiki(){
     };
 
     async function formHandler(event){
-        event.preventDefault()
+        event.preventDefault();
         if(modify){
+            const patchData = {};
 
-            const patchData = {}
-
-            if(formData.nombre != modifyData[0]){
-                patchData.name = formData.nombre
+            if(formData.nombre !== modifyData[0]){
+                patchData.name = formData.nombre;
             }
 
-            if(formData.descripcion != modifyData[1]){
-                patchData.description = formData.descripcion
+            if(formData.descripcion !== modifyData[1]){
+                patchData.description = formData.descripcion;
             }
 
             if(Object.keys(patchData).length > 0){
-                await axios.patch(apiEndpoint.api+ '/wikis/' + id + '/modify_wiki/', patchData)
+                const fullUrl = apiEndpoint.api + '/wikis/' + id + '/modify_wiki';
+                console.log(fullUrl);
+                await axios.patch(fullUrl, patchData)
                 .then((response) => {
-                    console.log(response)
+                    console.log(response);
+                    setMessage('Wiki modificada correctamente.');
+                    setMessageType('modified'); 
                 })
                 .catch((error) => {
-                    console.log(error)
+                    console.log(error);
+                    setMessage('Hubo un error al modificar la wiki.');
+                    setMessageType('error'); 
                 });
-
+            } else {
+                setMessage('No hay cambios para guardar.');
+                setMessageType('notice'); 
             }
-
-        }else{
+        } else {
             await axios.post(apiEndpoint.api + '/wikis/',{
                 name: formData.nombre,
                 creator: formData.creador,
@@ -88,23 +92,30 @@ function CreateWiki(){
                 date: date
             })
             .then((response) => {
-                console.log(response)
+                console.log(response);
+                setMessage('Wiki creada correctamente.');
+                setMessageType('success'); 
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error);
+                setMessage('Hubo un error al crear la wiki.');
+                setMessageType('error'); 
             });
         }
 
+        setTimeout(() => {
+            setMessage('');
+            setMessageType('');
+        }, 3000);
     }
 
-
     return(
-
         <>
             <Navbar/>
 
             <form onSubmit={formHandler} className="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 space-y-6 mt-9">
-                <h2 className="text-2xl font-bold text-gray-700">                        {id == null ? 'Crear Wiki' : 'Editar Wiki'}
+                <h2 className="text-2xl font-bold text-gray-700">
+                    {id == null ? 'Crear Wiki' : 'Editar Wiki'}
                 </h2>
 
                 <div className="flex flex-col">
@@ -165,15 +176,19 @@ function CreateWiki(){
                         {id == null ? 'Crear Wiki' : 'Editar Wiki'}
                     </button>
                 </div>
+
+                {message && (
+                    <p className={`mt-4 text-center text-sm font-medium ${
+                        messageType === 'success' ? 'text-green-600' :
+                        messageType === 'error' ? 'text-red-600' :
+                        messageType === 'modified' ? 'text-yellow-600' : 'text-gray-600'
+                    }`}>
+                        {message}
+                    </p>
+                )}
             </form>
-
-        
         </>
-
     );
-
 }
 
 export default CreateWiki;
-
-
