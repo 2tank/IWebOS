@@ -127,7 +127,7 @@ async def mark_all_notifications_as_read(username: str = Depends(verify_token)):
         raise HTTPException(status_code=500, detail="Could not mark notifications as read: " + str(e))
 
 @router.post("/send-email")
-async def send_email(email:str, subject: str, body: str):
+async def send_email(email:str, subject: str, body: str, username: str = Depends(verify_token)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(f"{notification_url}/send-email", json={"email": email, "subject": subject, "body": body})
