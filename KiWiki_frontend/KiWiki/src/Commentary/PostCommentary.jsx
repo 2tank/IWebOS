@@ -86,7 +86,7 @@ function PostCommentary({entryID, entryVersionID, reloadCommentaries}) {
   useEffect(() => {
     if(editorUser) {
       if(editorUser.send_email) {
-        let content = "Alguien a comentado en tu version de: " + tituloEntrada;
+        let content = "Alguien ha comentado en tu version de: " + tituloEntrada;
         handleSendEmail(editorUser.email,"Alguien ha comentado en tu entrada", content);
       }
     }
