@@ -17,6 +17,8 @@ import HideSourceIcon from '@mui/icons-material/HideSource';
 
 import apiEndPoints from '../assets/apiEndpoints.json'
 
+import {handleSendEmail} from '../Emails/SendEmail'
+
 import { useSession } from '../Common/SessionProvider'
 import url from '../url.json';
 
@@ -38,6 +40,8 @@ function PostVersion() {
 
   const finalUrl = `${urlVersion}${id}`;
 
+  const[tituloEntradaEmail,settituloEntradaEmail] = useState("");
+  const[redactorUser,setRedactorUser] = useState("");
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [showAddImage, setShowAddImage] = useState(false);
@@ -134,6 +138,15 @@ function PostVersion() {
     setFormState((prev) => ({ ...prev, maps: updatedMaps }));
   };
 
+  useEffect(() => {
+    if(redactorUser) {
+      if(redactorUser.send_email && entryId) {
+        let content = "Alguien ha editado en tu entrada " +  tituloEntradaEmail;
+        handleSendEmail(redactorUser.email,"Alguien ha editado en tu entrada", content);
+      }
+    }
+  },[redactorUser,entryId])
+
   const handleCreateVersion = async (e) => {
     e.preventDefault();
 
@@ -165,13 +178,26 @@ function PostVersion() {
     console.log(updatedVersion);
 
     try {
+      console.log("entryid: " + entryId);
+      let urlEntrada = `${url.active_urlBase}/entries/${entryId}`;
+      const respuestaSaberEntrada =await axios.get(urlEntrada);
+      console.log(" saber entrada  " +respuestaSaberEntrada.data);
+      console.log(respuestaSaberEntrada.data.title);
+      settituloEntradaEmail(respuestaSaberEntrada.data.title);
+
+
+      let localUserUrl = `${url.active_urlBase}/users/` + redactor;
+
+      const respuestaUserMail = await axios.get(localUserUrl);
+
+      setRedactorUser(respuestaUserMail.data);
 
       const payload = {
         approved: true,
         notifDate: new Date().toISOString(),
         notifType: "ENTRY_CREATION",
         read: false,
-        title: "Notificación de creación de entrada de la Wiki Guerra",
+        title: "Notificación de creación de entrada",
         user: redactor,
       };
 
